@@ -70,6 +70,8 @@ const sellBanner = document.getElementById("sellBanner");
 const candidateGrid = document.getElementById("candidateGrid");
 const pitchEl = document.getElementById("pitch");
 const botStatusList = document.getElementById("botStatusList");
+const squadToggleBtn = document.getElementById("squadToggleBtn");
+const squadPanelBody = document.getElementById("squadPanelBody");
 const roundLogEl = document.getElementById("roundLog");
 const resultBody = document.getElementById("resultBody");
 const resultTitle = document.getElementById("resultTitle");
@@ -106,6 +108,10 @@ endCareerBtn.addEventListener("click", () => showResults(false));
 seasonTableContinueBtn.addEventListener("click", () => {
   seasonTableScreen.classList.add("hidden");
   runTransferWindow();
+});
+squadToggleBtn.addEventListener("click", () => {
+  const expanded = squadPanelBody.classList.toggle("expanded");
+  squadToggleBtn.textContent = expanded ? "Kadroyu Gizle ▴" : "Kadroyu Göster ▾";
 });
 
 function formatValue(v) {
@@ -824,10 +830,18 @@ function renderPitch() {
   }
 }
 
+function averageRating(p) {
+  const total = SLOTS.reduce((s, slot) => s + p.squad[slot].rating, 0);
+  return (total / SLOTS.length).toFixed(1);
+}
+
 function renderBotStatus() {
+  const myAvgEl = document.getElementById("myAvgRating");
+  if (myAvgEl) myAvgEl.textContent = `Ortalama Rating: ${averageRating(human)}`;
+
   botStatusList.innerHTML = "";
   for (const p of participants.filter(x => x.isBot)) {
-    const totalRating = SLOTS.reduce((s, slot) => s + p.squad[slot].rating, 0);
+    const avgRating = averageRating(p);
     const processed = Math.min(slotIndex, SLOTS.length);
     const chips = SLOTS.map((slot, i) => {
       const player = p.squad[slot];
@@ -844,7 +858,7 @@ function renderBotStatus() {
         <span class="bot-card-name">${p.name} 🤖</span>
         <span class="bot-card-budget">${formatValue(p.budget)}</span>
       </div>
-      <div class="bot-card-meta">Sezon ${currentSeason} · İşlenen: ${processed}/${SLOTS.length} · Toplam Rating: <b>${totalRating}</b></div>
+      <div class="bot-card-meta">Sezon ${currentSeason} · İşlenen: ${processed}/${SLOTS.length} · Ortalama Rating: <b>${avgRating}</b></div>
       <div class="bot-chip-row">${chips}</div>
     `;
     botStatusList.appendChild(card);
@@ -930,7 +944,7 @@ function showResults() {
     div.innerHTML = `
       <h3><span>${p.name}${p.isBot ? " 🤖" : " (Sen)"}${isWinner ? " 👑" : ""}</span></h3>
       <div class="result-totals">
-        <span>Toplam Rating: <b>${totalRating}</b></span>
+        <span>Ortalama Rating: <b>${(totalRating / SLOTS.length).toFixed(1)}</b></span>
         <span>Kadro Değeri: <b>${formatValue(totalValue)}</b></span>
         <span>Kalan Bütçe: <b>${formatValue(p.budget)}</b></span>
       </div>

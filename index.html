@@ -60,10 +60,15 @@
 
   <div class="rebuild-body">
     <aside class="squad-panel" id="squadPanel">
-      <h3>Kadron <span class="formation-tag">4-2-3-1</span></h3>
-      <div class="pitch" id="pitch"></div>
-
-      <div class="bot-status-list" id="botStatusList"></div>
+      <div class="squad-panel-header">
+        <h3>Kadron <span class="formation-tag">4-2-3-1</span></h3>
+        <span class="my-avg-rating" id="myAvgRating"></span>
+        <button id="squadToggleBtn" class="squad-toggle-btn" type="button">Kadroyu Göster ▾</button>
+      </div>
+      <div class="squad-panel-body" id="squadPanelBody">
+        <div class="pitch" id="pitch"></div>
+        <div class="bot-status-list" id="botStatusList"></div>
+      </div>
     </aside>
 
     <main class="decision-panel">

@@ -864,14 +864,23 @@ function humanConcede() {
 
 /* ---------------- COMMIT ---------------- */
 
+// Bedava transferle (€0 bonservis) gelen bir oyuncu, kadroya katıldıktan sonra hâlâ "değersiz"
+// görünmesin diye reytingine göre gerçekçi bir piyasa değeri kazanır — sadece transfer BEDELİ
+// (price, bütçeden düşülen tutar) sıfır kalır, oyuncunun kendi değeri sıfır kalmaz.
+function computeFreeTransferValue(rating) {
+  const value = 800_000 * Math.pow(1.2, Math.max(0, rating - 55));
+  return Math.max(300_000, Math.round(value / 100000) * 100000);
+}
+
 function commitBuy(participant, slot, candidate, price) {
   const oldPlayer = participant.squad[slot];
   if (!oldPlayer.vacant) participant.budget += oldPlayer.value;
   participant.budget -= price;
   usedWorldNames.add(candidate.name);
+  const marketValue = candidate.value === 0 ? computeFreeTransferValue(candidate.rating) : candidate.value;
   participant.squad[slot] = {
     name: candidate.name,
-    value: candidate.value,
+    value: marketValue,
     rating: candidate.rating,
     age: candidate.age,
     nationality: candidate.nationality,

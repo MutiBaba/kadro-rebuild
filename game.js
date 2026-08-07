@@ -746,18 +746,24 @@ function renderTransferScreen(transferLogMessages, botsAccepted, botsTotal) {
     const card = document.createElement("div");
     card.className = "offer-card";
     card.innerHTML = `
-      <div class="rating-badge small">${offer.player.rating}</div>
-      <div class="player-photo">${pixelAvatarSVG(offer.player.name)}</div>
-      <div class="offer-pos">${SLOT_LABELS[offer.slot]} · ${offer.player.age} yaş</div>
-      <div class="offer-name">${offer.player.name}</div>
-      <div class="offer-current-value">Güncel Değeri: ${formatValue(offer.player.value)}</div>
-      <div class="offer-buyer">${offer.buyerClub} teklif veriyor</div>
-      <div class="offer-value">${formatValue(offer.offerValue)}</div>
-      <div class="offer-buttons">
-        <button class="accept-btn">✅ Kabul Et</button>
-        <button class="reject-btn">❌ Reddet</button>
+      <div class="offer-left">
+        <div class="rating-badge small">${offer.player.rating}</div>
+        <div class="player-photo">${pixelAvatarSVG(offer.player.name)}</div>
       </div>
-      <div class="offer-status"></div>
+      <div class="offer-text">
+        <div class="offer-pos">${SLOT_LABELS[offer.slot]} · ${offer.player.age} yaş</div>
+        <div class="offer-name">${offer.player.name}</div>
+        <div class="offer-current-value">Güncel Değeri: ${formatValue(offer.player.value)}</div>
+        <div class="offer-buyer">${offer.buyerClub} teklif veriyor</div>
+      </div>
+      <div class="offer-actions">
+        <div class="offer-value">${formatValue(offer.offerValue)}</div>
+        <div class="offer-buttons">
+          <button class="accept-btn">✅ Kabul Et</button>
+          <button class="reject-btn">❌ Reddet</button>
+        </div>
+        <div class="offer-status"></div>
+      </div>
     `;
     card.querySelector(".accept-btn").addEventListener("click", () => handleOfferDecision(idx, true, card));
     card.querySelector(".reject-btn").addEventListener("click", () => handleOfferDecision(idx, false, card));

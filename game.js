@@ -188,12 +188,26 @@ function clubAvgRating(clubId) {
   return (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1);
 }
 
+// Wikipedia'dan hotlink edilen kulüp logolarının çoğu (18 kulübün 14'ü) gerçekte var olmayan
+// dosya yollarına işaret ediyor ve kırık çıkıyor. Ağa bağımlı olmayan, HER ZAMAN çalışan basit
+// bir renkli rozet üretiyoruz — güvenilirlik, gerçek logo peşinde koşmaktan daha değerli.
+function hashStr(s) {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+  return Math.abs(h);
+}
+function clubBadgeHTML(clubId, name, sizeClass) {
+  const hue = hashStr(clubId) % 360;
+  const initials = name.replace(/[^\p{L}\s]/gu, "").split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0]).join("").toUpperCase();
+  return `<span class="club-badge ${sizeClass}" style="background: hsl(${hue}, 55%, 32%); color: hsl(${hue}, 70%, 88%);">${initials}</span>`;
+}
+
 function renderTeamPickGrid() {
   const grid = document.getElementById("botTeamPickGroup");
   if (!grid) return;
   grid.innerHTML = PLAYERS_DATA.clubs.map(c => `
     <button class="team-grid-btn${c.id === botSetupClubId ? " active" : ""}" data-club="${c.id}">
-      <img src="${c.logo}" alt="" class="team-grid-logo" loading="lazy" onerror="this.style.display='none'">
+      ${clubBadgeHTML(c.id, c.name, "team-grid-logo")}
       <span>${c.name}</span>
       <span class="team-grid-rating">${clubAvgRating(c.id)}</span>
     </button>
@@ -236,7 +250,7 @@ function renderBotSetupText() {
   if (opponentsRow) {
     opponentsRow.innerHTML = botSetupOpponentIds.map(id => {
       const c = PLAYERS_DATA.clubs.find(cc => cc.id === id);
-      return `<div class="opponent-chip"><img src="${c.logo}" alt="" class="opponent-chip-logo" onerror="this.style.display='none'">${c.name} 🤖</div>`;
+      return `<div class="opponent-chip">${clubBadgeHTML(c.id, c.name, "opponent-chip-logo")}${c.name} 🤖</div>`;
     }).join("");
   }
   document.getElementById("rerollOpponentsBtn")?.classList.toggle("hidden", TRADITIONAL_BIG3.has(botSetupClubId));

@@ -264,7 +264,17 @@ body {
   gap: 0.4rem;
 }
 
-.opponent-chip-logo { width: 18px; height: 18px; object-fit: contain; flex-shrink: 0; }
+.club-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: 800;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.opponent-chip-logo { width: 18px; height: 18px; font-size: 0.6rem; }
 
 .hint-inline { font-weight: 400; color: var(--muted); font-size: 0.78em; }
 
@@ -301,7 +311,7 @@ body {
 
 .team-grid-btn:hover { border-color: var(--accent); }
 .team-grid-btn.active { background: var(--accent); border-color: var(--accent); color: #06210f; font-weight: 700; }
-.team-grid-logo { width: 28px; height: 28px; object-fit: contain; }
+.team-grid-logo { width: 28px; height: 28px; font-size: 0.75rem; }
 .team-grid-rating {
   font-size: 0.62rem;
   font-weight: 800;
@@ -1490,7 +1500,7 @@ body {
   .option-btn { padding: 0.45rem 0.3rem; font-size: 0.72rem; }
   .team-pick-grid { grid-template-columns: repeat(3, 1fr); max-height: 180px; gap: 0.35rem; }
   .team-grid-btn { padding: 0.35rem 0.2rem; font-size: 0.6rem; gap: 0.15rem; }
-  .team-grid-logo { width: 20px; height: 20px; }
+  .team-grid-logo { width: 20px; height: 20px; font-size: 0.56rem; }
   .team-grid-rating { font-size: 0.52rem; padding: 0.03rem 0.3rem; }
   .small-btn { padding: 0.4rem; font-size: 0.72rem; margin-top: 0.3rem; }
   #teamNameRow .lobby-input { padding: 0.5rem 0.7rem; font-size: 0.85rem; }

@@ -66,7 +66,11 @@ function serializeGameState() {
     currentSeason,
     usedWorldNames: Array.from(usedWorldNames),
     careerPoints,
-    seasonHistory,
+    // seasonHistory'deki table[].p canlı bir participant REFERANSI (kopya değil) — sonradan o
+    // katılımcı üzerinde yapılan mutasyonlar (ör. henüz karar verilmemiş bir altyapı teklifi)
+    // eski sezon kayıtlarına da yansır. JSON round-trip ile gerçek bir anlık görüntüye çeviriyoruz;
+    // bu ayrıca undefined değerleri de temizler (Firebase .set() undefined'ı kabul etmiyor).
+    seasonHistory: JSON.parse(JSON.stringify(seasonHistory)),
     positionBonusBreakdown,
     participants: participants.map(p => JSON.parse(JSON.stringify(p)))
   };

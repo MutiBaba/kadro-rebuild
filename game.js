@@ -510,6 +510,8 @@ function freeTransferPool(category) {
   return list;
 }
 
+// Üç sabit segment: Yıldız Transfer (82+), Orta Segment (74-82) dünya piyasasından, ve
+// Bedava Transfer (73 altı, diğer Süper Lig takımlarından, €0). Her tur bu 3 aday gösterilir.
 function buildSlotCandidates(category) {
   const available = WORLD_MARKET[category].filter(p => !usedWorldNames.has(p.name));
   const expensivePool = available.filter(p => p.rating >= 82);
@@ -1030,6 +1032,24 @@ function renderSeasonTableScreen(table, scorers) {
     </div>
   `).join("");
 
+  // Çok oyunculuda ekranı ilerletme yetkisi sadece host'ta — misafirlere tıklanamaz bir
+  // buton bırakmak yerine (host'un devam etmesini bekle) net bir ipucu gösteriyoruz.
+  const isGuest = mpActive() && !mpIsHost();
+  seasonTableContinueBtn.classList.toggle("hidden", isGuest);
+  const tableBodyEl = document.querySelector(".table-body");
+  let waitHint = document.getElementById("mpSeasonTableWaitHint");
+  if (isGuest) {
+    if (!waitHint) {
+      waitHint = document.createElement("p");
+      waitHint.id = "mpSeasonTableWaitHint";
+      waitHint.className = "hint";
+      tableBodyEl?.appendChild(waitHint);
+    }
+    waitHint.textContent = "Devam etmek için host'u bekle…";
+  } else {
+    waitHint?.remove();
+  }
+
   renderBotStatus();
 }
 
@@ -1103,9 +1123,13 @@ function generateAcademyOffer(p) {
     rangeLow: low,
     rangeHigh: high,
     decided: false,
-    accepted: undefined,
-    actualRating: undefined,
-    value: undefined
+    // undefined DEĞİL null: Firebase Realtime Database .set() çağrısı, değer ağacında
+    // herhangi bir yerde undefined bulursa TÜM yazmayı sessizce reddediyor (multiplayer'da
+    // bu, karar verilmemiş bir altyapı teklifi varken state yayınının hiç çalışmaması
+    // anlamına geliyordu — "transfer sezonuna geç" butonunun misafirlerde etkisiz kalması).
+    accepted: null,
+    actualRating: null,
+    value: null
   };
 }
 
@@ -1192,6 +1216,11 @@ function applyAcademySigning(p, offer) {
 
 function renderTransferScreen(transferLogMessages, botsAccepted, botsTotal) {
   mpPhase = "transfer";
+  // Çok oyunculuda misafirlerin bu ekranı senkron görebilmesi için host, bot teklif özetini
+  // (mesajlar + kabul sayısı) yayınlanan state'e ekler — yoksa guest ekranı hiç güncellenmez.
+  if (mpActive() && mpIsHost()) {
+    mpTransferSnapshot = { messages: transferLogMessages, botsAccepted, botsTotal };
+  }
   mpPublish();
   rebuildScreen.classList.add("hidden");
   resultScreen.classList.add("hidden");

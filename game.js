@@ -208,6 +208,12 @@ document.getElementById("botModePickGroup")?.addEventListener("click", (e) => {
   renderBotSetupText();
 });
 
+// Mobilde takım ismi kutusuna dokununca klavye kart içini aşağı kaydırıyor; klavye
+// kapandığında (blur) kartı başa sarıyoruz ki bütçe/Başlat gibi üstteki içerik kaybolmasın.
+document.getElementById("teamNameInput")?.addEventListener("blur", () => {
+  document.querySelector("#setupScreen .setup-card")?.scrollTo({ top: 0, behavior: "smooth" });
+});
+
 startBtn.addEventListener("click", () => {
   const defs = ALL_CLUB_IDS.map(id => ({ clubId: id, isBot: id !== botSetupClubId }));
   const teamNameInput = document.getElementById("teamNameInput");
@@ -934,9 +940,12 @@ function teamDefense(p) {
   return (p.squad.gk.rating + p.squad.cb1.rating + p.squad.cb2.rating + p.squad.rb.rating + p.squad.lb.rating) / 5;
 }
 
-function simulateGoals(attack, defense) {
-  const base = 1.3 + (attack - defense) / 14;
-  const goals = Math.round(base + (Math.random() * 3 - 1.2));
+// overallEdge: kendi kadro reytingi - rakibinki. Sıralama kadro reytingine göre yapıldığı için
+// maç sonuçlarının da bununla genel olarak tutarlı olması gerekir — yoksa tabloda en düşük
+// reytingli takım tüm maçları kazanmış gibi görünüp sıralamayla çelişebiliyordu.
+function simulateGoals(attack, defense, overallEdge) {
+  const base = 1.3 + (attack - defense) / 16 + overallEdge / 9;
+  const goals = Math.round(base + (Math.random() * 2.4 - 1.1));
   return Math.max(0, Math.min(6, goals));
 }
 
@@ -955,8 +964,9 @@ function simulateSeasonAndShowTable() {
   }
 
   for (const [home, away] of pairs) {
-    const goalsHome = simulateGoals(teamAttack(home), teamDefense(away));
-    const goalsAway = simulateGoals(teamAttack(away), teamDefense(home));
+    const overallEdge = avgSquadRating(home) - avgSquadRating(away);
+    const goalsHome = simulateGoals(teamAttack(home), teamDefense(away), overallEdge);
+    const goalsAway = simulateGoals(teamAttack(away), teamDefense(home), -overallEdge);
     const sh = stats[home.clubId];
     const sa = stats[away.clubId];
     sh.played++; sa.played++;
@@ -1309,42 +1319,59 @@ function renderAcademyCard() {
   academyOfferWrap.appendChild(card);
 }
 
-function handleAcademyOfferDecision(accept, card) {
-  const offer = human.academyOffer;
+// Herhangi bir katılımcı için altyapı/teklif kararını UYGULAR (host'un kendi kararı ya da
+// bir misafirden gelen aksiyon aynı yoldan geçer) — sadece host bu fonksiyonları çağırır,
+// state'i o yayınlar. Guest'ler kendi kararlarını MP.sendAction ile host'a gönderir.
+function resolveAcademyOfferDecision(participant, accept) {
+  const offer = participant.academyOffer;
   if (!offer || offer.decided) return;
   offer.decided = true;
   offer.accepted = accept;
+  if (accept) applyAcademySigning(participant, offer);
+  mpPublish();
+}
 
+function resolveOfferDecision(participant, idx, accept) {
+  const offer = participant.pendingOffers[idx];
+  if (!offer || offer.decided) return;
+  offer.decided = true;
+  offer.accepted = accept;
   if (accept) {
-    applyAcademySigning(human, offer);
-    card.querySelector(".academy-status").textContent = `✅ Kadroya katıldı — gerçek reytingi ${offer.actualRating}, değeri ${formatValue(offer.value)}`;
-  } else {
-    card.querySelector(".academy-status").textContent = "❌ Reddedildi, oyuncu kadroda kaldı";
+    participant.budget += offer.offerValue;
+    participant.squad[offer.slot].vacant = true;
   }
+  mpPublish();
+}
+
+function handleAcademyOfferDecision(accept, card) {
+  if (mpActive() && !mpIsHost()) {
+    MP.sendAction("academyDecision", { clubId: human.clubId, accept });
+    return;
+  }
+  const offer = human.academyOffer;
+  if (!offer || offer.decided) return;
+  resolveAcademyOfferDecision(human, accept);
+  card.querySelector(".academy-status").textContent = offer.accepted
+    ? `✅ Kadroya katıldı — gerçek reytingi ${offer.actualRating}, değeri ${formatValue(offer.value)}`
+    : "❌ Reddedildi, oyuncu kadroda kaldı";
   card.querySelectorAll("button").forEach(b => (b.disabled = true));
   card.classList.add("decided");
-
-  mpPublish();
   updateTransferContinueVisibility();
 }
 
 function handleOfferDecision(idx, accept, card) {
-  const offer = human.pendingOffers[idx];
-  if (offer.decided) return;
-  offer.decided = true;
-  offer.accepted = accept;
-
-  if (accept) {
-    human.budget += offer.offerValue;
-    human.squad[offer.slot].vacant = true;
-    card.querySelector(".offer-status").textContent = `✅ Satıldı (+${formatValue(offer.offerValue)})`;
-  } else {
-    card.querySelector(".offer-status").textContent = "❌ Reddedildi, oyuncu kadroda kaldı";
+  if (mpActive() && !mpIsHost()) {
+    MP.sendAction("offerDecision", { clubId: human.clubId, idx, accept });
+    return;
   }
+  const offer = human.pendingOffers[idx];
+  if (!offer || offer.decided) return;
+  resolveOfferDecision(human, idx, accept);
+  card.querySelector(".offer-status").textContent = offer.accepted
+    ? `✅ Satıldı (+${formatValue(offer.offerValue)})`
+    : "❌ Reddedildi, oyuncu kadroda kaldı";
   card.querySelectorAll("button").forEach(b => (b.disabled = true));
   card.classList.add("decided");
-
-  mpPublish();
   updateTransferContinueVisibility();
 }
 

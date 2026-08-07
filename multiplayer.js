@@ -158,6 +158,10 @@ function startHostActionListener() {
       if (auction) raiseBid(participant);
     } else if (action.type === "concede") {
       if (auction) concedeBid(participant);
+    } else if (action.type === "offerDecision") {
+      resolveOfferDecision(participant, action.payload.idx, action.payload.accept);
+    } else if (action.type === "academyDecision") {
+      resolveAcademyOfferDecision(participant, action.payload.accept);
     }
   });
 }

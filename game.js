@@ -71,7 +71,12 @@ const ACADEMY_NAME_POOL = [
   "Arda Kesici", "Utku Şener", "Poyraz İnan", "Tolga Bayrak", "Onur Kement",
   "Bartu Sezgin", "Çınar Akalın", "Görkem Tarhan", "Deniz Özkaya", "Umut Bilgiç",
   "Atakan Yörük", "Kaan Selvi", "Metehan Turgut", "Alp Eren Coşkun", "Barış Demirtaş",
-  "Enes Karaman", "Yusuf Ziya Erden"
+  "Enes Karaman", "Yusuf Ziya Erden", "Taha Girgin", "Ozan Bektaş", "Emir Sağlam",
+  "Rüzgar Aytaç", "Tuna Kayacan", "Batuhan Erol", "Bora Yücel", "Kağan Törenli",
+  "Sarp Değirmenci", "Cem Kutluay", "İlkay Bostancı", "Rıdvan Şener", "Doruk Alkan",
+  "Mira Han Aksu", "Kayra Baysal", "Berke Onaran", "Volkan Peker", "Sinan Ergüven",
+  "Halil Kocabaş", "Recep Tuğrul", "Emrecan Uğurlu", "Serhat Batur", "Toprak Yalman",
+  "Ozan Kaçar", "Alihan Tezcan", "Boran Şevik", "Erdem Kutay", "Timur Aygün"
 ];
 let usedAcademyNames = new Set();
 
@@ -235,6 +240,22 @@ seasonTableContinueBtn.addEventListener("click", hostOnlyGuard(() => {
 }));
 function formatValue(v) {
   return "€" + (v / 1_000_000).toFixed(1).replace(".", ",") + "M";
+}
+
+// Gerçek transfer piyasasına (Transfermarkt tarzı) yakın bir eğri: 73 reytingde ~€3M,
+// 90 reytingde ~€170M (Mbappé/Haaland tayfı) civarına oturacak şekilde kalibre edilmiştir.
+// Oyun içinde her yerde (dünya piyasası, bedava transfer, altyapı) TEK bu fonksiyon kullanılır.
+function ratingToMarketValue(rating, age) {
+  let base = 3_000_000 * Math.pow(1.268, rating - 73);
+  const ageFactor =
+    age === undefined || age === null ? 1 :
+    age <= 20 ? 1.25 :
+    age <= 23 ? 1.1 :
+    age <= 29 ? 1.0 :
+    age <= 32 ? 0.65 :
+    age <= 35 ? 0.4 : 0.25;
+  base *= ageFactor;
+  return Math.max(300_000, Math.min(220_000_000, Math.round(base / 250000) * 250000));
 }
 
 function prospectiveBudget(participant, slot) {
@@ -867,9 +888,8 @@ function humanConcede() {
 // Bedava transferle (€0 bonservis) gelen bir oyuncu, kadroya katıldıktan sonra hâlâ "değersiz"
 // görünmesin diye reytingine göre gerçekçi bir piyasa değeri kazanır — sadece transfer BEDELİ
 // (price, bütçeden düşülen tutar) sıfır kalır, oyuncunun kendi değeri sıfır kalmaz.
-function computeFreeTransferValue(rating) {
-  const value = 800_000 * Math.pow(1.2, Math.max(0, rating - 55));
-  return Math.max(300_000, Math.round(value / 100000) * 100000);
+function computeFreeTransferValue(rating, age) {
+  return ratingToMarketValue(rating, age);
 }
 
 function commitBuy(participant, slot, candidate, price) {
@@ -877,7 +897,7 @@ function commitBuy(participant, slot, candidate, price) {
   if (!oldPlayer.vacant) participant.budget += oldPlayer.value;
   participant.budget -= price;
   usedWorldNames.add(candidate.name);
-  const marketValue = candidate.value === 0 ? computeFreeTransferValue(candidate.rating) : candidate.value;
+  const marketValue = candidate.value === 0 ? computeFreeTransferValue(candidate.rating, candidate.age) : candidate.value;
   participant.squad[slot] = {
     name: candidate.name,
     value: marketValue,
@@ -1050,10 +1070,10 @@ function computeOffer(player) {
   return Math.round(offer / 500000) * 500000;
 }
 
-// Reytinge göre kabaca bir piyasa değeri — altyapıdan çıkan, henüz kanıtlanmamış bir genç
-// olduğu için aynı reytingdeki hazır bir profesyonelden belirgin ucuz, ama tavanı da var.
-function computeAcademyValue(rating) {
-  const value = 1_000_000 * Math.pow(1.19, Math.max(0, rating - 60));
+// Reytinge göre piyasa değeri — altyapıdan çıkan, henüz kanıtlanmamış bir genç olduğu için
+// aynı reytingdeki hazır bir profesyonelden belirgin ucuz (%40 iskonto), ama tavanı da var.
+function computeAcademyValue(rating, age) {
+  const value = ratingToMarketValue(rating, age) * 0.6;
   return Math.min(80_000_000, Math.max(500_000, Math.round(value / 250000) * 250000));
 }
 
@@ -1154,7 +1174,8 @@ function resolveAcademyOffer(p, offer, transferLogMessages) {
 
 function applyAcademySigning(p, offer) {
   const actualRating = offer.rangeLow + Math.floor(Math.random() * (offer.rangeHigh - offer.rangeLow + 1));
-  const value = computeAcademyValue(actualRating);
+  const age = 17 + Math.floor(Math.random() * 3);
+  const value = computeAcademyValue(actualRating, age);
   offer.actualRating = actualRating;
   offer.value = value;
   usedWorldNames.add(offer.name);
@@ -1162,7 +1183,7 @@ function applyAcademySigning(p, offer) {
     name: offer.name,
     value,
     rating: actualRating,
-    age: 17 + Math.floor(Math.random() * 3),
+    age,
     nationality: "Türkiye",
     club: p.name,
     origin: "academy"

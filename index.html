@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kadro Rebuild — Fenerbahçe vs Botlar</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="bg-decor" aria-hidden="true">
+  <div class="bg-grid"></div>
+  <span class="floaty f1">⚽</span>
+  <span class="floaty f2">⚽</span>
+  <span class="floaty f3">⭐</span>
+  <span class="floaty f4">⭐</span>
+</div>
+
+<!-- SETUP SCREEN -->
+<section id="setupScreen" class="screen">
+  <div class="setup-card">
+    <div class="setup-hero">
+      <div class="hero-trophy">🏆</div>
+    </div>
+    <h1>Kadro Rebuild <span class="accent">Fenerbahçe</span></h1>
+    <p class="subtitle">
+      Sen Fenerbahçe'yi yönetiyorsun, karşında <b>Beşiktaş</b> ve <b>Galatasaray</b> botları var.
+      Herkesin 120M€ bütçesi ve kendi gerçek 11'i var. Mevki mevki oyuncunu <b>tut</b> ya da <b>sat</b>
+      (satış kesindir, vazgeçemezsin) — sana ve botlara her turda <b>aynı 3 alternatif</b> sunulur.
+      Aynı oyuncuyu birden fazla taraf isterse <b>açık artırma</b> başlar; kaybedersen kalan
+      adaylardan birini almak zorundasın. Amaç: EA FC ratingine göre en güçlü 11'i kurmak.
+      Her sezon sonunda büyük Avrupa kulüpleri her takımdan <b>3 oyuncuya</b>, yaşına ve
+      potansiyeline göre teklif gönderir. Kariyer 5 sezon sürer.
+    </p>
+
+    <div class="budget-display">
+      <span class="budget-label">Herkesin Bütçesi</span>
+      <span class="budget-amount">€120,0M</span>
+    </div>
+
+    <div class="opponents-row">
+      <div class="opponent-chip">🔵⚪ Beşiktaş 🤖</div>
+      <div class="opponent-chip">🟡🔴 Galatasaray 🤖</div>
+    </div>
+
+    <p class="hint">Şimdilik sadece bu 3 takım var — diğer takımlar yakında eklenecek.</p>
+
+    <button id="startBtn" class="primary-btn">Rebuild'e Başla</button>
+  </div>
+</section>
+
+<!-- REBUILD SCREEN -->
+<section id="rebuildScreen" class="screen hidden">
+  <header class="draft-header">
+    <div class="draft-title">Kadro Rebuild <span class="accent">Fenerbahçe vs Botlar</span></div>
+    <div class="budget-pill" id="budgetPill">Bütçe: €0M</div>
+  </header>
+
+  <div id="roundLog" class="round-log hidden"></div>
+
+  <div class="rebuild-body">
+    <aside class="squad-panel" id="squadPanel">
+      <h3>Kadron <span class="formation-tag">4-2-3-1</span></h3>
+      <div class="pitch" id="pitch"></div>
+
+      <div class="bot-status-list" id="botStatusList"></div>
+    </aside>
+
+    <main class="decision-panel">
+      <div class="progress-line" id="progressLine"></div>
+
+      <!-- Decide: keep or sell -->
+      <div id="decideView" class="decide-view">
+        <p class="slot-label" id="slotLabel"></p>
+        <div class="current-player-card" id="currentPlayerCard"></div>
+        <div class="decision-buttons">
+          <button id="keepBtn" class="keep-btn">✅ Tut</button>
+          <button id="sellBtn" class="sell-btn">💰 Sat</button>
+        </div>
+      </div>
+
+      <!-- Choose replacement -->
+      <div id="chooseView" class="choose-view hidden">
+        <p class="sell-banner" id="sellBanner"></p>
+        <div class="candidate-grid" id="candidateGrid"></div>
+      </div>
+
+      <!-- Auction -->
+      <div id="auctionView" class="auction-view hidden">
+        <p class="auction-title">🔨 Açık Artırma!</p>
+        <p class="auction-desc" id="auctionDesc"></p>
+        <div class="auction-candidate" id="auctionCandidate"></div>
+        <div class="auction-bidders" id="auctionBidders"></div>
+        <div class="auction-current-bid">
+          Güncel Teklif: <span id="auctionCurrentBid"></span>
+        </div>
+        <div class="auction-buttons">
+          <button id="raiseBidBtn" class="keep-btn">💰 Teklif Ver (+€5,0M)</button>
+          <button id="concedeBidBtn" class="sell-btn">🏳️ Vazgeç</button>
+        </div>
+      </div>
+    </main>
+  </div>
+</section>
+
+<!-- SEASON TABLE SCREEN -->
+<section id="seasonTableScreen" class="screen hidden">
+  <header class="draft-header">
+    <div class="draft-title">Sezon <span class="accent" id="tableSeasonNum"></span> Sonu — Lig Tablosu</div>
+  </header>
+  <div class="table-body">
+    <table class="league-table" id="leagueTable">
+      <thead>
+        <tr>
+          <th>#</th><th>Takım</th><th>O</th><th>G</th><th>B</th><th>M</th>
+          <th>AG</th><th>YG</th><th>AV</th><th>Puan</th><th>Ödül</th>
+        </tr>
+      </thead>
+      <tbody id="leagueTableBody"></tbody>
+    </table>
+
+    <h3 class="scorer-title">⚽ Gol Krallığı</h3>
+    <div class="scorer-list" id="scorerList"></div>
+
+    <button id="seasonTableContinueBtn" class="primary-btn">Transfer Tekliflerine Geç</button>
+  </div>
+</section>
+
+<!-- TRANSFER WINDOW SCREEN -->
+<section id="transferScreen" class="screen hidden">
+  <header class="draft-header">
+    <div class="draft-title">Sezon <span class="accent" id="transferSeasonNum"></span> Sonu — Transfer Teklifleri</div>
+  </header>
+  <div class="transfer-body">
+    <p class="transfer-intro">Büyük Avrupa kulüpleri, sezon performansına ve genç yeteneğine güvenerek 3 oyuncun için teklif gönderdi. Kabul edersen para kasana girer ama mevkiyi yeni sezonda doldurman gerekir.</p>
+    <div id="transferOffers" class="transfer-offers"></div>
+    <div id="botTransferLog" class="round-log"></div>
+    <div id="transferContinueRow" class="transfer-continue-row hidden">
+      <button id="continueSeasonBtn" class="primary-btn">Sonraki Sezona Geç</button>
+      <button id="endCareerBtn" class="cancel-btn">Kariyeri Burada Bitir</button>
+    </div>
+  </div>
+</section>
+
+<!-- RESULT SCREEN -->
+<section id="resultScreen" class="screen hidden">
+  <header class="draft-header">
+    <div class="draft-title" id="resultTitle">Rebuild Tamamlandı</div>
+  </header>
+  <div class="career-summary" id="careerSummary"></div>
+  <div class="result-body" id="resultBody"></div>
+  <button id="restartBtn" class="primary-btn">Yeniden Başla</button>
+</section>
+
+<script src="data/players.js"></script>
+<script src="data/worldmarket.js"></script>
+<script src="pixelavatar.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

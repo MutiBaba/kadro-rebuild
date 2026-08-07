@@ -58,12 +58,13 @@
 
   <div id="roundLog" class="round-log hidden"></div>
 
+  <div class="mobile-ratings-strip" id="mobileRatingsStrip"></div>
+
   <div class="rebuild-body">
     <aside class="squad-panel" id="squadPanel">
       <div class="squad-panel-header">
         <h3>Kadron <span class="formation-tag">4-2-3-1</span></h3>
         <span class="my-avg-rating" id="myAvgRating"></span>
-        <button id="squadToggleBtn" class="squad-toggle-btn" type="button">Kadroyu Göster ▾</button>
       </div>
       <div class="squad-panel-body" id="squadPanelBody">
         <div class="pitch" id="pitch"></div>
@@ -119,7 +120,7 @@
         <thead>
           <tr>
             <th>#</th><th>Takım</th><th>O</th><th>G</th><th>B</th><th>M</th>
-            <th>AG</th><th>YG</th><th>AV</th><th>Puan</th><th>Ödül</th>
+            <th>AG</th><th>YG</th><th>AV</th><th><span class="full">Puan</span><span class="short">P</span></th><th><span class="full">Ödül</span><span class="short">🏆</span></th>
           </tr>
         </thead>
         <tbody id="leagueTableBody"></tbody>
@@ -141,6 +142,7 @@
   <div class="transfer-body">
     <p class="transfer-intro">Büyük Avrupa kulüpleri, sezon performansına ve genç yeteneğine güvenerek 3 oyuncun için teklif gönderdi. Kabul edersen para kasana girer ama mevkiyi yeni sezonda doldurman gerekir.</p>
     <div id="transferOffers" class="transfer-offers"></div>
+    <div id="botTransferSummary" class="bot-transfer-summary"></div>
     <div id="botTransferLog" class="round-log"></div>
     <div id="transferContinueRow" class="transfer-continue-row hidden">
       <button id="continueSeasonBtn" class="primary-btn">Sonraki Sezona Geç</button>
@@ -155,6 +157,7 @@
     <div class="draft-title" id="resultTitle">Rebuild Tamamlandı</div>
   </header>
   <div class="career-summary" id="careerSummary"></div>
+  <div class="result-tabs" id="resultTabs"></div>
   <div class="result-body" id="resultBody"></div>
   <button id="restartBtn" class="primary-btn">Yeniden Başla</button>
 </section>

@@ -70,8 +70,7 @@ const sellBanner = document.getElementById("sellBanner");
 const candidateGrid = document.getElementById("candidateGrid");
 const pitchEl = document.getElementById("pitch");
 const botStatusList = document.getElementById("botStatusList");
-const squadToggleBtn = document.getElementById("squadToggleBtn");
-const squadPanelBody = document.getElementById("squadPanelBody");
+const mobileRatingsStrip = document.getElementById("mobileRatingsStrip");
 const roundLogEl = document.getElementById("roundLog");
 const resultBody = document.getElementById("resultBody");
 const resultTitle = document.getElementById("resultTitle");
@@ -109,11 +108,6 @@ seasonTableContinueBtn.addEventListener("click", () => {
   seasonTableScreen.classList.add("hidden");
   runTransferWindow();
 });
-squadToggleBtn.addEventListener("click", () => {
-  const expanded = squadPanelBody.classList.toggle("expanded");
-  squadToggleBtn.textContent = expanded ? "Kadroyu Gizle ▴" : "Kadroyu Göster ▾";
-});
-
 function formatValue(v) {
   return "€" + (v / 1_000_000).toFixed(1).replace(".", ",") + "M";
 }
@@ -713,10 +707,14 @@ function runTransferWindow() {
     });
   }
 
+  let botsAccepted = 0;
+  let botsTotal = 0;
   for (const p of participants.filter(x => x.isBot)) {
     for (const offer of p.pendingOffers) {
+      botsTotal++;
       const accept = offer.offerValue > offer.player.value * 1.15;
       if (accept) {
+        botsAccepted++;
         p.budget += offer.offerValue;
         p.squad[offer.slot].vacant = true;
         transferLogMessages.push(`📤 <b>${p.name}</b>: ${offer.player.name} (${offer.player.age} yaş), ${offer.buyerClub}'a ${formatValue(offer.offerValue)} karşılığında transfer oldu.`);
@@ -727,10 +725,10 @@ function runTransferWindow() {
     }
   }
 
-  renderTransferScreen(transferLogMessages);
+  renderTransferScreen(transferLogMessages, botsAccepted, botsTotal);
 }
 
-function renderTransferScreen(transferLogMessages) {
+function renderTransferScreen(transferLogMessages, botsAccepted, botsTotal) {
   rebuildScreen.classList.add("hidden");
   resultScreen.classList.add("hidden");
   seasonTableScreen.classList.add("hidden");
@@ -739,6 +737,9 @@ function renderTransferScreen(transferLogMessages) {
   transferSeasonNum.textContent = currentSeason;
   botTransferLog.innerHTML = transferLogMessages.map(m => `<div>${m}</div>`).join("");
   transferContinueRow.classList.add("hidden");
+
+  const botSummaryEl = document.getElementById("botTransferSummary");
+  if (botSummaryEl) botSummaryEl.textContent = `🤖 Botlar: ${botsAccepted}/${botsTotal} teklifi kabul etti`;
 
   transferOffers.innerHTML = "";
   human.pendingOffers.forEach((offer, idx) => {
@@ -839,6 +840,13 @@ function renderBotStatus() {
   const myAvgEl = document.getElementById("myAvgRating");
   if (myAvgEl) myAvgEl.textContent = `Ortalama Rating: ${averageRating(human)}`;
 
+  if (mobileRatingsStrip) {
+    mobileRatingsStrip.innerHTML = participants.map(p => {
+      const cls = p === human ? "me" : "";
+      return `<span class="mrs-item ${cls}">${p.isBot ? "🤖" : "⭐"} ${p.name}: <b>${averageRating(p)}</b></span>`;
+    }).join("");
+  }
+
   botStatusList.innerHTML = "";
   for (const p of participants.filter(x => x.isBot)) {
     const avgRating = averageRating(p);
@@ -927,10 +935,11 @@ function showResults() {
   const maxRating = Math.max(...summaries.map(s => s.totalRating));
 
   resultBody.innerHTML = "";
-  for (const { p, totalRating, totalValue } of summaries) {
+  summaries.forEach(({ p, totalRating, totalValue }, idx) => {
     const isWinner = totalRating === maxRating;
     const div = document.createElement("div");
-    div.className = "result-team" + (isWinner ? " winner" : "");
+    div.className = "result-team" + (isWinner ? " winner" : "") + (idx === 0 ? " tab-active" : "");
+    div.dataset.tabIdx = idx;
     const rows = SLOTS.map(slot => {
       const x = p.squad[slot];
       return `<div class="result-slot">
@@ -951,5 +960,21 @@ function showResults() {
       ${rows}
     `;
     resultBody.appendChild(div);
+  });
+
+  const resultTabs = document.getElementById("resultTabs");
+  if (resultTabs) {
+    resultTabs.innerHTML = summaries.map(({ p }, idx) => `
+      <button class="result-tab-btn${idx === 0 ? " active" : ""}" data-tab-idx="${idx}" type="button">
+        ${p.isBot ? "🤖" : "⭐"} ${p.name}
+      </button>
+    `).join("");
+    resultTabs.querySelectorAll(".result-tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const idx = btn.dataset.tabIdx;
+        resultTabs.querySelectorAll(".result-tab-btn").forEach(b => b.classList.toggle("active", b === btn));
+        resultBody.querySelectorAll(".result-team").forEach(el => el.classList.toggle("tab-active", el.dataset.tabIdx === idx));
+      });
+    });
   }
 }

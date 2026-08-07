@@ -40,8 +40,8 @@
     <div class="setup-hero">
       <div class="hero-trophy">🏆</div>
     </div>
-    <h1>Kadro Rebuild <span class="accent">Fenerbahçe</span></h1>
-    <p class="subtitle">
+    <h1>Kadro Rebuild <span class="accent" id="setupTeamName">Fenerbahçe</span></h1>
+    <p class="subtitle" id="setupSubtitle">
       Sen Fenerbahçe'yi yönetiyorsun, karşında <b>Beşiktaş</b> ve <b>Galatasaray</b> botları var.
       Herkesin 120M€ bütçesi ve kendi gerçek 11'i var. Mevki mevki oyuncunu <b>tut</b> ya da <b>sat</b>
       (satış kesindir, vazgeçemezsin) — sana ve botlara her turda <b>aynı 3 alternatif</b> sunulur.
@@ -51,14 +51,37 @@
       potansiyeline göre teklif gönderir. Kariyer 5 sezon sürer.
     </p>
 
-    <div class="budget-display">
-      <span class="budget-label">Herkesin Bütçesi</span>
-      <span class="budget-amount">€120,0M</span>
+    <div class="setup-row">
+      <label>Takımını Seç</label>
+      <div class="option-group" id="botTeamPickGroup">
+        <button class="option-btn active" data-club="fenerbahce">🟡🔵 Fenerbahçe</button>
+        <button class="option-btn" data-club="besiktas">⚫⚪ Beşiktaş</button>
+        <button class="option-btn" data-club="galatasaray">🔴🟡 Galatasaray</button>
+      </div>
     </div>
 
-    <div class="opponents-row">
-      <div class="opponent-chip">🔵⚪ Beşiktaş 🤖</div>
-      <div class="opponent-chip">🟡🔴 Galatasaray 🤖</div>
+    <div class="setup-row">
+      <label>Oyun Modu</label>
+      <div class="option-group" id="botModePickGroup">
+        <button class="option-btn active" data-mode="rebuild">🔁 Kadro Rebuild</button>
+        <button class="option-btn" data-mode="empty">🌱 Sıfırdan Kadro Kur</button>
+      </div>
+      <p class="hint" id="botModeHint">Mevcut kadronla başlarsın, mevki mevki tut/sat kararı verirsin.</p>
+    </div>
+
+    <div class="setup-row hidden" id="teamNameRow">
+      <label>Takımının İsmi</label>
+      <input type="text" id="teamNameInput" class="lobby-input" placeholder="ör. Yıldız Spor" maxlength="24">
+    </div>
+
+    <div class="budget-display">
+      <span class="budget-label">Herkesin Bütçesi</span>
+      <span class="budget-amount" id="setupBudgetAmount">€120,0M</span>
+    </div>
+
+    <div class="opponents-row" id="setupOpponentsRow">
+      <div class="opponent-chip">⚫⚪ Beşiktaş 🤖</div>
+      <div class="opponent-chip">🔴🟡 Galatasaray 🤖</div>
     </div>
 
     <p class="hint">Şimdilik sadece bu 3 takım var — diğer takımlar yakında eklenecek.</p>
@@ -129,6 +152,7 @@
         <div class="auction-current-bid">
           Güncel Teklif: <span id="auctionCurrentBid"></span>
         </div>
+        <p class="auction-budget-hint" id="auctionBudgetHint"></p>
         <div class="auction-buttons">
           <button id="raiseBidBtn" class="keep-btn">💰 Teklif Ver (+€5,0M)</button>
           <button id="concedeBidBtn" class="sell-btn">🏳️ Vazgeç</button>
@@ -170,7 +194,10 @@
   </header>
   <div class="transfer-body">
     <p class="transfer-intro">Büyük Avrupa kulüpleri, sezon performansına ve genç yeteneğine güvenerek 3 oyuncun için teklif gönderdi. Kabul edersen para kasana girer ama mevkiyi yeni sezonda doldurman gerekir.</p>
-    <div id="transferOffers" class="transfer-offers"></div>
+    <div class="transfer-offers-scroll">
+      <div id="academyOfferWrap"></div>
+      <div id="transferOffers" class="transfer-offers"></div>
+    </div>
     <div id="botTransferSummary" class="bot-transfer-summary"></div>
     <div id="botTransferLog" class="round-log"></div>
     <div id="transferContinueRow" class="transfer-continue-row hidden">

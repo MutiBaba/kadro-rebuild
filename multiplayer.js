@@ -249,9 +249,17 @@ function renderLobbyCreateConfig() {
       </div>
       <p class="hint">2 kişilikte seçilmeyen 3. takımı bot yönetir. 3 kişilikte tüm takımlar gerçek oyunculara ait olmalı.</p>
     </div>
+    <div class="setup-row">
+      <label>Oyun Modu</label>
+      <div class="option-group" id="lobbyModeGroup">
+        <button class="option-btn active" data-mode="rebuild">🔁 Kadro Rebuild (€120M)</button>
+        <button class="option-btn" data-mode="empty">🌱 Sıfırdan Kadro (€250M)</button>
+      </div>
+    </div>
     <button id="lobbyCreateConfirmBtn" class="primary-btn">Lobiyi Oluştur</button>
   `;
   let size = 2;
+  let emptyStart = false;
   document.getElementById("lobbySizeGroup").addEventListener("click", (e) => {
     const btn = e.target.closest(".option-btn");
     if (!btn) return;
@@ -259,10 +267,17 @@ function renderLobbyCreateConfig() {
     btn.classList.add("active");
     size = parseInt(btn.dataset.size, 10);
   });
-  document.getElementById("lobbyCreateConfirmBtn").addEventListener("click", () => createRoom(size));
+  document.getElementById("lobbyModeGroup").addEventListener("click", (e) => {
+    const btn = e.target.closest(".option-btn");
+    if (!btn) return;
+    document.querySelectorAll("#lobbyModeGroup .option-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    emptyStart = btn.dataset.mode === "empty";
+  });
+  document.getElementById("lobbyCreateConfirmBtn").addEventListener("click", () => createRoom(size, emptyStart));
 }
 
-function createRoom(maxPlayers) {
+function createRoom(maxPlayers, emptyStart) {
   const code = randomRoomCode();
   roomCode = code;
   isHostFlag = true;
@@ -270,6 +285,7 @@ function createRoom(maxPlayers) {
   roomRef.set({
     createdAt: Date.now(),
     maxPlayers,
+    emptyStart: !!emptyStart,
     hostId: myClientId,
     status: "lobby",
     players: {
@@ -338,7 +354,7 @@ function renderLobbyRoom(data) {
 
   lobbyContent.innerHTML = `
     <h1>Lobi <span class="accent">${roomCode}</span></h1>
-    <p class="subtitle">Bu kodu arkadaşlarına gönder: <b>${roomCode}</b> — (${players.length}/${data.maxPlayers} kişi)</p>
+    <p class="subtitle">Bu kodu arkadaşlarına gönder: <b>${roomCode}</b> — (${players.length}/${data.maxPlayers} kişi) · ${data.emptyStart ? "🌱 Sıfırdan Kadro (€250M)" : "🔁 Kadro Rebuild (€120M)"}</p>
     <div class="setup-row">
       <label>Takımını Seç</label>
       <div class="option-group lobby-team-group">${teamButtons}</div>
@@ -374,7 +390,8 @@ function startMultiplayerGame(data) {
   db.ref(`rooms/${roomCode}`).update({
     status: "playing",
     defs,
-    humanClubIds
+    humanClubIds,
+    emptyStart: !!data.emptyStart
   });
 }
 
@@ -390,7 +407,7 @@ function launchMultiplayerGame(data) {
 
   if (isHostFlag) {
     startHostActionListener();
-    startRebuild(data.defs, myTeamClubId);
+    startRebuild(data.defs, myTeamClubId, !!data.emptyStart);
   } else {
     startRemoteGameListener();
     // İlk state gelene kadar basit bir bekleme ekranı göster

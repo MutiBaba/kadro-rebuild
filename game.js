@@ -26,7 +26,26 @@ const PITCH_COORDS = {
   gk:  { top: "90%", left: "50%" }
 };
 const START_BUDGET = 120_000_000;
+const EMPTY_START_BUDGET = 250_000_000;
 const BID_INCREMENT = 5_000_000;
+const ALL_CLUB_IDS = ["fenerbahce", "besiktas", "galatasaray"];
+const CLUB_EMOJI = { fenerbahce: "🟡🔵", besiktas: "⚫⚪", galatasaray: "🔴🟡" };
+// Sıfırdan Kadro modunda kimse gerçek bir kulübü "devralmıyor" — herkes aynı şartlarda,
+// isimsiz bir kadroyla başlıyor. Botlara bu havuzdan rastgele bir isim atanır.
+const FANTASY_CLUB_NAMES = [
+  "Anadolu Yıldız", "Kartallar SK", "Sahil Fırtınası", "Demir Kale SK", "Gökkuşağı SK",
+  "Rüzgar Gücü", "Aslanlar Birliği", "Kızıl Şimşek", "Mavi Dalga SK", "Toprak Yıldızı",
+  "Yeşil Vadi SK", "Gece Yıldızları", "Altın Boynuz SK", "Ateş Kartalı", "Kuzey Rüzgarı",
+  "Efsane SK", "Zafer Yıldızı", "Bozkır Kartalları", "Deniz Feneri SK", "Ejderha Gücü"
+];
+function pickRandomFantasyName(takenNames) {
+  const pool = FANTASY_CLUB_NAMES.filter(n => !takenNames.has(n));
+  const name = pool.length > 0
+    ? pool[Math.floor(Math.random() * pool.length)]
+    : `Rastgele Takım #${Math.floor(100 + Math.random() * 900)}`;
+  takenNames.add(name);
+  return name;
+}
 const PARTICIPANT_DEFS = [
   { clubId: "fenerbahce", isBot: false },
   { clubId: "besiktas", isBot: true },
@@ -44,7 +63,20 @@ const TOP_SCORER_PRIZE = 10_000_000;
 const TOP_SCORER_CAREER_POINT = 1;
 const POSITION_UPGRADE_CAREER_POINT = 1;
 
+// Her sezon sonunda altyapıdan çıkan genç oyuncu için isim havuzu — bir isim bir kez kullanılır.
+const ACADEMY_NAME_POOL = [
+  "Burak Öztürk", "Şevki Kıvanç Özcan", "Furkan Mehmetcik",
+  "Emirhan Kaya", "Berat Yavaş", "Doğukan Çetiner", "Yiğit Aslanoğlu", "Kerem Balcı",
+  "Alperen Doğan", "Efe Karadeniz", "Baran Uçar", "Mert Solmaz", "Ege Tuncer",
+  "Arda Kesici", "Utku Şener", "Poyraz İnan", "Tolga Bayrak", "Onur Kement",
+  "Bartu Sezgin", "Çınar Akalın", "Görkem Tarhan", "Deniz Özkaya", "Umut Bilgiç",
+  "Atakan Yörük", "Kaan Selvi", "Metehan Turgut", "Alp Eren Coşkun", "Barış Demirtaş",
+  "Enes Karaman", "Yusuf Ziya Erden"
+];
+let usedAcademyNames = new Set();
+
 let participants = [];
+let isEmptyStartMode = false;
 let human = null;
 let slotIndex = 0;
 let currentSeason = 1;
@@ -113,10 +145,75 @@ const leagueTableBody = document.getElementById("leagueTableBody");
 const scorerList = document.getElementById("scorerList");
 const seasonTableContinueBtn = document.getElementById("seasonTableContinueBtn");
 
-startBtn.addEventListener("click", () => startRebuild());
+/* ---------------- BOT MODE SETUP SCREEN: takım + mod seçimi ---------------- */
+let botSetupClubId = "fenerbahce";
+let botSetupEmptyStart = false;
+
+function renderBotSetupText() {
+  const club = PLAYERS_DATA.clubs.find(c => c.id === botSetupClubId);
+  const others = ALL_CLUB_IDS.filter(id => id !== botSetupClubId);
+  const teamNameEl = document.getElementById("setupTeamName");
+  if (teamNameEl) teamNameEl.textContent = club.name;
+  const subtitleEl = document.getElementById("setupSubtitle");
+  if (subtitleEl) {
+    const otherNames = others.map(id => PLAYERS_DATA.clubs.find(c => c.id === id).name);
+    subtitleEl.innerHTML = `
+      Sen ${club.name}'i yönetiyorsun, karşında <b>${otherNames[0]}</b> ve <b>${otherNames[1]}</b> botları var.
+      Herkesin ${botSetupEmptyStart ? "250M€" : "120M€"} bütçesi var${botSetupEmptyStart ? " ve kadronu sıfırdan kuruyorsun" : " ve kendi gerçek 11'i var"}.
+      Mevki mevki oyuncunu <b>tut</b> ya da <b>sat</b> (satış kesindir, vazgeçemezsin) — sana ve botlara her turda
+      <b>aynı 3 alternatif</b> sunulur. Aynı oyuncuyu birden fazla taraf isterse <b>açık artırma</b> başlar; kaybedersen
+      kalan adaylardan birini almak zorundasın. Amaç: EA FC ratingine göre en güçlü 11'i kurmak.
+      Her sezon sonunda büyük Avrupa kulüpleri her takımdan <b>3 oyuncuya</b>, yaşına ve potansiyeline göre teklif
+      gönderir. Kariyer 5 sezon sürer.
+    `;
+  }
+  const budgetEl = document.getElementById("setupBudgetAmount");
+  if (budgetEl) budgetEl.textContent = formatValue(botSetupEmptyStart ? EMPTY_START_BUDGET : START_BUDGET);
+  const opponentsRow = document.getElementById("setupOpponentsRow");
+  if (opponentsRow) {
+    opponentsRow.innerHTML = others.map(id => {
+      const c = PLAYERS_DATA.clubs.find(cc => cc.id === id);
+      return `<div class="opponent-chip">${CLUB_EMOJI[id]} ${c.name} 🤖</div>`;
+    }).join("");
+  }
+  const modeHintEl = document.getElementById("botModeHint");
+  if (modeHintEl) {
+    modeHintEl.textContent = botSetupEmptyStart
+      ? "Herkes boş bir kadroyla başlar, sezon 1'de tüm 11 mevkiyi sıfırdan doldurursun. Botlar da rastgele bir isimle aynı şartlarda yarışır."
+      : "Mevcut kadronla başlarsın, mevki mevki tut/sat kararı verirsin.";
+  }
+  document.getElementById("teamNameRow")?.classList.toggle("hidden", !botSetupEmptyStart);
+}
+
+document.getElementById("botTeamPickGroup")?.addEventListener("click", (e) => {
+  const btn = e.target.closest(".option-btn");
+  if (!btn) return;
+  document.querySelectorAll("#botTeamPickGroup .option-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  botSetupClubId = btn.dataset.club;
+  renderBotSetupText();
+});
+
+document.getElementById("botModePickGroup")?.addEventListener("click", (e) => {
+  const btn = e.target.closest(".option-btn");
+  if (!btn) return;
+  document.querySelectorAll("#botModePickGroup .option-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  botSetupEmptyStart = btn.dataset.mode === "empty";
+  renderBotSetupText();
+});
+
+startBtn.addEventListener("click", () => {
+  const defs = ALL_CLUB_IDS.map(id => ({ clubId: id, isBot: id !== botSetupClubId }));
+  const teamNameInput = document.getElementById("teamNameInput");
+  const customTeamName = botSetupEmptyStart ? (teamNameInput?.value.trim() || null) : null;
+  startRebuild(defs, botSetupClubId, botSetupEmptyStart, customTeamName);
+});
+renderBotSetupText();
 restartBtn.addEventListener("click", () => {
   resultScreen.classList.add("hidden");
   setupScreen.classList.remove("hidden");
+  renderBotSetupText();
 });
 keepBtn.addEventListener("click", onKeep);
 sellBtn.addEventListener("click", onSell);
@@ -151,21 +248,49 @@ function logMessage(msg) {
 
 /* ---------------- SETUP ---------------- */
 
-function startRebuild(customDefs, myClubId) {
+function makeVacantSlot() {
+  return { name: "Boş Mevki", value: 0, rating: 0, age: 0, nationality: "—", club: "", origin: "vacant", vacant: true };
+}
+
+function startRebuild(customDefs, myClubId, emptyStart, customTeamName) {
   const defs = customDefs || PARTICIPANT_DEFS;
+  isEmptyStartMode = !!emptyStart;
+  // Sıfırdan Kadro modunda kimse gerçek kulüp kimliğini taşımaz — herkes aynı şartlarda
+  // yarışır. İnsan oyuncu kendi takımına isim verebilir, botlara rastgele bir isim atanır.
+  const takenFantasyNames = new Set();
+  if (isEmptyStartMode && customTeamName) takenFantasyNames.add(customTeamName);
   participants = defs.map(def => {
     const club = PLAYERS_DATA.clubs.find(c => c.id === def.clubId);
     const squad = {};
     for (const slot of SLOTS) {
-      const p = club.xi[slot];
-      squad[slot] = { name: p.name, value: p.value, rating: p.rating, age: p.age, nationality: p.nationality, club: club.name, origin: "kept" };
+      if (isEmptyStartMode) {
+        squad[slot] = makeVacantSlot();
+      } else {
+        const p = club.xi[slot];
+        squad[slot] = { name: p.name, value: p.value, rating: p.rating, age: p.age, nationality: p.nationality, club: club.name, origin: "kept" };
+      }
     }
-    return { clubId: def.clubId, name: club.name, logo: club.logo, isBot: def.isBot, budget: START_BUDGET, squad };
+    let displayName = club.name;
+    if (isEmptyStartMode) {
+      displayName = (def.clubId === myClubId && customTeamName)
+        ? customTeamName
+        : pickRandomFantasyName(takenFantasyNames);
+    }
+    return { clubId: def.clubId, name: displayName, logo: club.logo, isBot: def.isBot, budget: isEmptyStartMode ? EMPTY_START_BUDGET : START_BUDGET, squad };
   });
   human = participants.find(p => p.clubId === (myClubId || defs[0].clubId)) || participants[0];
   slotIndex = 0;
   currentSeason = 1;
+  // Dünya piyasası / bedava transfer havuzlarının, herhangi bir takımın başlangıç kadrosundaki
+  // gerçek bir oyuncuyla aynı isimde birini "yeni" diye teklif etmesini önlemek için, kariyer
+  // başında TÜM başlangıç kadrolarının isimlerini kullanılmış say.
   usedWorldNames = new Set();
+  for (const p of participants) {
+    for (const slot of SLOTS) {
+      if (!p.squad[slot].vacant) usedWorldNames.add(p.squad[slot].name);
+    }
+  }
+  usedAcademyNames = new Set();
   carryLog = [];
   careerPoints = {};
   for (const p of participants) careerPoints[p.clubId] = 0;
@@ -331,8 +456,11 @@ function onSell() {
 function renderForcedFill() {
   const slot = round.slot;
   const budget = prospectiveBudget(human, slot);
-  const banner = `${SLOT_LABELS[slot]} mevkin sezon başında boş kaldı (oyuncu transfer oldu) — birini transfer etmen gerekiyor. Bütçen: ${formatValue(budget)}`;
+  const banner = isEmptyStartMode && currentSeason === 1
+    ? `${SLOT_LABELS[slot]} mevkisi için kadronu sıfırdan kuruyorsun — birini transfer etmen gerekiyor. Bütçen: ${formatValue(budget)}`
+    : `${SLOT_LABELS[slot]} mevkin sezon başında boş kaldı (oyuncu transfer oldu) — birini transfer etmen gerekiyor. Bütçen: ${formatValue(budget)}`;
   progressLine.textContent = `Sezon ${currentSeason} · Mevki ${slotIndex + 1} / ${SLOTS.length}`;
+  updateBudgetPill();
   localChoicePendingKey = currentRoundKey();
   renderCandidateSelection(slot, budget, banner, round.sharedCandidates, (cand) => {
     submitLocalDecision({ sold: true, target: cand });
@@ -666,16 +794,26 @@ function updateAuctionUI() {
   }).join("");
 
   const iAmBidding = auction.bidders.some(b => b.participant === human);
+  const budgetHintEl = document.getElementById("auctionBudgetHint");
   if (!iAmBidding) {
     raiseBidBtn.disabled = true;
     concedeBidBtn.disabled = true;
     raiseBidBtn.textContent = "👀 İzliyorsun…";
+    if (budgetHintEl) budgetHintEl.textContent = "";
     return;
   }
   concedeBidBtn.disabled = false;
-  const canRaise = (auction.currentBid + BID_INCREMENT) <= prospectiveBudget(human, round.slot);
+  const availableBudget = prospectiveBudget(human, round.slot);
+  const canRaise = (auction.currentBid + BID_INCREMENT) <= availableBudget;
   raiseBidBtn.disabled = !canRaise;
   raiseBidBtn.textContent = canRaise ? `💰 Teklif Ver (+${formatValue(BID_INCREMENT)})` : "💸 Bütçen Yetmiyor";
+  if (budgetHintEl) {
+    const current = human.squad[round.slot];
+    const includesSale = !current.vacant;
+    budgetHintEl.textContent = includesSale
+      ? `Kullanılabilir bütçen: ${formatValue(availableBudget)} (${current.name} satılırsa kasana giren ${formatValue(current.value)} dahil)`
+      : `Kullanılabilir bütçen: ${formatValue(availableBudget)}`;
+  }
 }
 
 // participant: teklifi veren asıl katılımcı (host'un kendisi ya da ağdan gelen bir isteğin sahibi)
@@ -894,9 +1032,52 @@ function computeOffer(player) {
   const isVeteran = player.age >= 33;
 
   const randomFactor = 0.85 + Math.random() * 0.5;
+  // Faktörler ayrı ayrı makul olsa da hepsi aynı anda tepe noktasına gelirse (genç + potansiyelli
+  // + şanslı rastgelelik) çarpım kontrolsüz büyüyüp gerçekçi olmayan tekliflere yol açabiliyordu.
+  // Teklif, oyuncunun güncel piyasa değerinin en fazla 2 katıyla sınırlanır.
   let offer = player.value * ageFactor * hypeFactor * randomFactor;
   offer = Math.max(offer, player.value * (isVeteran ? 0.25 : 0.5));
+  offer = Math.min(offer, player.value * 2);
   return Math.round(offer / 500000) * 500000;
+}
+
+// Reytinge göre kabaca bir piyasa değeri — altyapıdan çıkan, henüz kanıtlanmamış bir genç
+// olduğu için aynı reytingdeki hazır bir profesyonelden belirgin ucuz, ama tavanı da var.
+function computeAcademyValue(rating) {
+  const value = 1_000_000 * Math.pow(1.19, Math.max(0, rating - 60));
+  return Math.min(80_000_000, Math.max(500_000, Math.round(value / 250000) * 250000));
+}
+
+function pickUnusedAcademyName() {
+  const pool = ACADEMY_NAME_POOL.filter(n => !usedAcademyNames.has(n));
+  if (pool.length === 0) return null; // isim havuzu tükendi (çok uzun kariyer) — bu sezon oluşturulmaz
+  const name = pool[Math.floor(Math.random() * pool.length)];
+  usedAcademyNames.add(name);
+  return name;
+}
+
+// Teklif anında sadece bir reyting ARALIĞI gösterilir (ör. 78-85) — gerçek reyting ancak
+// kabul edilirse ortaya çıkar. Çoğunlukla mütevazı bir yetenek, nadiren gerçek bir yıldız adayı.
+function generateAcademyOffer(p) {
+  const name = pickUnusedAcademyName();
+  if (!name) return null;
+  const slot = SLOTS[Math.floor(Math.random() * SLOTS.length)];
+  const roll = Math.random();
+  let low;
+  if (roll < 0.6) low = 65 + Math.floor(Math.random() * 10);       // %60: mütevazı yetenek
+  else if (roll < 0.9) low = 76 + Math.floor(Math.random() * 6);  // %30: umut vaat eden
+  else low = 83 + Math.floor(Math.random() * 5);                   // %10: istisnai yıldız adayı
+  const high = low + 7;
+  return {
+    slot,
+    name,
+    rangeLow: low,
+    rangeHigh: high,
+    decided: false,
+    accepted: undefined,
+    actualRating: undefined,
+    value: undefined
+  };
 }
 
 function runTransferWindow() {
@@ -914,6 +1095,7 @@ function runTransferWindow() {
         decided: false
       };
     });
+    p.academyOffer = generateAcademyOffer(p);
   }
 
   let botsAccepted = 0;
@@ -936,9 +1118,46 @@ function runTransferWindow() {
       offer.decided = true;
       offer.accepted = accept;
     }
+    if (p.academyOffer) {
+      resolveAcademyOffer(p, p.academyOffer, transferLogMessages);
+    }
   }
 
   renderTransferScreen(transferLogMessages, botsAccepted, botsTotal);
+}
+
+// Bot, gerçek reytingi bilmez (henüz kanıtlanmamış bir genç) — sadece gösterilen aralığın
+// ortalamasına göre kendi mevkisindeki oyuncuyla kıyaslar, biraz risk iştahıyla karar verir.
+function resolveAcademyOffer(p, offer, transferLogMessages) {
+  const current = p.squad[offer.slot];
+  const midRating = (offer.rangeLow + offer.rangeHigh) / 2;
+  const riskAppetite = 0.9 + Math.random() * 0.3;
+  const accept = midRating * riskAppetite > current.rating;
+  offer.decided = true;
+  offer.accepted = accept;
+  if (accept) {
+    applyAcademySigning(p, offer);
+    transferLogMessages.push(`🌱 <b>${p.name}</b>: Altyapıdan ${offer.name} (${SLOT_LABELS[offer.slot]}) kadroya katıldı, gerçek reytingi ${offer.actualRating} çıktı.`);
+  } else {
+    transferLogMessages.push(`🚫 <b>${p.name}</b>: Altyapıdan gelen ${offer.name} teklifini reddetti, ${current.name} kadroda kaldı.`);
+  }
+}
+
+function applyAcademySigning(p, offer) {
+  const actualRating = offer.rangeLow + Math.floor(Math.random() * (offer.rangeHigh - offer.rangeLow + 1));
+  const value = computeAcademyValue(actualRating);
+  offer.actualRating = actualRating;
+  offer.value = value;
+  usedWorldNames.add(offer.name);
+  p.squad[offer.slot] = {
+    name: offer.name,
+    value,
+    rating: actualRating,
+    age: 17 + Math.floor(Math.random() * 3),
+    nationality: "Türkiye",
+    club: p.name,
+    origin: "academy"
+  };
 }
 
 function renderTransferScreen(transferLogMessages, botsAccepted, botsTotal) {
@@ -955,6 +1174,8 @@ function renderTransferScreen(transferLogMessages, botsAccepted, botsTotal) {
 
   const botSummaryEl = document.getElementById("botTransferSummary");
   if (botSummaryEl) botSummaryEl.textContent = `🤖 Botlar: ${botsAccepted}/${botsTotal} teklifi kabul etti`;
+
+  renderAcademyCard();
 
   transferOffers.innerHTML = "";
   human.pendingOffers.forEach((offer, idx) => {
@@ -994,6 +1215,60 @@ function renderTransferScreen(transferLogMessages, botsAccepted, botsTotal) {
   updateTransferContinueVisibility();
 }
 
+const academyOfferWrap = document.getElementById("academyOfferWrap");
+
+function renderAcademyCard() {
+  const offer = human.academyOffer;
+  academyOfferWrap.innerHTML = "";
+  if (!offer) return;
+
+  const current = human.squad[offer.slot];
+  const card = document.createElement("div");
+  card.className = "academy-card";
+  card.innerHTML = `
+    <div class="academy-tag">🌱 Altyapıdan Bir Yetenek Çıktı</div>
+    <div class="academy-name">${offer.name}</div>
+    <div class="academy-pos">${SLOT_LABELS[offer.slot]} · Şu an kadroda: ${current.name} (${current.rating})</div>
+    <div class="academy-range">Tahmini Reyting: ${offer.rangeLow}-${offer.rangeHigh}</div>
+    <div class="academy-desc">Kabul edersen ${current.name} ile yer değiştirir ve gerçek reytingi ortaya çıkar. Reddedersen ${current.name} kadroda kalır.</div>
+    <div class="academy-buttons">
+      <button class="keep-btn academy-accept-btn">✅ Kabul Et (Takas)</button>
+      <button class="sell-btn academy-reject-btn">❌ Reddet</button>
+    </div>
+    <div class="academy-status"></div>
+  `;
+  if (offer.decided) {
+    card.classList.add("decided");
+    card.querySelectorAll("button").forEach(b => (b.disabled = true));
+    card.querySelector(".academy-status").textContent = offer.accepted
+      ? `✅ Kadroya katıldı — gerçek reytingi ${offer.actualRating}, değeri ${formatValue(offer.value)}`
+      : "❌ Reddedildi, oyuncu kadroda kaldı";
+  } else {
+    card.querySelector(".academy-accept-btn").addEventListener("click", () => handleAcademyOfferDecision(true, card));
+    card.querySelector(".academy-reject-btn").addEventListener("click", () => handleAcademyOfferDecision(false, card));
+  }
+  academyOfferWrap.appendChild(card);
+}
+
+function handleAcademyOfferDecision(accept, card) {
+  const offer = human.academyOffer;
+  if (!offer || offer.decided) return;
+  offer.decided = true;
+  offer.accepted = accept;
+
+  if (accept) {
+    applyAcademySigning(human, offer);
+    card.querySelector(".academy-status").textContent = `✅ Kadroya katıldı — gerçek reytingi ${offer.actualRating}, değeri ${formatValue(offer.value)}`;
+  } else {
+    card.querySelector(".academy-status").textContent = "❌ Reddedildi, oyuncu kadroda kaldı";
+  }
+  card.querySelectorAll("button").forEach(b => (b.disabled = true));
+  card.classList.add("decided");
+
+  mpPublish();
+  updateTransferContinueVisibility();
+}
+
 function handleOfferDecision(idx, accept, card) {
   const offer = human.pendingOffers[idx];
   if (offer.decided) return;
@@ -1015,7 +1290,8 @@ function handleOfferDecision(idx, accept, card) {
 }
 
 function updateTransferContinueVisibility() {
-  if (human.pendingOffers.every(o => o.decided)) {
+  const academyDone = !human.academyOffer || human.academyOffer.decided;
+  if (academyDone && human.pendingOffers.every(o => o.decided)) {
     transferContinueRow.classList.remove("hidden");
     const isLastSeason = currentSeason >= MAX_SEASONS;
     const showBoth = !mpActive() || mpIsHost();
@@ -1230,7 +1506,7 @@ function showResults() {
         <span class="rs-avatar">${pixelAvatarSVG(x.name)}</span>
         <span class="pos-tag">${SLOT_SHORT[slot]}</span>
         <span class="result-rating">${x.rating}</span>
-        <span>${x.name} <span class="age-tag">${x.age}y</span> <span class="origin-tag ${x.origin}">${x.origin === "bought" ? "Yeni" : "Kadroda"}</span></span>
+        <span>${x.name} <span class="age-tag">${x.age}y</span> <span class="origin-tag ${x.origin}">${x.origin === "bought" ? "Yeni" : x.origin === "academy" ? "🌱 Altyapı" : "Kadroda"}</span></span>
         <span class="rv">${formatValue(x.value)}</span>
       </div>`;
     }).join("");

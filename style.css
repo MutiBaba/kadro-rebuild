@@ -1415,11 +1415,15 @@ body {
   .screen { height: 100dvh; min-height: 0; overflow: hidden; }
 
   /* ---- Setup ---- */
-  #setupScreen { padding: 2vh 1rem; align-items: stretch; }
-  /* Bu ekrana takım/mod seçimi eklenince içerik bazı (kısa/küçük) telefonlarda taşabiliyordu;
-     sayfa genelinde kaydırma yasak olsa da bu kart özelinde güvenlik amaçlı iç kaydırma açık —
-     böylece "Başlat" butonu hiçbir zaman ulaşılamaz şekilde ekranın altında kalmıyor. */
-  .setup-card { padding: 1.6vh 1.1rem; max-height: 96dvh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  /* Bu ekrana takım/mod seçimi eklenince içerik bazı (kısa/küçük) telefonlarda taşabiliyordu.
+     Tek bir iç kaydırma kutusu (nested scroll + dvh + flex ortalama) cihazdan cihaza güvenilmez
+     çıktı, bu yüzden bunun yerine EKRANIN KENDİSİNİ normal şekilde kaydırılabilir yapıyoruz —
+     böylece bütçe/Başlat gibi hiçbir şey asla kırpılmıyor, gerekirse ufak bir kaydırma yeterli. */
+  /* justify-content:center + overflow:auto bazı taraycılarda üst kısmı kaydırarak
+     ULAŞILAMAZ hale getirebiliyor (klasik flexbox tuzağı) — flex-start ile içerik
+     her zaman en üstten başlar, taşarsa aşağı doğru normal şekilde kaydırılır. */
+  #setupScreen { height: 100dvh; min-height: 0; overflow-y: auto; align-items: center; justify-content: flex-start; padding: 3vh 1rem; }
+  .setup-card { padding: 1.6vh 1.1rem; max-height: none; overflow: visible; }
   .setup-hero { margin-bottom: 0.2rem; }
   .hero-trophy { font-size: clamp(1.4rem, 5vh, 2.2rem); }
   .setup-card h1 { font-size: clamp(1.1rem, 4vh, 1.5rem); margin-bottom: 0.3rem; }

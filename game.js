@@ -1163,10 +1163,10 @@ function runTransferWindow() {
 
   let botsAccepted = 0;
   let botsTotal = 0;
-  // Tek oyunculuda botlar, çok oyunculuda "ben" dışındaki HERKES (botlar + diğer gerçek
-  // oyuncular) bu teklifleri otomatik karara bağlar — MVP basitliği için her oyuncu kendi
-  // tekliflerini sadece kendi ekranında (host ise) interaktif karar verir.
-  for (const p of participants.filter(x => x !== human)) {
+  // Sadece GERÇEK botlar otomatik karar verir. Çok oyunculuda diğer gerçek oyuncular
+  // (host olsun olmasın) kendi tekliflerini kendi ekranlarında interaktif karara bağlar —
+  // host'un onlar adına otomatik "bot gibi" karar vermesi doğru değil.
+  for (const p of participants.filter(x => x.isBot)) {
     for (const offer of p.pendingOffers) {
       botsTotal++;
       const accept = offer.offerValue > offer.player.value * 1.15;
@@ -1376,19 +1376,29 @@ function handleOfferDecision(idx, accept, card) {
 }
 
 function updateTransferContinueVisibility() {
-  const academyDone = !human.academyOffer || human.academyOffer.decided;
-  if (academyDone && human.pendingOffers.every(o => o.decided)) {
-    transferContinueRow.classList.remove("hidden");
-    const isLastSeason = currentSeason >= MAX_SEASONS;
-    const showBoth = !mpActive() || mpIsHost();
-    continueSeasonBtn.classList.toggle("hidden", isLastSeason || !showBoth);
-    endCareerBtn.classList.toggle("hidden", !showBoth);
-    endCareerBtn.textContent = isLastSeason ? "🏆 Kariyer Özetini Gör" : "Kariyeri Burada Bitir";
-    if (!showBoth && !document.getElementById("mpHostWaitHint")) {
-      transferContinueRow.insertAdjacentHTML("beforeend", '<p class="hint" id="mpHostWaitHint">Devam etmek için host\'u bekle…</p>');
-    }
-    if (showBoth) document.getElementById("mpHostWaitHint")?.remove();
+  // Çok oyunculuda sadece "benim" tekliflerim değil, TÜM gerçek oyuncuların kendi
+  // tekliflerine karar vermiş olması gerekir — yoksa host, diğer oyuncular henüz karar
+  // vermeden sezonu ilerletip onları yarım kalmış bir teklif ekranında bırakabilir.
+  const requiredIds = requiredHumanClubIds();
+  const allDecided = participants
+    .filter(p => requiredIds.has(p.clubId))
+    .every(p => (!p.academyOffer || p.academyOffer.decided) && p.pendingOffers.every(o => o.decided));
+
+  if (!allDecided) {
+    transferContinueRow.classList.add("hidden");
+    return;
   }
+
+  transferContinueRow.classList.remove("hidden");
+  const isLastSeason = currentSeason >= MAX_SEASONS;
+  const showBoth = !mpActive() || mpIsHost();
+  continueSeasonBtn.classList.toggle("hidden", isLastSeason || !showBoth);
+  endCareerBtn.classList.toggle("hidden", !showBoth);
+  endCareerBtn.textContent = isLastSeason ? "🏆 Kariyer Özetini Gör" : "Kariyeri Burada Bitir";
+  if (!showBoth && !document.getElementById("mpHostWaitHint")) {
+    transferContinueRow.insertAdjacentHTML("beforeend", '<p class="hint" id="mpHostWaitHint">Devam etmek için host\'u bekle…</p>');
+  }
+  if (showBoth) document.getElementById("mpHostWaitHint")?.remove();
 }
 
 function onContinueSeason() {

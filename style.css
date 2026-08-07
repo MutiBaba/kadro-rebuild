@@ -209,6 +209,80 @@ body {
   box-shadow: 0 6px 24px -6px rgba(51, 209, 122, 0.5);
 }
 
+.primary-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.primary-btn.secondary-btn-style {
+  background: var(--panel-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.primary-btn.secondary-btn-style:hover {
+  background: var(--panel);
+  border-color: var(--accent);
+  box-shadow: none;
+}
+
+.back-link {
+  display: block;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  padding: 0;
+  text-align: left;
+}
+
+.back-link:hover { color: var(--accent); }
+
+.lobby-input {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+.lobby-input:focus { outline: 2px solid var(--accent); }
+
+.lobby-team-group {
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.team-pick-btn {
+  text-align: left;
+  flex: none;
+}
+
+.lobby-player-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.lobby-player-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.5rem 0.8rem;
+  font-size: 0.85rem;
+}
+
+.lobby-player-team { color: var(--gold); font-weight: 600; font-size: 0.8rem; }
+
 /* ---------- DRAFT ---------- */
 .draft-header {
   display: flex;

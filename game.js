@@ -52,6 +52,20 @@ let auction = null;
 let careerPoints = {};
 let seasonHistory = [];
 
+// ---- Multiplayer hook points (no-ops in single-player mode) ----
+// window.MP, when present, provides: isMultiplayer(), isHost(), controlledClubIds (Set),
+// sendAction(type, payload), publishState(), onWaitingFor(clubIds) -> bool (renders a wait screen)
+function mpActive() { return typeof MP !== "undefined" && MP.isMultiplayer(); }
+function mpIsHost() { return mpActive() && MP.isHost(); }
+function mpControlsClub(clubId) { return mpActive() ? MP.controlledClubIds.has(clubId) : clubId === human.clubId; }
+function mpPublish() { if (mpActive() && MP.isHost()) MP.publishState(); }
+function requiredHumanClubIds() { return mpActive() ? MP.humanClubIds : new Set([human.clubId]); }
+let mpPhase = "decide";
+// Guest henüz kendi tut/sat kararını (aday seçimiyle) tamamlamadan host başka bir oyuncunun
+// kararıyla state yayınlarsa, guest'in yarım kalan aday seçim ekranı ezilmesin diye bekletiyoruz.
+let localChoicePendingKey = null;
+function currentRoundKey() { return round ? `${currentSeason}:${round.slot}` : null; }
+
 const setupScreen = document.getElementById("setupScreen");
 const rebuildScreen = document.getElementById("rebuildScreen");
 const resultScreen = document.getElementById("resultScreen");
@@ -93,7 +107,7 @@ const leagueTableBody = document.getElementById("leagueTableBody");
 const scorerList = document.getElementById("scorerList");
 const seasonTableContinueBtn = document.getElementById("seasonTableContinueBtn");
 
-startBtn.addEventListener("click", startRebuild);
+startBtn.addEventListener("click", () => startRebuild());
 restartBtn.addEventListener("click", () => {
   resultScreen.classList.add("hidden");
   setupScreen.classList.remove("hidden");
@@ -102,12 +116,20 @@ keepBtn.addEventListener("click", onKeep);
 sellBtn.addEventListener("click", onSell);
 raiseBidBtn.addEventListener("click", humanRaiseBid);
 concedeBidBtn.addEventListener("click", humanConcede);
-continueSeasonBtn.addEventListener("click", onContinueSeason);
-endCareerBtn.addEventListener("click", () => showResults(false));
-seasonTableContinueBtn.addEventListener("click", () => {
+// Çok oyunculuda oyunu ilerletme yetkisi sadece host'ta — misafirler bu ekranları
+// senkronize state üzerinden salt-okunur izler.
+function hostOnlyGuard(fn) {
+  return () => {
+    if (mpActive() && !mpIsHost()) return;
+    fn();
+  };
+}
+continueSeasonBtn.addEventListener("click", hostOnlyGuard(onContinueSeason));
+endCareerBtn.addEventListener("click", hostOnlyGuard(() => showResults(false)));
+seasonTableContinueBtn.addEventListener("click", hostOnlyGuard(() => {
   seasonTableScreen.classList.add("hidden");
   runTransferWindow();
-});
+}));
 function formatValue(v) {
   return "€" + (v / 1_000_000).toFixed(1).replace(".", ",") + "M";
 }
@@ -123,8 +145,9 @@ function logMessage(msg) {
 
 /* ---------------- SETUP ---------------- */
 
-function startRebuild() {
-  participants = PARTICIPANT_DEFS.map(def => {
+function startRebuild(customDefs, myClubId) {
+  const defs = customDefs || PARTICIPANT_DEFS;
+  participants = defs.map(def => {
     const club = PLAYERS_DATA.clubs.find(c => c.id === def.clubId);
     const squad = {};
     for (const slot of SLOTS) {
@@ -133,7 +156,7 @@ function startRebuild() {
     }
     return { clubId: def.clubId, name: club.name, logo: club.logo, isBot: def.isBot, budget: START_BUDGET, squad };
   });
-  human = participants[0];
+  human = participants.find(p => p.clubId === (myClubId || defs[0].clubId)) || participants[0];
   slotIndex = 0;
   currentSeason = 1;
   usedWorldNames = new Set();
@@ -147,6 +170,12 @@ function startRebuild() {
   transferScreen.classList.add("hidden");
   seasonTableScreen.classList.add("hidden");
   rebuildScreen.classList.remove("hidden");
+
+  const draftTitleTeamsEl = document.getElementById("draftTitleTeams");
+  if (draftTitleTeamsEl) {
+    const opponentLabel = participants.filter(p => p !== human).map(p => p.name).join(" & ");
+    draftTitleTeamsEl.textContent = `${human.name} vs ${opponentLabel}`;
+  }
 
   renderPitch();
   renderBotStatus();
@@ -163,12 +192,46 @@ function startSlotRound() {
   const slot = SLOTS[slotIndex];
   const category = SLOT_CATEGORY[slot];
   // Bu tur için herkese (sana ve botlara) gösterilecek ORTAK 3 aday — kimse başka havuzdan seçmiyor.
-  round = { slot, category, sharedCandidates: pickTieredCandidates(categoryPool(category), 3) };
-  if (human.squad[slot].vacant) {
+  round = { slot, category, sharedCandidates: pickTieredCandidates(categoryPool(category), 3), decisions: {} };
+  mpPhase = "decide";
+  mpPublish();
+  renderCurrentClientView();
+}
+
+// Bu istemcinin ne göstermesi gerektiğine karar verir: kendi mevkisi boşsa zorunlu transfer,
+// kendi kararını zaten verdiyse "bekleniyor" ekranı, aksi halde normal tut/sat ekranı.
+function renderCurrentClientView() {
+  const slot = round.slot;
+  if (localChoicePendingKey !== null && localChoicePendingKey !== currentRoundKey()) {
+    localChoicePendingKey = null; // yeni tur başladı, eski bekleyen seçim artık geçersiz
+  }
+  if (localChoicePendingKey === currentRoundKey()) {
+    return; // guest hâlâ kendi aday seçim ekranında — ezme
+  }
+  if (round.decisions && (human.clubId in round.decisions)) {
+    renderWaitingForOthers();
+  } else if (human.squad[slot].vacant) {
     renderForcedFill();
   } else {
     renderDecideView();
   }
+}
+
+function renderWaitingForOthers() {
+  decideView.classList.remove("hidden");
+  chooseView.classList.add("hidden");
+  auctionView.classList.add("hidden");
+  renderRoundLog();
+  progressLine.textContent = `Sezon ${currentSeason} · Mevki ${slotIndex + 1} / ${SLOTS.length}`;
+  slotLabel.textContent = "Diğer oyuncular bekleniyor…";
+  currentPlayerCard.innerHTML = `
+    <div class="cp-name">⏳ Kararını verdin</div>
+    <div class="cp-meta">Diğer oyuncuların ve botların bu mevki için kararını vermesi bekleniyor…</div>
+  `;
+  document.querySelector("#decideView .decision-buttons")?.classList.add("hidden");
+  updateBudgetPill();
+  renderPitch();
+  renderBotStatus();
 }
 
 function updateBudgetPill() {
@@ -190,6 +253,7 @@ function renderDecideView() {
   decideView.classList.remove("hidden");
   chooseView.classList.add("hidden");
   auctionView.classList.add("hidden");
+  document.querySelector("#decideView .decision-buttons")?.classList.remove("hidden");
 
   renderRoundLog();
 
@@ -209,9 +273,36 @@ function renderDecideView() {
   renderBotStatus();
 }
 
+// Bu istemcinin ("human") kararını gönderir: çok oyunculuysa ve host değilse ağa yollar
+// ve bekleme ekranını gösterir; aksi halde (tek oyunculu ya da host'un kendi kararı) direkt işler.
+function submitLocalDecision(decision) {
+  localChoicePendingKey = null;
+  if (mpActive() && !mpIsHost()) {
+    MP.sendAction("decision", { clubId: human.clubId, decision });
+    renderWaitingForOthers();
+    return;
+  }
+  submitDecision(human, decision);
+}
+
+function submitDecision(participant, decision) {
+  round.decisions[participant.clubId] = decision;
+  tryResolveRound();
+}
+
+function tryResolveRound() {
+  for (const clubId of requiredHumanClubIds()) {
+    if (!(clubId in round.decisions)) {
+      mpPublish();
+      if (!mpActive() || mpIsHost()) renderCurrentClientView();
+      return; // hâlâ birilerini bekliyoruz
+    }
+  }
+  resolveRoundNow();
+}
+
 function onKeep() {
-  round.humanDecision = { sold: false };
-  proceedAfterHuman();
+  submitLocalDecision({ sold: false });
 }
 
 function onSell() {
@@ -219,9 +310,9 @@ function onSell() {
   const player = human.squad[slot];
   const budget = prospectiveBudget(human, slot);
   const banner = `${player.name} satılırsa (+${formatValue(player.value)}) bütçen ${formatValue(budget)} olur. Kimi hedefleyeceksin? (Satış kesindir, vazgeçemezsin)`;
+  localChoicePendingKey = currentRoundKey();
   renderCandidateSelection(slot, budget, banner, round.sharedCandidates, (cand) => {
-    round.humanDecision = { sold: true, target: cand };
-    proceedAfterHuman();
+    submitLocalDecision({ sold: true, target: cand });
   });
 }
 
@@ -230,9 +321,9 @@ function renderForcedFill() {
   const budget = prospectiveBudget(human, slot);
   const banner = `${SLOT_LABELS[slot]} mevkin sezon başında boş kaldı (oyuncu transfer oldu) — birini transfer etmen gerekiyor. Bütçen: ${formatValue(budget)}`;
   progressLine.textContent = `Sezon ${currentSeason} · Mevki ${slotIndex + 1} / ${SLOTS.length}`;
+  localChoicePendingKey = currentRoundKey();
   renderCandidateSelection(slot, budget, banner, round.sharedCandidates, (cand) => {
-    round.humanDecision = { sold: true, target: cand };
-    proceedAfterHuman();
+    submitLocalDecision({ sold: true, target: cand });
   });
 }
 
@@ -346,13 +437,18 @@ function pickFallback(participant, slot) {
 
 /* ---------------- CONFLICT RESOLUTION ---------------- */
 
-function proceedAfterHuman() {
+function resolveRoundNow() {
   const slot = round.slot;
   const sellers = [];
-  if (round.humanDecision.sold) sellers.push({ participant: human, target: round.humanDecision.target });
-  for (const p of participants.filter(x => x.isBot)) {
-    const decision = botDecide(p, slot);
-    if (decision.sold) sellers.push({ participant: p, target: decision.target });
+  const requiredIds = requiredHumanClubIds();
+  for (const p of participants) {
+    if (requiredIds.has(p.clubId)) {
+      const d = round.decisions[p.clubId];
+      if (d && d.sold) sellers.push({ participant: p, target: d.target });
+    } else if (p.isBot) {
+      const decision = botDecide(p, slot);
+      if (decision.sold) sellers.push({ participant: p, target: decision.target });
+    }
   }
 
   const groups = {};
@@ -375,6 +471,7 @@ function proceedAfterHuman() {
 function processNextGroup() {
   if (round.pendingGroups.length === 0) {
     for (const p of round.keepers) commitKeep(p, round.slot);
+    mpPublish();
     finishSlot();
     return;
   }
@@ -390,8 +487,19 @@ function processNextGroup() {
 function finishGroup(winnerParticipant, finalPrice, candidate, allGroupParticipants) {
   commitBuy(winnerParticipant, round.slot, candidate, finalPrice);
 
-  const botLosers = allGroupParticipants.filter(p => p !== winnerParticipant && p.isBot);
-  for (const p of botLosers) {
+  const requiredIds = requiredHumanClubIds();
+  // Tek oyunculuda "sen" kaybedersen ilk 3'ten kalanlardan seçersin (zengin UX).
+  // Çok oyunculuda (basitlik için) kaybeden herkese -bot ya da gerçek oyuncu farketmeksizin-
+  // otomatik en iyi alternatif atanır; sadece TEK GERÇEK KAYBEDEN varsa ve o "sensen" (yani
+  // host'un kendi ekranıysa) interaktif seçim gösterilir.
+  const soloHumanLoss = !mpActive() && allGroupParticipants.includes(human) && winnerParticipant !== human;
+
+  const autoLosers = allGroupParticipants.filter(p => {
+    if (p === winnerParticipant) return false;
+    if (soloHumanLoss && p === human) return false;
+    return true;
+  });
+  for (const p of autoLosers) {
     const fallback = pickFallback(p, round.slot);
     if (fallback) commitBuy(p, round.slot, fallback, fallback.value);
     else commitKeep(p, round.slot);
@@ -399,10 +507,10 @@ function finishGroup(winnerParticipant, finalPrice, candidate, allGroupParticipa
 
   auction = null;
 
-  const humanLostHere = allGroupParticipants.includes(human) && winnerParticipant !== human;
-  if (humanLostHere) {
+  if (soloHumanLoss) {
     renderAuctionLossPicker();
   } else {
+    mpPublish();
     processNextGroup();
   }
 }
@@ -433,9 +541,10 @@ function renderAuctionLossPicker() {
 function resolveConflict(group) {
   const candidate = group[0].target;
   const groupParticipants = group.map(g => g.participant);
-  const humanEntry = group.find(g => g.participant === human);
+  const requiredIds = requiredHumanClubIds();
+  const hasHumanEntry = group.some(g => requiredIds.has(g.participant.clubId));
 
-  if (!humanEntry) {
+  if (!hasHumanEntry) {
     const bidders = groupParticipants.map(p => ({
       participant: p,
       maxWillingness: Math.min(prospectiveBudget(p, round.slot), Math.round(candidate.value * 1.5))
@@ -450,8 +559,8 @@ function resolveConflict(group) {
 
   const bidders = group.map(g => ({
     participant: g.participant,
-    maxWillingness: g.participant === human
-      ? prospectiveBudget(human, round.slot)
+    maxWillingness: requiredIds.has(g.participant.clubId)
+      ? prospectiveBudget(g.participant, round.slot)
       : Math.min(prospectiveBudget(g.participant, round.slot), Math.round(candidate.value * 1.5))
   }));
 
@@ -461,6 +570,8 @@ function resolveConflict(group) {
     currentBid: candidate.value,
     groupParticipants
   };
+  mpPhase = "auction";
+  mpPublish();
   renderAuctionView();
 }
 
@@ -490,41 +601,63 @@ function updateAuctionUI() {
     return `<div class="bidder-chip${isHuman ? " you" : ""}">${b.participant.name}${isHuman ? " (Sen)" : ""}</div>`;
   }).join("");
 
+  const iAmBidding = auction.bidders.some(b => b.participant === human);
+  if (!iAmBidding) {
+    raiseBidBtn.disabled = true;
+    concedeBidBtn.disabled = true;
+    raiseBidBtn.textContent = "👀 İzliyorsun…";
+    return;
+  }
+  concedeBidBtn.disabled = false;
   const canRaise = (auction.currentBid + BID_INCREMENT) <= prospectiveBudget(human, round.slot);
   raiseBidBtn.disabled = !canRaise;
   raiseBidBtn.textContent = canRaise ? `💰 Teklif Ver (+${formatValue(BID_INCREMENT)})` : "💸 Bütçen Yetmiyor";
 }
 
-function humanRaiseBid() {
+// participant: teklifi veren asıl katılımcı (host'un kendisi ya da ağdan gelen bir isteğin sahibi)
+function raiseBid(participant) {
   const newBid = auction.currentBid + BID_INCREMENT;
-  if (newBid > prospectiveBudget(human, round.slot)) return;
+  if (newBid > prospectiveBudget(participant, round.slot)) return;
   auction.currentBid = newBid;
-  auction.bidders = auction.bidders.filter(b => b.participant === human || b.maxWillingness >= newBid);
+  auction.bidders = auction.bidders.filter(b => b.participant === participant || b.maxWillingness >= newBid);
 
   if (auction.bidders.length === 1) {
-    logMessage(`🏆 Sen <b>${auction.candidate.name}</b> için açık artırmayı ${formatValue(auction.currentBid)} teklifle kazandın!`);
-    finishGroup(human, auction.currentBid, auction.candidate, auction.groupParticipants);
+    const isMe = participant === human;
+    logMessage(`🏆 ${isMe ? "Sen" : participant.name} <b>${auction.candidate.name}</b> için açık artırmayı ${formatValue(auction.currentBid)} teklifle kazand${isMe ? "ın" : "ı"}!`);
+    finishGroup(participant, auction.currentBid, auction.candidate, auction.groupParticipants);
     return;
   }
+  mpPublish();
   updateAuctionUI();
 }
 
-function humanConcede() {
+function concedeBid(participant) {
   const candidate = auction.candidate;
-  const remainingBots = auction.bidders.filter(b => b.participant !== human);
+  const remaining = auction.bidders.filter(b => b.participant !== participant);
   const groupParticipants = auction.groupParticipants;
+  const isMe = participant === human;
 
-  if (remainingBots.length === 1) {
-    logMessage(`Açık artırmada pes ettin — <b>${remainingBots[0].participant.name}</b>, ${candidate.name}'i ${formatValue(auction.currentBid)} karşılığında aldı.`);
-    finishGroup(remainingBots[0].participant, auction.currentBid, candidate, groupParticipants);
+  if (remaining.length === 1) {
+    logMessage(`${isMe ? "Açık artırmada pes ettin" : participant.name + " açık artırmada pes etti"} — <b>${remaining[0].participant.name}</b>, ${candidate.name}'i ${formatValue(auction.currentBid)} karşılığında aldı.`);
+    finishGroup(remaining[0].participant, auction.currentBid, candidate, groupParticipants);
   } else {
-    const sorted = [...remainingBots].sort((a, b) => b.maxWillingness - a.maxWillingness);
+    const sorted = [...remaining].sort((a, b) => b.maxWillingness - a.maxWillingness);
     const winner = sorted[0];
     const runnerUp = sorted[1];
     const finalPrice = Math.max(auction.currentBid, Math.min(winner.maxWillingness, runnerUp.maxWillingness + BID_INCREMENT));
-    logMessage(`Açık artırmada pes ettin — <b>${winner.participant.name}</b>, ${candidate.name}'i ${formatValue(finalPrice)} karşılığında aldı.`);
+    logMessage(`${isMe ? "Açık artırmada pes ettin" : participant.name + " açık artırmada pes etti"} — <b>${winner.participant.name}</b>, ${candidate.name}'i ${formatValue(finalPrice)} karşılığında aldı.`);
     finishGroup(winner.participant, finalPrice, candidate, groupParticipants);
   }
+}
+
+function humanRaiseBid() {
+  if (mpActive() && !mpIsHost()) { MP.sendAction("raise", { clubId: human.clubId }); return; }
+  raiseBid(human);
+}
+
+function humanConcede() {
+  if (mpActive() && !mpIsHost()) { MP.sendAction("concede", { clubId: human.clubId }); return; }
+  concedeBid(human);
 }
 
 /* ---------------- COMMIT ---------------- */
@@ -622,12 +755,14 @@ function simulateSeasonAndShowTable() {
   }).sort((a, b) => b.goals - a.goals);
   scorers[0].p.budget += TOP_SCORER_PRIZE;
 
-  seasonHistory.push({ season: currentSeason, table, topScorer: scorers[0] });
+  seasonHistory.push({ season: currentSeason, table, topScorer: scorers[0], scorers });
 
   renderSeasonTableScreen(table, scorers);
 }
 
 function renderSeasonTableScreen(table, scorers) {
+  mpPhase = "seasonTable";
+  mpPublish();
   rebuildScreen.classList.add("hidden");
   seasonTableScreen.classList.remove("hidden");
   tableSeasonNum.textContent = `${currentSeason} / ${MAX_SEASONS}`;
@@ -636,7 +771,7 @@ function renderSeasonTableScreen(table, scorers) {
     const gd = row.gf - row.ga;
     return `<tr class="${row.rank === 1 ? "champion" : ""}">
       <td>${row.rank === 1 ? "🥇" : row.rank}</td>
-      <td class="team-cell">${row.p.name}${row.p.isBot ? " 🤖" : " (Sen)"}</td>
+      <td class="team-cell">${row.p.name}${whoLabel(row.p)}</td>
       <td>${row.played}</td><td>${row.w}</td><td>${row.d}</td><td>${row.l}</td>
       <td>${row.gf}</td><td>${row.ga}</td><td>${gd >= 0 ? "+" : ""}${gd}</td>
       <td class="points-cell">${row.pts}</td>
@@ -709,7 +844,10 @@ function runTransferWindow() {
 
   let botsAccepted = 0;
   let botsTotal = 0;
-  for (const p of participants.filter(x => x.isBot)) {
+  // Tek oyunculuda botlar, çok oyunculuda "ben" dışındaki HERKES (botlar + diğer gerçek
+  // oyuncular) bu teklifleri otomatik karara bağlar — MVP basitliği için her oyuncu kendi
+  // tekliflerini sadece kendi ekranında (host ise) interaktif karar verir.
+  for (const p of participants.filter(x => x !== human)) {
     for (const offer of p.pendingOffers) {
       botsTotal++;
       const accept = offer.offerValue > offer.player.value * 1.15;
@@ -722,6 +860,7 @@ function runTransferWindow() {
         transferLogMessages.push(`🚫 <b>${p.name}</b>: ${offer.buyerClub}'ın ${offer.player.name} için ${formatValue(offer.offerValue)} teklifini reddetti.`);
       }
       offer.decided = true;
+      offer.accepted = accept;
     }
   }
 
@@ -729,6 +868,8 @@ function runTransferWindow() {
 }
 
 function renderTransferScreen(transferLogMessages, botsAccepted, botsTotal) {
+  mpPhase = "transfer";
+  mpPublish();
   rebuildScreen.classList.add("hidden");
   resultScreen.classList.add("hidden");
   seasonTableScreen.classList.add("hidden");
@@ -765,16 +906,25 @@ function renderTransferScreen(transferLogMessages, botsAccepted, botsTotal) {
         <div class="offer-status"></div>
       </div>
     `;
-    card.querySelector(".accept-btn").addEventListener("click", () => handleOfferDecision(idx, true, card));
-    card.querySelector(".reject-btn").addEventListener("click", () => handleOfferDecision(idx, false, card));
+    if (offer.decided) {
+      card.classList.add("decided");
+      card.querySelectorAll("button").forEach(b => (b.disabled = true));
+      card.querySelector(".offer-status").textContent = offer.accepted ? "✅ Karar verildi (kabul)" : "❌ Karar verildi (ret)";
+    } else {
+      card.querySelector(".accept-btn").addEventListener("click", () => handleOfferDecision(idx, true, card));
+      card.querySelector(".reject-btn").addEventListener("click", () => handleOfferDecision(idx, false, card));
+    }
     transferOffers.appendChild(card);
   });
+
+  updateTransferContinueVisibility();
 }
 
 function handleOfferDecision(idx, accept, card) {
   const offer = human.pendingOffers[idx];
   if (offer.decided) return;
   offer.decided = true;
+  offer.accepted = accept;
 
   if (accept) {
     human.budget += offer.offerValue;
@@ -786,11 +936,22 @@ function handleOfferDecision(idx, accept, card) {
   card.querySelectorAll("button").forEach(b => (b.disabled = true));
   card.classList.add("decided");
 
+  mpPublish();
+  updateTransferContinueVisibility();
+}
+
+function updateTransferContinueVisibility() {
   if (human.pendingOffers.every(o => o.decided)) {
     transferContinueRow.classList.remove("hidden");
     const isLastSeason = currentSeason >= MAX_SEASONS;
-    continueSeasonBtn.classList.toggle("hidden", isLastSeason);
+    const showBoth = !mpActive() || mpIsHost();
+    continueSeasonBtn.classList.toggle("hidden", isLastSeason || !showBoth);
+    endCareerBtn.classList.toggle("hidden", !showBoth);
     endCareerBtn.textContent = isLastSeason ? "🏆 Kariyer Özetini Gör" : "Kariyeri Burada Bitir";
+    if (!showBoth && !document.getElementById("mpHostWaitHint")) {
+      transferContinueRow.insertAdjacentHTML("beforeend", '<p class="hint" id="mpHostWaitHint">Devam etmek için host\'u bekle…</p>');
+    }
+    if (showBoth) document.getElementById("mpHostWaitHint")?.remove();
   }
 }
 
@@ -837,6 +998,11 @@ function renderPitch() {
   }
 }
 
+// "Sen" sadece BU istemcinin kendi katılımcısı için, bot için 🤖, başka gerçek oyuncu için 👤.
+function whoLabel(p) {
+  return p === human ? " (Sen)" : p.isBot ? " 🤖" : " 👤";
+}
+
 function averageRating(p) {
   const total = SLOTS.reduce((s, slot) => s + p.squad[slot].rating, 0);
   return (total / SLOTS.length).toFixed(1);
@@ -849,12 +1015,13 @@ function renderBotStatus() {
   if (mobileRatingsStrip) {
     mobileRatingsStrip.innerHTML = participants.map(p => {
       const cls = p === human ? "me" : "";
-      return `<span class="mrs-item ${cls}">${p.isBot ? "🤖" : "⭐"} ${p.name}: <b>${averageRating(p)}</b></span>`;
+      const icon = p === human ? "⭐" : p.isBot ? "🤖" : "👤";
+      return `<span class="mrs-item ${cls}">${icon} ${p.name}: <b>${averageRating(p)}</b></span>`;
     }).join("");
   }
 
   botStatusList.innerHTML = "";
-  for (const p of participants.filter(x => x.isBot)) {
+  for (const p of participants.filter(x => x !== human)) {
     const avgRating = averageRating(p);
     const processed = Math.min(slotIndex, SLOTS.length);
     const chips = SLOTS.map((slot, i) => {
@@ -869,7 +1036,7 @@ function renderBotStatus() {
     card.className = "bot-card";
     card.innerHTML = `
       <div class="bot-card-head">
-        <span class="bot-card-name">${p.name} 🤖</span>
+        <span class="bot-card-name">${p.name}${p.isBot ? " 🤖" : " 👤"}</span>
         <span class="bot-card-budget">${formatValue(p.budget)}</span>
       </div>
       <div class="bot-card-meta">Sezon ${currentSeason} · İşlenen: ${processed}/${SLOTS.length} · Ortalama Rating: <b>${avgRating}</b></div>
@@ -899,7 +1066,7 @@ function renderCareerSummary() {
   const pointsRows = ranked.map((r, idx) => `
     <div class="career-row${idx === 0 ? " champion" : ""}">
       <span class="career-rank">${idx === 0 ? "👑" : idx + 1}</span>
-      <span class="career-name">${r.p.name}${r.p.isBot ? " 🤖" : " (Sen)"}</span>
+      <span class="career-name">${r.p.name}${whoLabel(r.p)}</span>
       <span class="career-points">${r.points} kariyer puanı</span>
     </div>
   `).join("");
@@ -920,6 +1087,8 @@ function renderCareerSummary() {
 }
 
 function showResults() {
+  mpPhase = "result";
+  mpPublish();
   rebuildScreen.classList.add("hidden");
   transferScreen.classList.add("hidden");
   seasonTableScreen.classList.add("hidden");
@@ -957,7 +1126,7 @@ function showResults() {
       </div>`;
     }).join("");
     div.innerHTML = `
-      <h3><span>${p.name}${p.isBot ? " 🤖" : " (Sen)"}${isWinner ? " 👑" : ""}</span></h3>
+      <h3><span>${p.name}${whoLabel(p)}${isWinner ? " 👑" : ""}</span></h3>
       <div class="result-totals">
         <span>Ortalama Rating: <b>${(totalRating / SLOTS.length).toFixed(1)}</b></span>
         <span>Kadro Değeri: <b>${formatValue(totalValue)}</b></span>
@@ -972,7 +1141,7 @@ function showResults() {
   if (resultTabs) {
     resultTabs.innerHTML = summaries.map(({ p }, idx) => `
       <button class="result-tab-btn${idx === 0 ? " active" : ""}" data-tab-idx="${idx}" type="button">
-        ${p.isBot ? "🤖" : "⭐"} ${p.name}
+        ${p === human ? "⭐" : p.isBot ? "🤖" : "👤"} ${p.name}
       </button>
     `).join("");
     resultTabs.querySelectorAll(".result-tab-btn").forEach(btn => {

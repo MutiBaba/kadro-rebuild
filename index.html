@@ -16,9 +16,27 @@
   <span class="floaty f4">⭐</span>
 </div>
 
-<!-- SETUP SCREEN -->
-<section id="setupScreen" class="screen">
+<!-- LANDING / MODE SELECT SCREEN -->
+<section id="landingScreen" class="screen">
   <div class="setup-card">
+    <div class="setup-hero">
+      <div class="hero-trophy">🏆</div>
+    </div>
+    <h1>Kadro Rebuild <span class="accent">Süper Lig</span></h1>
+    <p class="subtitle">
+      Fenerbahçe, Beşiktaş ve Galatasaray'dan birini yönet; herkesin 120M€ bütçesi ve kendi
+      gerçek 11'i var. Mevki mevki oyuncunu <b>tut</b> ya da <b>sat</b>, açık artırmalarla
+      rakiplerinle yarış, 5 sezonluk bir kariyer boyunca EA FC ratingine göre en güçlü 11'i kur.
+    </p>
+    <button id="modeBotBtn" class="primary-btn">🤖 Botlara Karşı Oyna</button>
+    <button id="modeLobbyBtn" class="primary-btn secondary-btn-style">👥 Arkadaşlarla Oyna</button>
+  </div>
+</section>
+
+<!-- SETUP SCREEN (bot mode) -->
+<section id="setupScreen" class="screen hidden">
+  <div class="setup-card">
+    <button class="back-link" data-back-to="landingScreen">◀ Geri</button>
     <div class="setup-hero">
       <div class="hero-trophy">🏆</div>
     </div>
@@ -49,10 +67,21 @@
   </div>
 </section>
 
+<!-- LOBBY SCREEN (multiplayer) -->
+<section id="lobbyScreen" class="screen hidden">
+  <div class="setup-card">
+    <button class="back-link" data-back-to="landingScreen">◀ Geri</button>
+    <div class="setup-hero">
+      <div class="hero-trophy">👥</div>
+    </div>
+    <div id="lobbyContent"></div>
+  </div>
+</section>
+
 <!-- REBUILD SCREEN -->
 <section id="rebuildScreen" class="screen hidden">
   <header class="draft-header">
-    <div class="draft-title">Kadro Rebuild <span class="accent">Fenerbahçe vs Botlar</span></div>
+    <div class="draft-title">Kadro Rebuild <span class="accent" id="draftTitleTeams">Fenerbahçe vs Botlar</span></div>
     <div class="budget-pill" id="budgetPill">Bütçe: €0M</div>
   </header>
 
@@ -165,6 +194,9 @@
 <script src="data/players.js"></script>
 <script src="data/worldmarket.js"></script>
 <script src="pixelavatar.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
 <script src="game.js"></script>
+<script src="multiplayer.js"></script>
 </body>
 </html>

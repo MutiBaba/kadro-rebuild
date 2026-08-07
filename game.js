@@ -36,6 +36,7 @@ const BIG_CLUBS = [
   "Real Madrid", "Manchester City", "Bayern Münih", "Paris Saint-Germain", "Liverpool",
   "Barcelona", "Chelsea", "Juventus", "Arsenal", "Inter", "Manchester United", "Atletico Madrid"
 ];
+const OTHER_SUPERLIG_CLUBS = PLAYERS_DATA.clubs.filter(c => !PARTICIPANT_DEFS.some(d => d.clubId === c.id));
 const MAX_SEASONS = 5;
 const LEAGUE_PRIZES = [60_000_000, 40_000_000, 20_000_000];
 const LEAGUE_CAREER_POINTS = [3, 2, 1];
@@ -203,7 +204,7 @@ function startSlotRound() {
   const slot = SLOTS[slotIndex];
   const category = SLOT_CATEGORY[slot];
   // Bu tur için herkese (sana ve botlara) gösterilecek ORTAK 3 aday — kimse başka havuzdan seçmiyor.
-  round = { slot, category, sharedCandidates: pickTieredCandidates(categoryPool(category), 3), decisions: {} };
+  round = { slot, category, sharedCandidates: buildSlotCandidates(category), decisions: {} };
   mpPhase = "decide";
   mpPublish();
   renderCurrentClientView();
@@ -338,19 +339,40 @@ function renderForcedFill() {
   });
 }
 
-// Havuzdan ucuz / orta / pahalı adaylar seçer (mümkün olduğunca farklı, varsayılan 3 aday).
-function pickTieredCandidates(pool, count = 3) {
-  const sorted = [...pool].sort((a, b) => a.value - b.value);
-  if (sorted.length <= count) return sorted;
-  if (count === 1) return [sorted[0]];
-  if (count === 2) return [sorted[0], sorted[sorted.length - 1]];
-  const cheap = sorted[0];
-  const expensive = sorted[sorted.length - 1];
-  let midIdx = Math.floor(sorted.length / 2);
-  if (midIdx === 0) midIdx = 1;
-  if (midIdx === sorted.length - 1) midIdx = sorted.length - 2;
-  const mid = sorted[midIdx];
-  return [cheap, mid, expensive];
+// Her turda gösterilen 3 aday sabit bir formülle seçilir: 1 pahalı (82+ reyting),
+// 1 orta segment (74-82 reyting) dünya piyasasından, ve 1 bedava transfer — Süper Lig'in
+// diğer takımlarından (73 reyting altı, ücretsiz). Kimseyi alamayan oyuncu bedava transferi
+// almak zorunda kalır çünkü değeri her zaman 0'dır.
+function pickRandomFromPool(pool) {
+  if (!pool || pool.length === 0) return null;
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+function freeTransferPool(category) {
+  const list = [];
+  for (const club of OTHER_SUPERLIG_CLUBS) {
+    for (const slot of SLOTS) {
+      if (SLOT_CATEGORY[slot] !== category) continue;
+      const p = club.xi[slot];
+      if (!p || usedWorldNames.has(p.name)) continue;
+      list.push({ name: p.name, club: club.name, nationality: p.nationality, value: 0, rating: p.rating, age: p.age });
+    }
+  }
+  return list;
+}
+
+function buildSlotCandidates(category) {
+  const available = WORLD_MARKET[category].filter(p => !usedWorldNames.has(p.name));
+  const expensivePool = available.filter(p => p.rating >= 82);
+  const midPool = available.filter(p => p.rating >= 74 && p.rating < 82);
+  const freePool = freeTransferPool(category);
+
+  const expensive = pickRandomFromPool(expensivePool) || pickRandomFromPool(available) || makeFreeAgent(category);
+  const midCandidates = midPool.filter(p => !expensive || p.name !== expensive.name);
+  const mid = pickRandomFromPool(midCandidates) || pickRandomFromPool(available.filter(p => !expensive || p.name !== expensive.name)) || makeFreeAgent(category);
+  const free = pickRandomFromPool(freePool) || makeFreeAgent(category, 0);
+
+  return [expensive, mid, free].filter(Boolean);
 }
 
 function renderCandidateSelection(slot, budget, bannerText, candidates, onPick) {
@@ -375,8 +397,9 @@ function renderCandidateSelection(slot, budget, bannerText, candidates, onPick) 
     card.className = "candidate-card" + (canAfford ? "" : " disabled");
     let tierLabel = "";
     if (cand === freeAgentFallback) tierLabel = "Bütçene Uygun";
-    else if (sorted.length === 3) tierLabel = idx === 0 ? "Ucuz" : idx === 2 ? "Pahalı" : "Orta";
-    else if (sorted.length === 2) tierLabel = idx === 0 ? "Ucuz" : "Pahalı";
+    else if (cand.value === 0) tierLabel = "Bedava Transfer";
+    else if (cand.rating >= 82) tierLabel = "Yıldız Transfer";
+    else tierLabel = "Orta Segment";
     card.innerHTML = `
       ${tierLabel ? `<div class="tier-tag">${tierLabel}</div>` : ""}
       <div class="rating-badge small">${cand.rating}</div>
@@ -384,7 +407,7 @@ function renderCandidateSelection(slot, budget, bannerText, candidates, onPick) 
       <div class="candidate-club">${cand.club}</div>
       <div class="candidate-name">${cand.name}</div>
       <div class="candidate-meta">${cand.age} yaş · ${cand.nationality}</div>
-      <div class="candidate-value">${formatValue(cand.value)}${cand.value > budget ? " ⚠️" : ""}</div>
+      <div class="candidate-value">${cand.value === 0 ? "Bedava" : formatValue(cand.value)}${cand.value > budget ? " ⚠️" : ""}</div>
     `;
     if (canAfford) {
       card.addEventListener("click", () => onPick(cand));
@@ -413,7 +436,8 @@ function makeFreeAgent(category, maxValue) {
 
 function categoryPool(category) {
   const pool = WORLD_MARKET[category].filter(p => !usedWorldNames.has(p.name));
-  return pool.length > 0 ? pool : [makeFreeAgent(category)];
+  const withFree = [...pool, ...freeTransferPool(category)];
+  return withFree.length > 0 ? withFree : [makeFreeAgent(category)];
 }
 
 // Havuzdan bütçeye SIĞAN en iyi oyuncuyu döndürür; hiçbiri sığmıyorsa bütçeye göre
@@ -431,13 +455,27 @@ function remainingSharedCandidates() {
   return round.sharedCandidates.filter(c => !usedWorldNames.has(c.name));
 }
 
+// Bot, kadronun TAMAMINI kurduğunun farkında: elindeki parayı ilk sıradaki mevkilere
+// harcayıp sonraki mevkileri (ör. forvet) parasız bırakmasın diye, hâlâ gelecek olan her
+// mevki için makul bir pay ayırır ve harcanabilir bütçesini buna göre kısar. Mevki zaten
+// boşsa (zorunlu doldurma) bu kısıtlama uygulanmaz — o an elindeki tüm bütçeyi kullanabilir.
+const BOT_RESERVE_PER_REMAINING_SLOT = 4_000_000;
+
+function botPlanningBudget(participant, slot) {
+  const budget = prospectiveBudget(participant, slot);
+  const slotPos = SLOTS.indexOf(slot);
+  const remainingSlotsAfter = SLOTS.length - slotPos - 1;
+  const reserve = remainingSlotsAfter * BOT_RESERVE_PER_REMAINING_SLOT;
+  return Math.max(0, budget - reserve);
+}
+
 function botDecide(participant, slot) {
   const current = participant.squad[slot];
   const budget = prospectiveBudget(participant, slot);
   let pool = remainingSharedCandidates();
-  let affordable = pool.filter(p => p.value <= budget);
 
   if (current.vacant) {
+    const affordable = pool.filter(p => p.value <= budget);
     const fallbackPool = pool.length > 0 ? pool : categoryPool(SLOT_CATEGORY[slot]);
     const best = affordable.length > 0
       ? affordable.reduce((a, b) => (b.rating > a.rating ? b : a))
@@ -445,6 +483,8 @@ function botDecide(participant, slot) {
     return { sold: true, target: best };
   }
 
+  const planningBudget = botPlanningBudget(participant, slot);
+  const affordable = pool.filter(p => p.value <= planningBudget);
   if (affordable.length === 0) return { sold: false };
   const best = affordable.reduce((a, b) => (b.rating > a.rating ? b : a));
   if (best.rating > current.rating) return { sold: true, target: best };
@@ -571,7 +611,7 @@ function resolveConflict(group) {
   if (!hasHumanEntry) {
     const bidders = groupParticipants.map(p => ({
       participant: p,
-      maxWillingness: Math.min(prospectiveBudget(p, round.slot), Math.round(candidate.value * 1.5))
+      maxWillingness: Math.min(botPlanningBudget(p, round.slot), Math.round(candidate.value * 1.5))
     })).sort((a, b) => b.maxWillingness - a.maxWillingness);
     const winner = bidders[0];
     const runnerUp = bidders[1];
@@ -585,7 +625,7 @@ function resolveConflict(group) {
     participant: g.participant,
     maxWillingness: requiredIds.has(g.participant.clubId)
       ? prospectiveBudget(g.participant, round.slot)
-      : Math.min(prospectiveBudget(g.participant, round.slot), Math.round(candidate.value * 1.5))
+      : Math.min(botPlanningBudget(g.participant, round.slot), Math.round(candidate.value * 1.5))
   }));
 
   auction = {

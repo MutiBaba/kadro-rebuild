@@ -67,6 +67,7 @@ function serializeGameState() {
     usedWorldNames: Array.from(usedWorldNames),
     careerPoints,
     seasonHistory,
+    positionBonusBreakdown,
     participants: participants.map(p => JSON.parse(JSON.stringify(p)))
   };
   state.round = round
@@ -98,6 +99,7 @@ function applyRemoteState(data) {
   usedWorldNames = new Set(data.usedWorldNames || []);
   careerPoints = data.careerPoints || {};
   seasonHistory = data.seasonHistory || [];
+  positionBonusBreakdown = data.positionBonusBreakdown || [];
   mpPhase = data.phase;
   mpTransferSnapshot = data.transferSnapshot || null;
 

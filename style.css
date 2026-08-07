@@ -78,7 +78,7 @@ body {
 }
 
 /* ---------- SETUP ---------- */
-#setupScreen {
+#setupScreen, #landingScreen, #lobbyScreen {
   align-items: center;
   justify-content: center;
   padding: 2rem;
@@ -1172,6 +1172,7 @@ body {
 .league-table td.team-cell { text-align: left; font-weight: 700; }
 .league-table th .short { display: none; }
 .league-table td.points-cell { color: var(--gold); font-weight: 800; }
+.league-table td.rating-cell { color: var(--accent); font-weight: 800; }
 .league-table tr.champion td { background: rgba(244, 197, 66, 0.08); }
 .league-table .prize-tag { color: var(--gold); font-weight: 700; font-size: 0.78rem; }
 
@@ -1259,6 +1260,13 @@ body {
 }
 
 .career-history b { color: var(--text); }
+
+.career-subtitle {
+  text-align: center;
+  color: var(--accent);
+  font-size: 0.95rem;
+  margin: 0.5rem 0 0.6rem;
+}
 
 
 /* ===== MOBILE OVERRIDES (kept last so it always wins the cascade) ===== */
@@ -1369,11 +1377,12 @@ body {
   .league-table th, .league-table td { padding: clamp(0.15rem, 0.7vh, 0.5rem) 0.08rem; border-right: 1px solid var(--border); }
   .league-table th:last-child, .league-table td:last-child { border-right: none; }
   /* Dar ekranda O ve AV sütunlarını gizle, Takım sütununa daha çok yer ver */
-  .league-table th:nth-child(3), .league-table td:nth-child(3),
-  .league-table th:nth-child(9), .league-table td:nth-child(9) { display: none; }
-  .league-table th:nth-child(2), .league-table td:nth-child(2) { width: 22%; }
-  .league-table th:nth-child(11), .league-table td:nth-child(11) { width: 20%; }
+  .league-table th:nth-child(4), .league-table td:nth-child(4),
+  .league-table th:nth-child(10), .league-table td:nth-child(10) { display: none; }
+  .league-table th:nth-child(2), .league-table td:nth-child(2) { width: 20%; }
+  .league-table th:nth-child(12), .league-table td:nth-child(12) { width: 18%; }
   .league-table th:nth-child(1), .league-table td:nth-child(1) { width: 7%; }
+  .league-table th:nth-child(3), .league-table td:nth-child(3) { width: 12%; }
   .league-table td.team-cell { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .league-table .prize-tag { white-space: nowrap; }
   .league-table th .full { display: none !important; }
@@ -1446,6 +1455,7 @@ body {
   .career-name { font-size: 0.5rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
   .career-points { font-size: 0.46rem; }
   .career-history { display: none; }
+  .career-subtitle { display: none; }
 
   .result-tabs {
     display: flex;

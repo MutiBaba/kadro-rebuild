@@ -38,8 +38,10 @@ const BIG_CLUBS = [
 ];
 const MAX_SEASONS = 5;
 const LEAGUE_PRIZES = [60_000_000, 40_000_000, 20_000_000];
-const LEAGUE_CAREER_POINTS = [3, 1, 0];
+const LEAGUE_CAREER_POINTS = [3, 2, 1];
 const TOP_SCORER_PRIZE = 10_000_000;
+const TOP_SCORER_CAREER_POINT = 1;
+const POSITION_UPGRADE_CAREER_POINT = 1;
 
 let participants = [];
 let human = null;
@@ -51,6 +53,9 @@ let round = null;
 let auction = null;
 let careerPoints = {};
 let seasonHistory = [];
+let startingSquadRatings = {};
+let positionBonusAwarded = false;
+let positionBonusBreakdown = [];
 
 // ---- Multiplayer hook points (no-ops in single-player mode) ----
 // window.MP, when present, provides: isMultiplayer(), isHost(), controlledClubIds (Set),
@@ -164,6 +169,12 @@ function startRebuild(customDefs, myClubId) {
   careerPoints = {};
   for (const p of participants) careerPoints[p.clubId] = 0;
   seasonHistory = [];
+  startingSquadRatings = {};
+  for (const p of participants) {
+    startingSquadRatings[p.clubId] = {};
+    for (const slot of SLOTS) startingSquadRatings[p.clubId][slot] = p.squad[slot].rating;
+  }
+  positionBonusAwarded = false;
 
   setupScreen.classList.add("hidden");
   resultScreen.classList.add("hidden");
@@ -346,18 +357,25 @@ function renderCandidateSelection(slot, budget, bannerText, candidates, onPick) 
   renderRoundLog();
   sellBanner.innerHTML = bannerText;
 
-  const sorted = [...candidates].sort((a, b) => a.value - b.value);
-  // En ucuz seçenek bütçeyi aşsa bile her zaman alınabilir olsun ki oyun asla tıkanmasın.
-  const cheapestValue = sorted.length ? sorted[0].value : 0;
+  let sorted = [...candidates].sort((a, b) => a.value - b.value);
+  // Bütçe hiçbir zaman eksiye düşmesin: sunulan adayların HİÇBİRİ bütçeye sığmıyorsa,
+  // bütçeye göre fiyatlandırılmış (her zaman alınabilir) bir serbest oyuncu ekleriz —
+  // gerçek adaylardan hiçbiri zorla, bütçe üstü fiyatla satın aldırılmaz.
+  const anyAffordable = sorted.some(c => c.value <= budget);
+  let freeAgentFallback = null;
+  if (!anyAffordable) {
+    freeAgentFallback = makeFreeAgent(round ? round.category : undefined, budget);
+    sorted = [freeAgentFallback, ...sorted];
+  }
 
   candidateGrid.innerHTML = "";
   sorted.forEach((cand, idx) => {
-    const isGuaranteed = cand.value === cheapestValue;
-    const canAfford = cand.value <= budget || isGuaranteed;
+    const canAfford = cand.value <= budget;
     const card = document.createElement("div");
     card.className = "candidate-card" + (canAfford ? "" : " disabled");
     let tierLabel = "";
-    if (sorted.length === 3) tierLabel = idx === 0 ? "Ucuz" : idx === 2 ? "Pahalı" : "Orta";
+    if (cand === freeAgentFallback) tierLabel = "Bütçene Uygun";
+    else if (sorted.length === 3) tierLabel = idx === 0 ? "Ucuz" : idx === 2 ? "Pahalı" : "Orta";
     else if (sorted.length === 2) tierLabel = idx === 0 ? "Ucuz" : "Pahalı";
     card.innerHTML = `
       ${tierLabel ? `<div class="tier-tag">${tierLabel}</div>` : ""}
@@ -381,12 +399,13 @@ function renderCandidateSelection(slot, budget, bannerText, candidates, onPick) 
 
 /* ---------------- FREE AGENT FALLBACK (never leaves a slot unfillable) ---------------- */
 
-function makeFreeAgent(category) {
+function makeFreeAgent(category, maxValue) {
+  const value = maxValue !== undefined ? Math.max(0, Math.min(1_500_000, maxValue)) : 1_500_000;
   return {
     name: `Serbest Oyuncu #${Math.floor(1000 + Math.random() * 9000)}`,
     club: "Serbest",
     nationality: "—",
-    value: 1_500_000,
+    value,
     rating: 64 + Math.floor(Math.random() * 8),
     age: 22 + Math.floor(Math.random() * 12)
   };
@@ -395,6 +414,14 @@ function makeFreeAgent(category) {
 function categoryPool(category) {
   const pool = WORLD_MARKET[category].filter(p => !usedWorldNames.has(p.name));
   return pool.length > 0 ? pool : [makeFreeAgent(category)];
+}
+
+// Havuzdan bütçeye SIĞAN en iyi oyuncuyu döndürür; hiçbiri sığmıyorsa bütçeye göre
+// fiyatlandırılmış bir serbest oyuncu üretir — bütçe asla eksiye düşmesin diye.
+function affordableOrFreeAgent(pool, budget, category) {
+  const affordable = pool.filter(p => p.value <= budget);
+  if (affordable.length > 0) return affordable.reduce((a, b) => (b.rating > a.rating ? b : a));
+  return makeFreeAgent(category, budget);
 }
 
 /* ---------------- BOT AI ---------------- */
@@ -411,11 +438,10 @@ function botDecide(participant, slot) {
   let affordable = pool.filter(p => p.value <= budget);
 
   if (current.vacant) {
-    if (affordable.length === 0) {
-      const fallbackPool = pool.length > 0 ? pool : categoryPool(SLOT_CATEGORY[slot]);
-      affordable = [...fallbackPool].sort((a, b) => a.value - b.value).slice(0, 1);
-    }
-    const best = affordable.reduce((a, b) => (b.rating > a.rating ? b : a));
+    const fallbackPool = pool.length > 0 ? pool : categoryPool(SLOT_CATEGORY[slot]);
+    const best = affordable.length > 0
+      ? affordable.reduce((a, b) => (b.rating > a.rating ? b : a))
+      : affordableOrFreeAgent(fallbackPool, budget, SLOT_CATEGORY[slot]);
     return { sold: true, target: best };
   }
 
@@ -430,9 +456,7 @@ function pickFallback(participant, slot) {
   const budget = prospectiveBudget(participant, slot);
   let pool = remainingSharedCandidates();
   if (pool.length === 0) pool = categoryPool(SLOT_CATEGORY[slot]);
-  const affordable = pool.filter(p => p.value <= budget);
-  if (affordable.length > 0) return affordable.reduce((a, b) => (b.rating > a.rating ? b : a));
-  return [...pool].sort((a, b) => a.value - b.value)[0];
+  return affordableOrFreeAgent(pool, budget, SLOT_CATEGORY[slot]);
 }
 
 /* ---------------- CONFLICT RESOLUTION ---------------- */
@@ -689,6 +713,10 @@ function finishSlot() {
 
 /* ---------------- SEASON SIMULATION (LEAGUE TABLE + TOP SCORER) ---------------- */
 
+function avgSquadRating(p) {
+  return SLOTS.reduce((s, slot) => s + p.squad[slot].rating, 0) / SLOTS.length;
+}
+
 function teamAttack(p) {
   return (p.squad.st.rating + p.squad.cam.rating + p.squad.rw.rating + p.squad.lw.rating) / 4;
 }
@@ -730,7 +758,11 @@ function simulateSeasonAndShowTable() {
     else { sh.d++; sa.d++; sh.pts += 1; sa.pts += 1; }
   }
 
+  // Sıralama kadro reytingine göre yapılır (maç puanları sadece görsel/eşitlik bozucu olarak kalır).
+  for (const row of Object.values(stats)) row.avgRating = avgSquadRating(row.p);
+
   const table = Object.values(stats).sort((a, b) => {
+    if (b.avgRating !== a.avgRating) return b.avgRating - a.avgRating;
     if (b.pts !== a.pts) return b.pts - a.pts;
     const gdA = a.gf - a.ga, gdB = b.gf - b.ga;
     if (gdB !== gdA) return gdB - gdA;
@@ -754,6 +786,7 @@ function simulateSeasonAndShowTable() {
     return { p, player: st, goals };
   }).sort((a, b) => b.goals - a.goals);
   scorers[0].p.budget += TOP_SCORER_PRIZE;
+  careerPoints[scorers[0].p.clubId] += TOP_SCORER_CAREER_POINT;
 
   seasonHistory.push({ season: currentSeason, table, topScorer: scorers[0], scorers });
 
@@ -772,6 +805,7 @@ function renderSeasonTableScreen(table, scorers) {
     return `<tr class="${row.rank === 1 ? "champion" : ""}">
       <td>${row.rank === 1 ? "🥇" : row.rank}</td>
       <td class="team-cell">${row.p.name}${whoLabel(row.p)}</td>
+      <td class="rating-cell">${row.avgRating.toFixed(1)}</td>
       <td>${row.played}</td><td>${row.w}</td><td>${row.d}</td><td>${row.l}</td>
       <td>${row.gf}</td><td>${row.ga}</td><td>${gd >= 0 ? "+" : ""}${gd}</td>
       <td class="points-cell">${row.pts}</td>
@@ -1074,28 +1108,63 @@ function renderCareerSummary() {
   const historyRows = seasonHistory.map(h => {
     const winner = h.table[0];
     return `<div class="history-row">
-      <b>Sezon ${h.season}:</b> Lig şampiyonu ${winner.p.name} (${winner.pts} puan, +${formatValue(winner.prize)}) ·
+      <b>Sezon ${h.season}:</b> Lig şampiyonu ${winner.p.name} (Kadro Reytingi ${winner.avgRating.toFixed(1)}, +${formatValue(winner.prize)}) ·
       Gol Kralı: ${h.topScorer.player.name} (${h.topScorer.p.name}, ${h.topScorer.goals} gol)
     </div>`;
   }).join("");
 
+  const bonusRows = positionBonusBreakdown.length > 0 ? `
+    <h4 class="career-subtitle">⭐ Mevki Bazlı En Büyük Yükseltme Bonusları (+1 puan)</h4>
+    <div class="career-history">
+      ${positionBonusBreakdown.map(b => `<div class="history-row">
+        <b>${SLOT_LABELS[b.slot]}:</b> ${b.clubName} (başlangıca göre +${b.upgrade} rating)
+      </div>`).join("")}
+    </div>
+  ` : "";
+
   careerSummaryEl.innerHTML = `
     <h3 class="career-title">🏆 ${seasonHistory.length} Sezonluk Kariyer Şampiyonu: ${champion.p.name}</h3>
     <div class="career-points-table">${pointsRows}</div>
+    ${bonusRows}
     <div class="career-history">${historyRows}</div>
   `;
 }
 
+// 5 sezonun sonunda, HER mevkide başlangıç kadrosuna göre en büyük rating yükseltmesini
+// yapan takıma o mevki için 1 kariyer puanı verir (eşitlikte kimseye verilmez). Bir kez uygulanır.
+function awardPositionUpgradeBonus() {
+  if (positionBonusAwarded) return;
+  positionBonusAwarded = true;
+  positionBonusBreakdown = [];
+  for (const slot of SLOTS) {
+    let bestClubId = null;
+    let bestUpgrade = -Infinity;
+    let tie = false;
+    for (const p of participants) {
+      const startRating = startingSquadRatings[p.clubId]?.[slot] ?? p.squad[slot].rating;
+      const upgrade = p.squad[slot].rating - startRating;
+      if (upgrade > bestUpgrade) { bestUpgrade = upgrade; bestClubId = p.clubId; tie = false; }
+      else if (upgrade === bestUpgrade) { tie = true; }
+    }
+    if (bestClubId && !tie) {
+      careerPoints[bestClubId] += POSITION_UPGRADE_CAREER_POINT;
+      const winnerP = participants.find(p => p.clubId === bestClubId);
+      positionBonusBreakdown.push({ slot, clubName: winnerP.name, upgrade: bestUpgrade });
+    }
+  }
+}
+
 function showResults() {
   mpPhase = "result";
+  const seasonsPlayed = seasonHistory.length;
+  const isFullCareer = seasonsPlayed >= MAX_SEASONS;
+  if (isFullCareer && (!mpActive() || mpIsHost())) awardPositionUpgradeBonus();
   mpPublish();
   rebuildScreen.classList.add("hidden");
   transferScreen.classList.add("hidden");
   seasonTableScreen.classList.add("hidden");
   resultScreen.classList.remove("hidden");
 
-  const seasonsPlayed = seasonHistory.length;
-  const isFullCareer = seasonsPlayed >= MAX_SEASONS;
   resultTitle.textContent = isFullCareer
     ? `🏆 Kariyer Bitti — ${seasonsPlayed} Sezon Tamamlandı`
     : `Kariyer Özeti — ${seasonsPlayed} Sezon Sonunda`;

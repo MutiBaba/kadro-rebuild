@@ -56,12 +56,8 @@
     </p>
 
     <div class="setup-row">
-      <label>Takımını Seç</label>
-      <div class="option-group" id="botTeamPickGroup">
-        <button class="option-btn active" data-club="fenerbahce">🟡🔵 Fenerbahçe</button>
-        <button class="option-btn" data-club="besiktas">⚫⚪ Beşiktaş</button>
-        <button class="option-btn" data-club="galatasaray">🔴🟡 Galatasaray</button>
-      </div>
+      <label>Takımını Seç <span class="hint-inline">(Süper Lig'deki 18 takımdan biri)</span></label>
+      <div class="team-pick-grid" id="botTeamPickGroup"></div>
     </div>
 
     <div class="setup-row">
@@ -83,13 +79,9 @@
       <span class="budget-amount" id="setupBudgetAmount">€120,0M</span>
     </div>
 
-    <div class="opponents-row" id="setupOpponentsRow">
-      <div class="opponent-chip">⚫⚪ Beşiktaş 🤖</div>
-      <div class="opponent-chip">🔴🟡 Galatasaray 🤖</div>
-    </div>
+    <div class="opponents-row" id="setupOpponentsRow"></div>
 
-    <p class="hint">Şimdilik sadece bu 3 takım var — diğer takımlar yakında eklenecek.</p>
-
+    <button id="rerollOpponentsBtn" class="primary-btn secondary-btn-style small-btn">🎲 Rakipleri Değiştir</button>
     <button id="startBtn" class="primary-btn">Rebuild'e Başla</button>
   </div>
 </section>

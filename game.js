@@ -28,8 +28,17 @@ const PITCH_COORDS = {
 const START_BUDGET = 120_000_000;
 const EMPTY_START_BUDGET = 250_000_000;
 const BID_INCREMENT = 5_000_000;
-const ALL_CLUB_IDS = ["fenerbahce", "besiktas", "galatasaray"];
-const CLUB_EMOJI = { fenerbahce: "🟡🔵", besiktas: "⚫⚪", galatasaray: "🔴🟡" };
+// Botlara karşı modda Süper Lig'deki 18 takımın TAMAMI seçilebilir; oyun hâlâ tam olarak
+// 3 katılımcıyla oynanır (sen + rastgele 2 bot rakip), sadece havuz genişledi.
+const ALL_CLUB_IDS = PLAYERS_DATA.clubs.map(c => c.id);
+function pickRandomOpponentIds(excludeId, count) {
+  const pool = ALL_CLUB_IDS.filter(id => id !== excludeId);
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  return pool.slice(0, count);
+}
 // Sıfırdan Kadro modunda kimse gerçek bir kulübü "devralmıyor" — herkes aynı şartlarda,
 // isimsiz bir kadroyla başlıyor. Botlara bu havuzdan rastgele bir isim atanır.
 const FANTASY_CLUB_NAMES = [
@@ -55,7 +64,6 @@ const BIG_CLUBS = [
   "Real Madrid", "Manchester City", "Bayern Münih", "Paris Saint-Germain", "Liverpool",
   "Barcelona", "Chelsea", "Juventus", "Arsenal", "Inter", "Manchester United", "Atletico Madrid"
 ];
-const OTHER_SUPERLIG_CLUBS = PLAYERS_DATA.clubs.filter(c => !PARTICIPANT_DEFS.some(d => d.clubId === c.id));
 const MAX_SEASONS = 5;
 const LEAGUE_PRIZES = [60_000_000, 40_000_000, 20_000_000];
 const LEAGUE_CAREER_POINTS = [3, 2, 1];
@@ -151,36 +159,87 @@ const scorerList = document.getElementById("scorerList");
 const seasonTableContinueBtn = document.getElementById("seasonTableContinueBtn");
 
 /* ---------------- BOT MODE SETUP SCREEN: takım + mod seçimi ---------------- */
+const TRADITIONAL_BIG3 = new Set(["fenerbahce", "besiktas", "galatasaray"]);
 let botSetupClubId = "fenerbahce";
 let botSetupEmptyStart = false;
 
+// Fenerbahçe/Beşiktaş/Galatasaray dışında bir takım seçilirse format 4 takıma çıkar (sen + 3
+// bot) — havuzda daha fazla takım rekabet ettiği için tek bir 3'lü ortak aday listesi sık sık
+// çakışıp oyunun tıkanmasına yol açabiliyordu; 4. bir "Ucuz Transfer" segmenti bu yüzden devreye
+// giriyor (bkz. buildSlotCandidates), böylece her turda katılımcı sayısı kadar seçenek olur.
+function opponentCountFor(clubId) {
+  return TRADITIONAL_BIG3.has(clubId) ? 2 : 3;
+}
+
+// Büyük 3'ten biri seçilirse klasik rekabet korunur (Fenerbahçe/Beşiktaş/Galatasaray hep
+// birbirine karşı) — rastgele rakip ataması sadece diğer 15 takımdan biri seçildiğinde devreye girer.
+function pickOpponentsFor(clubId) {
+  if (TRADITIONAL_BIG3.has(clubId)) {
+    return [...TRADITIONAL_BIG3].filter(id => id !== clubId);
+  }
+  return pickRandomOpponentIds(clubId, opponentCountFor(clubId));
+}
+
+let botSetupOpponentIds = pickOpponentsFor(botSetupClubId);
+
+function clubAvgRating(clubId) {
+  const club = PLAYERS_DATA.clubs.find(c => c.id === clubId);
+  const ratings = Object.values(club.xi).map(p => p.rating);
+  return (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1);
+}
+
+function renderTeamPickGrid() {
+  const grid = document.getElementById("botTeamPickGroup");
+  if (!grid) return;
+  grid.innerHTML = PLAYERS_DATA.clubs.map(c => `
+    <button class="team-grid-btn${c.id === botSetupClubId ? " active" : ""}" data-club="${c.id}">
+      <img src="${c.logo}" alt="" class="team-grid-logo" loading="lazy" onerror="this.style.display='none'">
+      <span>${c.name}</span>
+      <span class="team-grid-rating">${clubAvgRating(c.id)}</span>
+    </button>
+  `).join("");
+  grid.querySelectorAll(".team-grid-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (btn.dataset.club === botSetupClubId) return;
+      botSetupClubId = btn.dataset.club;
+      botSetupOpponentIds = pickOpponentsFor(botSetupClubId);
+      grid.querySelectorAll(".team-grid-btn").forEach(b => b.classList.toggle("active", b.dataset.club === botSetupClubId));
+      renderBotSetupText();
+    });
+  });
+}
+
 function renderBotSetupText() {
   const club = PLAYERS_DATA.clubs.find(c => c.id === botSetupClubId);
-  const others = ALL_CLUB_IDS.filter(id => id !== botSetupClubId);
   const teamNameEl = document.getElementById("setupTeamName");
   if (teamNameEl) teamNameEl.textContent = club.name;
   const subtitleEl = document.getElementById("setupSubtitle");
+  const isFourTeam = botSetupOpponentIds.length === 3;
   if (subtitleEl) {
-    const otherNames = others.map(id => PLAYERS_DATA.clubs.find(c => c.id === id).name);
+    const otherNames = botSetupOpponentIds.map(id => PLAYERS_DATA.clubs.find(c => c.id === id).name);
+    const opponentText = isFourTeam
+      ? `karşında <b>${otherNames[0]}</b>, <b>${otherNames[1]}</b> ve <b>${otherNames[2]}</b> botları var (4 takımlı format)`
+      : `karşında <b>${otherNames[0]}</b> ve <b>${otherNames[1]}</b> botları var`;
     subtitleEl.innerHTML = `
-      Sen ${club.name}'i yönetiyorsun, karşında <b>${otherNames[0]}</b> ve <b>${otherNames[1]}</b> botları var.
+      Sen ${club.name}'i yönetiyorsun, ${opponentText}.
       Herkesin ${botSetupEmptyStart ? "250M€" : "120M€"} bütçesi var${botSetupEmptyStart ? " ve kadronu sıfırdan kuruyorsun" : " ve kendi gerçek 11'i var"}.
       Mevki mevki oyuncunu <b>tut</b> ya da <b>sat</b> (satış kesindir, vazgeçemezsin) — sana ve botlara her turda
-      <b>aynı 3 alternatif</b> sunulur. Aynı oyuncuyu birden fazla taraf isterse <b>açık artırma</b> başlar; kaybedersen
-      kalan adaylardan birini almak zorundasın. Amaç: EA FC ratingine göre en güçlü 11'i kurmak.
-      Her sezon sonunda büyük Avrupa kulüpleri her takımdan <b>3 oyuncuya</b>, yaşına ve potansiyeline göre teklif
-      gönderir. Kariyer 5 sezon sürer.
+      <b>${isFourTeam ? "aynı 4 alternatif" : "aynı 3 alternatif"}</b> sunulur. Aynı oyuncuyu birden fazla taraf isterse
+      <b>açık artırma</b> başlar; kaybedersen kalan adaylardan birini almak zorundasın. Amaç: EA FC ratingine göre
+      en güçlü 11'i kurmak. Her sezon sonunda büyük Avrupa kulüpleri her takımdan <b>3 oyuncuya</b>, yaşına ve
+      potansiyeline göre teklif gönderir. Kariyer 5 sezon sürer.
     `;
   }
   const budgetEl = document.getElementById("setupBudgetAmount");
   if (budgetEl) budgetEl.textContent = formatValue(botSetupEmptyStart ? EMPTY_START_BUDGET : START_BUDGET);
   const opponentsRow = document.getElementById("setupOpponentsRow");
   if (opponentsRow) {
-    opponentsRow.innerHTML = others.map(id => {
+    opponentsRow.innerHTML = botSetupOpponentIds.map(id => {
       const c = PLAYERS_DATA.clubs.find(cc => cc.id === id);
-      return `<div class="opponent-chip">${CLUB_EMOJI[id]} ${c.name} 🤖</div>`;
+      return `<div class="opponent-chip"><img src="${c.logo}" alt="" class="opponent-chip-logo" onerror="this.style.display='none'">${c.name} 🤖</div>`;
     }).join("");
   }
+  document.getElementById("rerollOpponentsBtn")?.classList.toggle("hidden", TRADITIONAL_BIG3.has(botSetupClubId));
   const modeHintEl = document.getElementById("botModeHint");
   if (modeHintEl) {
     modeHintEl.textContent = botSetupEmptyStart
@@ -189,15 +248,6 @@ function renderBotSetupText() {
   }
   document.getElementById("teamNameRow")?.classList.toggle("hidden", !botSetupEmptyStart);
 }
-
-document.getElementById("botTeamPickGroup")?.addEventListener("click", (e) => {
-  const btn = e.target.closest(".option-btn");
-  if (!btn) return;
-  document.querySelectorAll("#botTeamPickGroup .option-btn").forEach(b => b.classList.remove("active"));
-  btn.classList.add("active");
-  botSetupClubId = btn.dataset.club;
-  renderBotSetupText();
-});
 
 document.getElementById("botModePickGroup")?.addEventListener("click", (e) => {
   const btn = e.target.closest(".option-btn");
@@ -208,6 +258,12 @@ document.getElementById("botModePickGroup")?.addEventListener("click", (e) => {
   renderBotSetupText();
 });
 
+document.getElementById("rerollOpponentsBtn")?.addEventListener("click", () => {
+  if (TRADITIONAL_BIG3.has(botSetupClubId)) return; // klasik rekabet sabit, karıştırılmaz
+  botSetupOpponentIds = pickRandomOpponentIds(botSetupClubId, opponentCountFor(botSetupClubId));
+  renderBotSetupText();
+});
+
 // Mobilde takım ismi kutusuna dokununca klavye kart içini aşağı kaydırıyor; klavye
 // kapandığında (blur) kartı başa sarıyoruz ki bütçe/Başlat gibi üstteki içerik kaybolmasın.
 document.getElementById("teamNameInput")?.addEventListener("blur", () => {
@@ -215,11 +271,15 @@ document.getElementById("teamNameInput")?.addEventListener("blur", () => {
 });
 
 startBtn.addEventListener("click", () => {
-  const defs = ALL_CLUB_IDS.map(id => ({ clubId: id, isBot: id !== botSetupClubId }));
+  const defs = [
+    { clubId: botSetupClubId, isBot: false },
+    ...botSetupOpponentIds.map(id => ({ clubId: id, isBot: true }))
+  ];
   const teamNameInput = document.getElementById("teamNameInput");
   const customTeamName = botSetupEmptyStart ? (teamNameInput?.value.trim() || null) : null;
   startRebuild(defs, botSetupClubId, botSetupEmptyStart, customTeamName);
 });
+renderTeamPickGrid();
 renderBotSetupText();
 restartBtn.addEventListener("click", () => {
   resultScreen.classList.add("hidden");
@@ -495,8 +555,10 @@ function renderForcedFill() {
 }
 
 // Her turda gösterilen 3 aday sabit bir formülle seçilir: 1 pahalı (82+ reyting),
-// 1 orta segment (74-82 reyting) dünya piyasasından, ve 1 bedava transfer — Süper Lig'in
-// diğer takımlarından (73 reyting altı, ücretsiz). Kimseyi alamayan oyuncu bedava transferi
+// 1 orta segment (74-82 reyting) dünya piyasasından, ve 1 bedava transfer — yurtdışının
+// düşük profilli kulüplerinden (73 reyting altı, ücretsiz). Süper Lig'deki TÜM takımlar
+// artık tek oyunculuda seçilebildiği için bedava transfer havuzu artık Süper Lig'den değil,
+// yabancı alt/orta seviye kulüplerden geliyor. Kimseyi alamayan oyuncu bedava transferi
 // almak zorunda kalır çünkü değeri her zaman 0'dır.
 function pickRandomFromPool(pool) {
   if (!pool || pool.length === 0) return null;
@@ -504,31 +566,46 @@ function pickRandomFromPool(pool) {
 }
 
 function freeTransferPool(category) {
-  const list = [];
-  for (const club of OTHER_SUPERLIG_CLUBS) {
-    for (const slot of SLOTS) {
-      if (SLOT_CATEGORY[slot] !== category) continue;
-      const p = club.xi[slot];
-      if (!p || usedWorldNames.has(p.name)) continue;
-      list.push({ name: p.name, club: club.name, nationality: p.nationality, value: 0, rating: p.rating, age: p.age });
-    }
-  }
-  return list;
+  return WORLD_MARKET[category]
+    .filter(p => p.rating < 73 && !usedWorldNames.has(p.name))
+    .map(p => ({ name: p.name, club: p.club, nationality: p.nationality, value: 0, rating: p.rating, age: p.age }));
 }
 
 // Üç sabit segment: Yıldız Transfer (82+), Orta Segment (74-82) dünya piyasasından, ve
 // Bedava Transfer (73 altı, diğer Süper Lig takımlarından, €0). Her tur bu 3 aday gösterilir.
+// 3 katılımcılı (geleneksel Fenerbahçe/Beşiktaş/Galatasaray) formatta 3 sabit segment:
+// Yıldız Transfer (82+), Orta Segment (74-82), Bedava Transfer (73 altı, yurtdışı, €0).
+// 4 katılımcılı formatta (büyük 3 dışında bir takım seçildiğinde) araya bir "Ucuz Transfer"
+// (73-77) segmenti daha girer — yoksa 3 aday üzerinde 4 taraf sık sık çakışıp oyunun
+// tıkanmasına (sürekli açık artırma / aday tükenmesi) yol açabiliyordu.
 function buildSlotCandidates(category) {
+  const fourTeamFormat = participants.length >= 4;
   const available = WORLD_MARKET[category].filter(p => !usedWorldNames.has(p.name));
-  const expensivePool = available.filter(p => p.rating >= 82);
-  const midPool = available.filter(p => p.rating >= 74 && p.rating < 82);
   const freePool = freeTransferPool(category);
+  const picked = [];
+  const notPicked = (p) => !picked.some(c => c.name === p.name);
 
-  const expensive = pickRandomFromPool(expensivePool) || pickRandomFromPool(available) || makeFreeAgent(category);
-  const midCandidates = midPool.filter(p => !expensive || p.name !== expensive.name);
-  const mid = pickRandomFromPool(midCandidates) || pickRandomFromPool(available.filter(p => !expensive || p.name !== expensive.name)) || makeFreeAgent(category);
+  const expensivePool = available.filter(p => p.rating >= 82);
+  const expensive = pickRandomFromPool(expensivePool.filter(notPicked)) || pickRandomFromPool(available.filter(notPicked)) || makeFreeAgent(category);
+  if (expensive) picked.push(expensive);
+
+  if (fourTeamFormat) {
+    const midPool = available.filter(p => p.rating >= 78 && p.rating < 82);
+    const mid = pickRandomFromPool(midPool.filter(notPicked)) || pickRandomFromPool(available.filter(notPicked)) || makeFreeAgent(category);
+    if (mid) picked.push(mid);
+
+    const cheapPool = available.filter(p => p.rating >= 73 && p.rating < 78);
+    const cheap = pickRandomFromPool(cheapPool.filter(notPicked)) || pickRandomFromPool(available.filter(notPicked)) || makeFreeAgent(category);
+    if (cheap) picked.push(cheap);
+
+    const free = pickRandomFromPool(freePool) || makeFreeAgent(category, 0);
+    return [expensive, mid, cheap, free].filter(Boolean);
+  }
+
+  const midPool = available.filter(p => p.rating >= 74 && p.rating < 82);
+  const mid = pickRandomFromPool(midPool.filter(notPicked)) || pickRandomFromPool(available.filter(notPicked)) || makeFreeAgent(category);
+  if (mid) picked.push(mid);
   const free = pickRandomFromPool(freePool) || makeFreeAgent(category, 0);
-
   return [expensive, mid, free].filter(Boolean);
 }
 
@@ -556,6 +633,7 @@ function renderCandidateSelection(slot, budget, bannerText, candidates, onPick) 
     if (cand === freeAgentFallback) tierLabel = "Bütçene Uygun";
     else if (cand.value === 0) tierLabel = "Bedava Transfer";
     else if (cand.rating >= 82) tierLabel = "Yıldız Transfer";
+    else if (participants.length >= 4 && cand.rating < 78) tierLabel = "Ucuz Transfer";
     else tierLabel = "Orta Segment";
     card.innerHTML = `
       ${tierLabel ? `<div class="tier-tag">${tierLabel}</div>` : ""}
@@ -1065,8 +1143,9 @@ function renderSeasonTableScreen(table, scorers) {
 
 /* ---------------- TRANSFER WINDOW ---------------- */
 
-function sampleSlots(n) {
-  const arr = [...SLOTS];
+function sampleSlots(n, excludeSlots) {
+  const excluded = excludeSlots ? new Set(excludeSlots) : null;
+  const arr = excluded ? SLOTS.filter(s => !excluded.has(s)) : [...SLOTS];
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [arr[i], arr[j]] = [arr[j], arr[i]];
@@ -1147,7 +1226,13 @@ function runTransferWindow() {
   const transferLogMessages = [];
 
   for (const p of participants) {
-    const slots = sampleSlots(3);
+    // Altyapı teklifinin mevkisiyle giden teklif tekliflerinden biri AYNI mevki olursa,
+    // ikisini de kabul ettiğinde hangisinin kadroda kalacağı çakışıyordu (biri diğerini
+    // sessizce eziyordu, mevki boş görünüyordu). Önce altyapı mevkisini belirleyip giden
+    // teklifleri o mevki HARİÇ seçerek bu çakışmayı kökten engelliyoruz.
+    p.academyOffer = generateAcademyOffer(p);
+    const excludeSlot = p.academyOffer ? [p.academyOffer.slot] : [];
+    const slots = sampleSlots(3, excludeSlot);
     p.pendingOffers = slots.map(slot => {
       const player = p.squad[slot];
       return {
@@ -1158,7 +1243,6 @@ function runTransferWindow() {
         decided: false
       };
     });
-    p.academyOffer = generateAcademyOffer(p);
   }
 
   let botsAccepted = 0;

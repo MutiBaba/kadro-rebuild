@@ -259,7 +259,58 @@ body {
   padding: 0.4rem 0.9rem;
   font-size: 0.85rem;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
 }
+
+.opponent-chip-logo { width: 18px; height: 18px; object-fit: contain; flex-shrink: 0; }
+
+.hint-inline { font-weight: 400; color: var(--muted); font-size: 0.78em; }
+
+.small-btn { padding: 0.5rem; font-size: 0.82rem; margin-top: 0.5rem; margin-bottom: 0; }
+
+.team-pick-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.5rem;
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 0.3rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel-2);
+}
+
+.team-grid-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.5rem 0.3rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 0.72rem;
+  text-align: center;
+  line-height: 1.2;
+  transition: all 0.15s ease;
+}
+
+.team-grid-btn:hover { border-color: var(--accent); }
+.team-grid-btn.active { background: var(--accent); border-color: var(--accent); color: #06210f; font-weight: 700; }
+.team-grid-logo { width: 28px; height: 28px; object-fit: contain; }
+.team-grid-rating {
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: var(--gold);
+  background: rgba(244, 197, 66, 0.12);
+  border-radius: 999px;
+  padding: 0.05rem 0.4rem;
+}
+.team-grid-btn.active .team-grid-rating { color: #06210f; background: rgba(6, 33, 15, 0.18); }
 
 .primary-btn {
   width: 100%;
@@ -1437,6 +1488,11 @@ body {
   .setup-row { margin-bottom: 0.6rem; }
   .setup-row label { font-size: 0.72rem; margin-bottom: 0.25rem; }
   .option-btn { padding: 0.45rem 0.3rem; font-size: 0.72rem; }
+  .team-pick-grid { grid-template-columns: repeat(3, 1fr); max-height: 180px; gap: 0.35rem; }
+  .team-grid-btn { padding: 0.35rem 0.2rem; font-size: 0.6rem; gap: 0.15rem; }
+  .team-grid-logo { width: 20px; height: 20px; }
+  .team-grid-rating { font-size: 0.52rem; padding: 0.03rem 0.3rem; }
+  .small-btn { padding: 0.4rem; font-size: 0.72rem; margin-top: 0.3rem; }
   #teamNameRow .lobby-input { padding: 0.5rem 0.7rem; font-size: 0.85rem; }
   .budget-display { padding: 0.4rem; margin-bottom: 0.4rem; }
   .budget-label { font-size: 0.68rem; }
@@ -1508,7 +1564,8 @@ body {
 
   /* ---- Candidate / choose view ---- */
   .sell-banner { font-size: 0.72rem; margin-bottom: 0.8vh; }
-  .candidate-grid { grid-template-columns: repeat(3, 1fr); gap: 0.4rem; }
+  /* 3'lü (büyük 3 formatı) veya 4'lü (diğer takımlar) aday sayısına otomatik uyum sağlar. */
+  .candidate-grid { grid-template-columns: repeat(auto-fit, minmax(78px, 1fr)); gap: 0.35rem; }
   .candidate-card { padding: 0.5rem 0.3rem; }
   .candidate-card .player-photo { width: clamp(28px, 8vh, 44px); height: clamp(28px, 8vh, 44px); margin-bottom: 0.3rem; }
   .candidate-club, .candidate-meta { font-size: 0.6rem; }

@@ -306,90 +306,90 @@ const PLAYERS_DATA = {
       "xi": {
         "gk": {
           "name": "Fatih Uğur",
-          "value": 3500000,
+          "value": 9750000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 62,
+          "rating": 78,
           "age": 26
         },
         "rb": {
           "name": "Berat Özdemir",
-          "value": 5000000,
+          "value": 4000000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 66,
+          "rating": 78,
           "age": 34
         },
         "cb1": {
           "name": "Stefano Denswil",
-          "value": 4000000,
+          "value": 13750000,
           "nationality": "Hollanda",
           "photo": null,
-          "rating": 61,
+          "rating": 79,
           "age": 21
         },
         "cb2": {
           "name": "Marc Bartra",
-          "value": 3500000,
+          "value": 5000000,
           "nationality": "İspanya",
           "photo": null,
-          "rating": 61,
+          "rating": 77,
           "age": 32
         },
         "lb": {
           "name": "Arif Boşluk",
-          "value": 3000000,
+          "value": 7750000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 58,
+          "rating": 77,
           "age": 25
         },
         "dm1": {
           "name": "Okay Yokuşlu",
-          "value": 5000000,
+          "value": 12500000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 64,
+          "rating": 79,
           "age": 29
         },
         "dm2": {
           "name": "Ozan Tufan",
-          "value": 6000000,
+          "value": 12500000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 69,
+          "rating": 79,
           "age": 25
         },
         "rw": {
           "name": "Edin Višća",
-          "value": 3000000,
+          "value": 10250000,
           "nationality": "Bosna Hersek",
           "photo": null,
-          "rating": 59,
+          "rating": 80,
           "age": 31
         },
         "cam": {
           "name": "Augustine Boakye",
-          "value": 6000000,
+          "value": 13750000,
           "nationality": "Gana",
           "photo": null,
-          "rating": 65,
+          "rating": 79,
           "age": 23
         },
         "lw": {
           "name": "Nuno Santos",
-          "value": 5000000,
+          "value": 8000000,
           "nationality": "Portekiz",
           "photo": null,
-          "rating": 64,
+          "rating": 81,
           "age": 35
         },
         "st": {
           "name": "Paul Onuachu",
-          "value": 8000000,
+          "value": 25000000,
           "nationality": "Nijerya",
           "photo": null,
-          "rating": 66,
+          "rating": 81,
           "age": 20
         }
       }
@@ -401,90 +401,90 @@ const PLAYERS_DATA = {
       "xi": {
         "gk": {
           "name": "Volkan Babacan",
-          "value": 1500000,
+          "value": 8000000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 58,
+          "rating": 79,
           "age": 31
         },
         "rb": {
           "name": "Muhammed Sagnan",
-          "value": 1200000,
+          "value": 3000000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 56,
+          "rating": 77,
           "age": 34
         },
         "cb1": {
           "name": "Rafael",
-          "value": 2500000,
+          "value": 19750000,
           "nationality": "Brezilya",
           "photo": null,
-          "rating": 60,
+          "rating": 80,
           "age": 19
         },
         "cb2": {
           "name": "Gustavo Cascardo",
-          "value": 2000000,
+          "value": 19750000,
           "nationality": "Brezilya",
           "photo": null,
-          "rating": 58,
+          "rating": 80,
           "age": 20
         },
         "lb": {
           "name": "Aleksandar Šćekić",
-          "value": 1500000,
+          "value": 2000000,
           "nationality": "Karadağ",
           "photo": null,
-          "rating": 58,
+          "rating": 75,
           "age": 35
         },
         "dm1": {
           "name": "Deniz Türüç",
-          "value": 2500000,
+          "value": 5000000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 60,
+          "rating": 77,
           "age": 32
         },
         "dm2": {
           "name": "Gökhan Gündoğan",
-          "value": 1500000,
+          "value": 6000000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 54,
+          "rating": 76,
           "age": 28
         },
         "rw": {
           "name": "Kevin Rodrigues",
-          "value": 2000000,
+          "value": 9750000,
           "nationality": "Portekiz",
           "photo": null,
-          "rating": 59,
+          "rating": 78,
           "age": 27
         },
         "cam": {
           "name": "Aleksandar Katai",
-          "value": 3000000,
+          "value": 13750000,
           "nationality": "Sırbistan",
           "photo": null,
-          "rating": 62,
+          "rating": 79,
           "age": 22
         },
         "lw": {
           "name": "Miha Zajc",
-          "value": 2500000,
+          "value": 3250000,
           "nationality": "Slovenya",
           "photo": null,
-          "rating": 58,
+          "rating": 75,
           "age": 31
         },
         "st": {
           "name": "Eldor Shomurodov",
-          "value": 6000000,
+          "value": 8000000,
           "nationality": "Özbekistan",
           "photo": null,
-          "rating": 67,
+          "rating": 81,
           "age": 34
         }
       }
@@ -496,90 +496,90 @@ const PLAYERS_DATA = {
       "xi": {
         "gk": {
           "name": "İrfan Can Eğribayat",
-          "value": 3000000,
+          "value": 4250000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 61,
+          "rating": 74,
           "age": 22
         },
         "rb": {
           "name": "Marius Broholm",
-          "value": 2000000,
+          "value": 4750000,
           "nationality": "Norveç",
           "photo": null,
-          "rating": 58,
+          "rating": 75,
           "age": 25
         },
         "cb1": {
           "name": "Nemanja Maksimović",
-          "value": 2500000,
+          "value": 3750000,
           "nationality": "Sırbistan",
           "photo": null,
-          "rating": 58,
+          "rating": 73,
           "age": 19
         },
         "cb2": {
           "name": "Cherif Ndiaye",
-          "value": 1500000,
+          "value": 3000000,
           "nationality": "Senegal",
           "photo": null,
-          "rating": 56,
+          "rating": 73,
           "age": 24
         },
         "lb": {
           "name": "Nedim Bajrami",
-          "value": 1800000,
+          "value": 2250000,
           "nationality": "Arnavutluk",
           "photo": null,
-          "rating": 58,
+          "rating": 72,
           "age": 29
         },
         "dm1": {
           "name": "Jaurès Assoumou",
-          "value": 1500000,
+          "value": 2250000,
           "nationality": "Fransa",
           "photo": null,
-          "rating": 58,
+          "rating": 72,
           "age": 28
         },
         "dm2": {
           "name": "Ntcham",
-          "value": 2000000,
+          "value": 6750000,
           "nationality": "Fransa",
           "photo": null,
-          "rating": 58,
+          "rating": 76,
           "age": 23
         },
         "rw": {
           "name": "Elayis Tavşan",
-          "value": 3000000,
+          "value": 2250000,
           "nationality": "Hollanda",
           "photo": null,
-          "rating": 61,
+          "rating": 72,
           "age": 29
         },
         "cam": {
           "name": "Emre Kılınç",
-          "value": 2500000,
+          "value": 6750000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 58,
+          "rating": 76,
           "age": 21
         },
         "lw": {
           "name": "Anthony Musaba",
-          "value": 4000000,
+          "value": 6000000,
           "nationality": "Hollanda",
           "photo": null,
-          "rating": 64,
+          "rating": 76,
           "age": 24
         },
         "st": {
           "name": "Guilherme",
-          "value": 3500000,
+          "value": 5250000,
           "nationality": "Brezilya",
           "photo": null,
-          "rating": 63,
+          "rating": 75,
           "age": 23
         }
       }
@@ -591,90 +591,90 @@ const PLAYERS_DATA = {
       "xi": {
         "gk": {
           "name": "Ali Şahin",
-          "value": 1500000,
+          "value": 6000000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 54,
+          "rating": 76,
           "age": 26
         },
         "rb": {
           "name": "Adil Demirbağ",
-          "value": 1200000,
+          "value": 1750000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 53,
+          "rating": 71,
           "age": 29
         },
         "cb1": {
           "name": "Marko Vešović",
-          "value": 1500000,
+          "value": 7750000,
           "nationality": "Karadağ",
           "photo": null,
-          "rating": 57,
+          "rating": 76,
           "age": 19
         },
         "cb2": {
           "name": "Erdal Kılıçaslan",
-          "value": 1200000,
+          "value": 3750000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 57,
+          "rating": 74,
           "age": 29
         },
         "lb": {
           "name": "Marius Briceag",
-          "value": 1000000,
+          "value": 1750000,
           "nationality": "Moldova",
           "photo": null,
-          "rating": 53,
+          "rating": 71,
           "age": 28
         },
         "dm1": {
           "name": "Berkan Kutlu",
-          "value": 5000000,
+          "value": 3750000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 66,
+          "rating": 74,
           "age": 25
         },
         "dm2": {
           "name": "Arif Boşluk",
-          "value": 1500000,
+          "value": 4750000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 54,
+          "rating": 75,
           "age": 25
         },
         "rw": {
           "name": "Deniz Türüç",
-          "value": 2500000,
+          "value": 1250000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 60,
+          "rating": 71,
           "age": 32
         },
         "cam": {
           "name": "Aleksa Terzić",
-          "value": 1800000,
+          "value": 2500000,
           "nationality": "Sırbistan",
           "photo": null,
-          "rating": 56,
+          "rating": 72,
           "age": 23
         },
         "lw": {
           "name": "Sander Svendsen",
-          "value": 2000000,
+          "value": 3250000,
           "nationality": "Norveç",
           "photo": null,
-          "rating": 56,
+          "rating": 75,
           "age": 32
         },
         "st": {
           "name": "Musa Al-Taamari",
-          "value": 3000000,
+          "value": 4750000,
           "nationality": "Ürdün",
           "photo": null,
-          "rating": 59,
+          "rating": 75,
           "age": 24
         }
       }
@@ -686,18 +686,18 @@ const PLAYERS_DATA = {
       "xi": {
         "gk": {
           "name": "Alper Özalan",
-          "value": 1000000,
+          "value": 2000000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 55,
+          "rating": 73,
           "age": 31
         },
         "rb": {
           "name": "Mateus Silva",
-          "value": 1200000,
+          "value": 2500000,
           "nationality": "Brezilya",
           "photo": null,
-          "rating": 53,
+          "rating": 74,
           "age": 31
         },
         "cb1": {
@@ -705,71 +705,71 @@ const PLAYERS_DATA = {
           "value": 1500000,
           "nationality": "Senegal",
           "photo": null,
-          "rating": 55,
+          "rating": 74,
           "age": 33
         },
         "cb2": {
           "name": "Kerim Alıcı",
-          "value": 1200000,
+          "value": 3000000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 53,
+          "rating": 73,
           "age": 24
         },
         "lb": {
           "name": "Ramazan Civelek",
-          "value": 1000000,
+          "value": 3750000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 55,
+          "rating": 73,
           "age": 19
         },
         "dm1": {
           "name": "Denis Bergqvist",
-          "value": 1000000,
+          "value": 2250000,
           "nationality": "İsveç",
           "photo": null,
-          "rating": 56,
+          "rating": 72,
           "age": 24
         },
         "dm2": {
           "name": "Miguel Cardoso",
-          "value": 1200000,
+          "value": 4250000,
           "nationality": "Portekiz",
           "photo": null,
-          "rating": 53,
+          "rating": 74,
           "age": 21
         },
         "rw": {
           "name": "Bertuğ Yıldırım",
-          "value": 1500000,
+          "value": 2000000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 55,
+          "rating": 75,
           "age": 33
         },
         "cam": {
           "name": "Umut Bozok",
-          "value": 1500000,
+          "value": 3250000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 58,
+          "rating": 75,
           "age": 31
         },
         "lw": {
           "name": "Munir El Haddadi",
-          "value": 2000000,
+          "value": 3750000,
           "nationality": "Fas",
           "photo": null,
-          "rating": 58,
+          "rating": 74,
           "age": 24
         },
         "st": {
           "name": "Ali Sowe",
-          "value": 3500000,
+          "value": 3250000,
           "nationality": "Gambiya",
           "photo": null,
-          "rating": 59,
+          "rating": 75,
           "age": 30
         }
       }
@@ -781,90 +781,90 @@ const PLAYERS_DATA = {
       "xi": {
         "gk": {
           "name": "Ertuğrul Ersoy",
-          "value": 800000,
+          "value": 300000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 54,
+          "rating": 68,
           "age": 34
         },
         "rb": {
           "name": "Cebrail Makreckis",
-          "value": 900000,
+          "value": 300000,
           "nationality": "Almanya",
           "photo": null,
-          "rating": 52,
+          "rating": 63,
           "age": 21
         },
         "cb1": {
           "name": "Robert Muçi",
-          "value": 1000000,
+          "value": 500000,
           "nationality": "Arnavutluk",
           "photo": null,
-          "rating": 53,
+          "rating": 64,
           "age": 22
         },
         "cb2": {
           "name": "Fabio Blanco",
-          "value": 900000,
+          "value": 750000,
           "nationality": "İspanya",
           "photo": null,
-          "rating": 52,
+          "rating": 67,
           "age": 23
         },
         "lb": {
           "name": "Doğukan Sarı",
-          "value": 700000,
+          "value": 500000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 55,
+          "rating": 66,
           "age": 27
         },
         "dm1": {
           "name": "Alper Akman",
-          "value": 1000000,
+          "value": 500000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 56,
+          "rating": 67,
           "age": 31
         },
         "dm2": {
           "name": "Emre Akbaba",
-          "value": 1200000,
+          "value": 500000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 53,
+          "rating": 65,
           "age": 23
         },
         "rw": {
           "name": "Fabio Pereira",
-          "value": 1000000,
+          "value": 300000,
           "nationality": "Portekiz",
           "photo": null,
-          "rating": 54,
+          "rating": 64,
           "age": 32
         },
         "cam": {
           "name": "Eren Albayrak",
-          "value": 900000,
+          "value": 500000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 55,
+          "rating": 65,
           "age": 21
         },
         "lw": {
           "name": "Youssouf Ndayishimiye",
-          "value": 1000000,
+          "value": 300000,
           "nationality": "Burundi",
           "photo": null,
-          "rating": 53,
+          "rating": 63,
           "age": 23
         },
         "st": {
           "name": "Alassane Ndiaye",
-          "value": 1500000,
+          "value": 500000,
           "nationality": "Senegal",
           "photo": null,
-          "rating": 58,
+          "rating": 67,
           "age": 31
         }
       }
@@ -876,18 +876,18 @@ const PLAYERS_DATA = {
       "xi": {
         "gk": {
           "name": "Alassane Diallo",
-          "value": 1000000,
+          "value": 3750000,
           "nationality": "Senegal",
           "photo": null,
-          "rating": 57,
+          "rating": 73,
           "age": 20
         },
         "rb": {
           "name": "Arda Kızıldağ",
-          "value": 1200000,
+          "value": 300000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 53,
+          "rating": 67,
           "age": 34
         },
         "cb1": {
@@ -895,55 +895,55 @@ const PLAYERS_DATA = {
           "value": 1500000,
           "nationality": "Portekiz",
           "photo": null,
-          "rating": 54,
+          "rating": 70,
           "age": 26
         },
         "cb2": {
           "name": "Doğukan Ozan",
-          "value": 1000000,
+          "value": 3000000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 55,
+          "rating": 73,
           "age": 25
         },
         "lb": {
           "name": "Mahmoud Bentayg",
-          "value": 900000,
+          "value": 2000000,
           "nationality": "Fas",
           "photo": null,
-          "rating": 53,
+          "rating": 71,
           "age": 22
         },
         "dm1": {
           "name": "Mehmet Şamil Öztürk",
-          "value": 1500000,
+          "value": 2250000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 55,
+          "rating": 72,
           "age": 29
         },
         "dm2": {
           "name": "Halil Akbunar",
-          "value": 1800000,
+          "value": 1000000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 59,
+          "rating": 70,
           "age": 30
         },
         "rw": {
           "name": "Guilherme Luiz",
-          "value": 1500000,
+          "value": 1250000,
           "nationality": "Brezilya",
           "photo": null,
-          "rating": 55,
+          "rating": 69,
           "age": 26
         },
         "cam": {
           "name": "Jeh",
-          "value": 1800000,
+          "value": 1250000,
           "nationality": "Brezilya",
           "photo": null,
-          "rating": 59,
+          "rating": 71,
           "age": 30
         },
         "lw": {
@@ -951,15 +951,15 @@ const PLAYERS_DATA = {
           "value": 1000000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 54,
+          "rating": 68,
           "age": 24
         },
         "st": {
           "name": "Juan Boselli",
-          "value": 2500000,
+          "value": 4750000,
           "nationality": "Uruguay",
           "photo": null,
-          "rating": 59,
+          "rating": 74,
           "age": 20
         }
       }
@@ -971,90 +971,90 @@ const PLAYERS_DATA = {
       "xi": {
         "gk": {
           "name": "Ferhat Kaplan",
-          "value": 900000,
+          "value": 500000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 56,
+          "rating": 65,
           "age": 25
         },
         "rb": {
           "name": "Junior Fernandes",
-          "value": 800000,
+          "value": 300000,
           "nationality": "Brezilya",
           "photo": null,
-          "rating": 55,
+          "rating": 64,
           "age": 34
         },
         "cb1": {
           "name": "Amir Hadžiahmetović",
-          "value": 1000000,
+          "value": 300000,
           "nationality": "Bosna Hersek",
           "photo": null,
-          "rating": 56,
+          "rating": 66,
           "age": 30
         },
         "cb2": {
           "name": "Batuhan Şen",
-          "value": 800000,
+          "value": 750000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 54,
+          "rating": 66,
           "age": 22
         },
         "lb": {
           "name": "Muhammet Taha Tepe",
-          "value": 700000,
+          "value": 500000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 53,
+          "rating": 65,
           "age": 28
         },
         "dm1": {
           "name": "Berat Luş",
-          "value": 1000000,
+          "value": 300000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 56,
+          "rating": 62,
           "age": 31
         },
         "dm2": {
           "name": "Rhaldney",
-          "value": 1200000,
+          "value": 500000,
           "nationality": "Brezilya",
           "photo": null,
-          "rating": 54,
+          "rating": 64,
           "age": 23
         },
         "rw": {
           "name": "Malcom Bokele",
-          "value": 1000000,
+          "value": 500000,
           "nationality": "Kongo DC",
           "photo": null,
-          "rating": 56,
+          "rating": 65,
           "age": 29
         },
         "cam": {
           "name": "Berkay Erguvan",
-          "value": 900000,
+          "value": 750000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 53,
+          "rating": 66,
           "age": 19
         },
         "lw": {
           "name": "Metehan Baltacı",
-          "value": 1500000,
+          "value": 300000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 58,
+          "rating": 63,
           "age": 31
         },
         "st": {
           "name": "Bruno Petković",
-          "value": 2000000,
+          "value": 750000,
           "nationality": "Hırvatistan",
           "photo": null,
-          "rating": 58,
+          "rating": 67,
           "age": 21
         }
       }
@@ -1066,90 +1066,90 @@ const PLAYERS_DATA = {
       "xi": {
         "gk": {
           "name": "Ramazan Köse",
-          "value": 1000000,
+          "value": 1750000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 57,
+          "rating": 71,
           "age": 26
         },
         "rb": {
           "name": "Kamil Çörekçi",
-          "value": 900000,
+          "value": 3250000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 54,
+          "rating": 73,
           "age": 23
         },
         "cb1": {
           "name": "Rodrigo Becão",
-          "value": 6000000,
+          "value": 1250000,
           "nationality": "Brezilya",
           "photo": null,
-          "rating": 66,
+          "rating": 73,
           "age": 33
         },
         "cb2": {
           "name": "Mateus Pereira",
-          "value": 1200000,
+          "value": 2500000,
           "nationality": "Brezilya",
           "photo": null,
-          "rating": 54,
+          "rating": 74,
           "age": 32
         },
         "lb": {
           "name": "Ndiaga Diaw",
-          "value": 900000,
+          "value": 1250000,
           "nationality": "Senegal",
           "photo": null,
-          "rating": 53,
+          "rating": 69,
           "age": 23
         },
         "dm1": {
           "name": "Kerem Demirbay",
-          "value": 3000000,
+          "value": 2250000,
           "nationality": "Almanya",
           "photo": null,
-          "rating": 61,
+          "rating": 72,
           "age": 26
         },
         "dm2": {
           "name": "İrfan Can Kahveci",
-          "value": 6000000,
+          "value": 4250000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 67,
+          "rating": 74,
           "age": 22
         },
         "rw": {
           "name": "Anthony Nwakaeme",
-          "value": 2000000,
+          "value": 1750000,
           "nationality": "Nijerya",
           "photo": null,
-          "rating": 56,
+          "rating": 71,
           "age": 25
         },
         "cam": {
           "name": "Amine Harit",
-          "value": 4000000,
+          "value": 2250000,
           "nationality": "Fas",
           "photo": null,
-          "rating": 63,
+          "rating": 72,
           "age": 24
         },
         "lw": {
           "name": "Nathan Ayeté",
-          "value": 1500000,
+          "value": 2500000,
           "nationality": "Fransa",
           "photo": null,
-          "rating": 54,
+          "rating": 74,
           "age": 30
         },
         "st": {
           "name": "Cenk Tosun",
-          "value": 2500000,
+          "value": 2250000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 58,
+          "rating": 72,
           "age": 25
         }
       }
@@ -1161,90 +1161,90 @@ const PLAYERS_DATA = {
       "xi": {
         "gk": {
           "name": "Günay Güvenç",
-          "value": 900000,
+          "value": 2250000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 55,
+          "rating": 72,
           "age": 29
         },
         "rb": {
           "name": "Victor Gidado",
-          "value": 900000,
+          "value": 1750000,
           "nationality": "Nijerya",
           "photo": null,
-          "rating": 55,
+          "rating": 70,
           "age": 20
         },
         "cb1": {
           "name": "Nihad Mujakić",
-          "value": 1200000,
+          "value": 750000,
           "nationality": "Bosna Hersek",
           "photo": null,
-          "rating": 56,
+          "rating": 71,
           "age": 34
         },
         "cb2": {
           "name": "Alexandru Pașcanu",
-          "value": 1500000,
+          "value": 3000000,
           "nationality": "Romanya",
           "photo": null,
-          "rating": 54,
+          "rating": 73,
           "age": 25
         },
         "lb": {
           "name": "Karamba Gassama",
-          "value": 800000,
+          "value": 1000000,
           "nationality": "Gine",
           "photo": null,
-          "rating": 54,
+          "rating": 70,
           "age": 31
         },
         "dm1": {
           "name": "Semih Güler",
-          "value": 800000,
+          "value": 1500000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 56,
+          "rating": 70,
           "age": 25
         },
         "dm2": {
           "name": "Ndiaga Djiga",
-          "value": 900000,
+          "value": 4250000,
           "nationality": "Fildişi Sahili",
           "photo": null,
-          "rating": 55,
+          "rating": 74,
           "age": 23
         },
         "rw": {
           "name": "Emre Demir",
-          "value": 1500000,
+          "value": 2250000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 54,
+          "rating": 71,
           "age": 20
         },
         "cam": {
           "name": "Marko Poletanović",
-          "value": 1200000,
+          "value": 2500000,
           "nationality": "Sırbistan",
           "photo": null,
-          "rating": 56,
+          "rating": 74,
           "age": 32
         },
         "lw": {
           "name": "Boubacar Fofana",
-          "value": 1000000,
+          "value": 4750000,
           "nationality": "Fildişi Sahili",
           "photo": null,
-          "rating": 53,
+          "rating": 74,
           "age": 19
         },
         "st": {
           "name": "Denis Drăguș",
-          "value": 3000000,
+          "value": 2000000,
           "nationality": "Romanya",
           "photo": null,
-          "rating": 62,
+          "rating": 73,
           "age": 32
         }
       }
@@ -1256,42 +1256,42 @@ const PLAYERS_DATA = {
       "xi": {
         "gk": {
           "name": "Erdem Çetin",
-          "value": 900000,
+          "value": 1000000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 54,
+          "rating": 70,
           "age": 32
         },
         "rb": {
           "name": "Yiğit Efe Demir",
-          "value": 800000,
+          "value": 1500000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 52,
+          "rating": 69,
           "age": 19
         },
         "cb1": {
           "name": "Ndiaga Djiga",
-          "value": 1000000,
+          "value": 2000000,
           "nationality": "Burkina Faso",
           "photo": null,
-          "rating": 56,
+          "rating": 71,
           "age": 23
         },
         "cb2": {
           "name": "Zoran Arsenić",
-          "value": 900000,
+          "value": 1500000,
           "nationality": "Sırbistan",
           "photo": null,
-          "rating": 52,
+          "rating": 70,
           "age": 26
         },
         "lb": {
           "name": "Lenny Pintor",
-          "value": 900000,
+          "value": 1250000,
           "nationality": "Fransa",
           "photo": null,
-          "rating": 54,
+          "rating": 69,
           "age": 26
         },
         "dm1": {
@@ -1299,23 +1299,23 @@ const PLAYERS_DATA = {
           "value": 1000000,
           "nationality": "Senegal",
           "photo": null,
-          "rating": 54,
+          "rating": 72,
           "age": 33
         },
         "dm2": {
           "name": "Yusuf Erdoğan",
-          "value": 1500000,
+          "value": 1000000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 57,
+          "rating": 68,
           "age": 22
         },
         "rw": {
           "name": "Salih Malkoçoğlu",
-          "value": 1200000,
+          "value": 1000000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 53,
+          "rating": 68,
           "age": 23
         },
         "cam": {
@@ -1323,23 +1323,23 @@ const PLAYERS_DATA = {
           "value": 1500000,
           "nationality": "İsviçre",
           "photo": null,
-          "rating": 55,
+          "rating": 69,
           "age": 20
         },
         "lw": {
           "name": "Muhammed Gümüşkaya",
-          "value": 1000000,
+          "value": 1750000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 55,
+          "rating": 71,
           "age": 24
         },
         "st": {
           "name": "Umut Nayir",
-          "value": 2000000,
+          "value": 750000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 56,
+          "rating": 71,
           "age": 33
         }
       }
@@ -1351,90 +1351,90 @@ const PLAYERS_DATA = {
       "xi": {
         "gk": {
           "name": "Gökhan Akkan",
-          "value": 1000000,
+          "value": 750000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 55,
+          "rating": 67,
           "age": 24
         },
         "rb": {
           "name": "Alpaslan Öztürk",
-          "value": 800000,
+          "value": 750000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 53,
+          "rating": 67,
           "age": 26
         },
         "cb1": {
           "name": "Davide Biraschi",
-          "value": 1200000,
+          "value": 500000,
           "nationality": "İtalya",
           "photo": null,
-          "rating": 56,
+          "rating": 67,
           "age": 30
         },
         "cb2": {
           "name": "Charalampos Lykogiannis",
-          "value": 1500000,
+          "value": 750000,
           "nationality": "Yunanistan",
           "photo": null,
-          "rating": 56,
+          "rating": 67,
           "age": 27
         },
         "lb": {
           "name": "Bartuğ Elmaz",
-          "value": 1500000,
+          "value": 750000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 57,
+          "rating": 66,
           "age": 19
         },
         "dm1": {
           "name": "Gökdeniz Bahadır",
-          "value": 900000,
+          "value": 1500000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 56,
+          "rating": 70,
           "age": 21
         },
         "dm2": {
           "name": "Marc Bola",
-          "value": 1200000,
+          "value": 1000000,
           "nationality": "İngiltere",
           "photo": null,
-          "rating": 53,
+          "rating": 68,
           "age": 24
         },
         "rw": {
           "name": "Erdi Kayaalp",
-          "value": 900000,
+          "value": 300000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 55,
+          "rating": 66,
           "age": 33
         },
         "cam": {
           "name": "Berat Özcan",
-          "value": 1000000,
+          "value": 500000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 54,
+          "rating": 68,
           "age": 31
         },
         "lw": {
           "name": "Emrecan Bulut",
-          "value": 800000,
+          "value": 500000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 53,
+          "rating": 66,
           "age": 27
         },
         "st": {
           "name": "Bassala Sambou",
-          "value": 1500000,
+          "value": 1000000,
           "nationality": "Fransa",
           "photo": null,
-          "rating": 58,
+          "rating": 68,
           "age": 27
         }
       }
@@ -1446,82 +1446,82 @@ const PLAYERS_DATA = {
       "xi": {
         "gk": {
           "name": "Erce Kardeşler",
-          "value": 900000,
+          "value": 2000000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 55,
+          "rating": 71,
           "age": 21
         },
         "rb": {
           "name": "Muhammed Gönülaçar",
-          "value": 800000,
+          "value": 750000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 52,
+          "rating": 67,
           "age": 22
         },
         "cb1": {
           "name": "Papa Ndiaye",
-          "value": 1000000,
+          "value": 1500000,
           "nationality": "Senegal",
           "photo": null,
-          "rating": 55,
+          "rating": 70,
           "age": 21
         },
         "cb2": {
           "name": "Osayamen Osawe",
-          "value": 800000,
+          "value": 2500000,
           "nationality": "Nijerya",
           "photo": null,
-          "rating": 56,
+          "rating": 72,
           "age": 23
         },
         "lb": {
           "name": "Emir Ortakaya",
-          "value": 1000000,
+          "value": 1750000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 57,
+          "rating": 70,
           "age": 20
         },
         "dm1": {
           "name": "Adedire Mebude",
-          "value": 1200000,
+          "value": 300000,
           "nationality": "Nijerya",
           "photo": null,
-          "rating": 54,
+          "rating": 67,
           "age": 34
         },
         "dm2": {
           "name": "Doğukan Sinik",
-          "value": 900000,
+          "value": 750000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 52,
+          "rating": 67,
           "age": 24
         },
         "rw": {
           "name": "Frantzdy Pierrot",
-          "value": 1500000,
+          "value": 750000,
           "nationality": "Haiti",
           "photo": null,
-          "rating": 54,
+          "rating": 71,
           "age": 35
         },
         "cam": {
           "name": "Enis Destan",
-          "value": 1000000,
+          "value": 500000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 56,
+          "rating": 69,
           "age": 33
         },
         "lw": {
           "name": "Yusuf Sarı",
-          "value": 900000,
+          "value": 500000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 53,
+          "rating": 70,
           "age": 35
         },
         "st": {
@@ -1529,7 +1529,7 @@ const PLAYERS_DATA = {
           "value": 2000000,
           "nationality": "Fildişi Sahili",
           "photo": null,
-          "rating": 59,
+          "rating": 71,
           "age": 21
         }
       }
@@ -1541,90 +1541,90 @@ const PLAYERS_DATA = {
       "xi": {
         "gk": {
           "name": "Devrim Malak",
-          "value": 900000,
+          "value": 1500000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 56,
+          "rating": 70,
           "age": 29
         },
         "rb": {
           "name": "Sam Adekugbe",
-          "value": 1000000,
+          "value": 750000,
           "nationality": "Kanada",
           "photo": null,
-          "rating": 57,
+          "rating": 66,
           "age": 20
         },
         "cb1": {
           "name": "Aleksandar Kapetanović",
-          "value": 1000000,
+          "value": 1500000,
           "nationality": "Sırbistan",
           "photo": null,
-          "rating": 54,
+          "rating": 70,
           "age": 23
         },
         "cb2": {
           "name": "Do Cascão",
-          "value": 900000,
+          "value": 3000000,
           "nationality": "Brezilya",
           "photo": null,
-          "rating": 52,
+          "rating": 72,
           "age": 20
         },
         "lb": {
           "name": "İlker Meral",
-          "value": 800000,
+          "value": 500000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 54,
+          "rating": 69,
           "age": 35
         },
         "dm1": {
           "name": "Salih Özcan",
-          "value": 4000000,
+          "value": 1000000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 63,
+          "rating": 68,
           "age": 24
         },
         "dm2": {
           "name": "Veysel Sarı",
-          "value": 900000,
+          "value": 1250000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 56,
+          "rating": 69,
           "age": 22
         },
         "rw": {
           "name": "Halil Dervişoğlu",
-          "value": 2000000,
+          "value": 750000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 56,
+          "rating": 67,
           "age": 27
         },
         "cam": {
           "name": "Efecan Karaca",
-          "value": 900000,
+          "value": 750000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 54,
+          "rating": 69,
           "age": 32
         },
         "lw": {
           "name": "Adam Buksa",
-          "value": 2000000,
+          "value": 300000,
           "nationality": "Polonya",
           "photo": null,
-          "rating": 56,
+          "rating": 67,
           "age": 33
         },
         "st": {
           "name": "Soner Aydoğdu",
-          "value": 1500000,
+          "value": 1250000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 55,
+          "rating": 69,
           "age": 23
         }
       }
@@ -1636,18 +1636,18 @@ const PLAYERS_DATA = {
       "xi": {
         "gk": {
           "name": "Ertuğrul Taşkıran",
-          "value": 900000,
+          "value": 1000000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 52,
+          "rating": 70,
           "age": 31
         },
         "rb": {
           "name": "Batuhan Kör",
-          "value": 800000,
+          "value": 500000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 55,
+          "rating": 67,
           "age": 31
         },
         "cb1": {
@@ -1655,63 +1655,63 @@ const PLAYERS_DATA = {
           "value": 1000000,
           "nationality": "Portekiz",
           "photo": null,
-          "rating": 54,
+          "rating": 72,
           "age": 34
         },
         "cb2": {
           "name": "Fofana Boubacar",
-          "value": 800000,
+          "value": 1500000,
           "nationality": "Fildişi Sahili",
           "photo": null,
-          "rating": 54,
+          "rating": 70,
           "age": 22
         },
         "lb": {
           "name": "Berkan Emir",
-          "value": 700000,
+          "value": 300000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 56,
+          "rating": 68,
           "age": 35
         },
         "dm1": {
           "name": "Efkan Bekiroğlu",
-          "value": 900000,
+          "value": 2250000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 52,
+          "rating": 71,
           "age": 20
         },
         "dm2": {
           "name": "Dario Melnjak",
-          "value": 1000000,
+          "value": 1750000,
           "nationality": "Hırvatistan",
           "photo": null,
-          "rating": 53,
+          "rating": 70,
           "age": 20
         },
         "rw": {
           "name": "Nuno da Costa",
-          "value": 1000000,
+          "value": 500000,
           "nationality": "Fransa",
           "photo": null,
-          "rating": 55,
+          "rating": 70,
           "age": 35
         },
         "cam": {
           "name": "Salih Dursun",
-          "value": 1500000,
+          "value": 500000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 54,
+          "rating": 68,
           "age": 30
         },
         "lw": {
           "name": "Marcel Ritzmaier",
-          "value": 1200000,
+          "value": 750000,
           "nationality": "Avusturya",
           "photo": null,
-          "rating": 55,
+          "rating": 67,
           "age": 23
         },
         "st": {
@@ -1719,7 +1719,7 @@ const PLAYERS_DATA = {
           "value": 2000000,
           "nationality": "Türkiye",
           "photo": null,
-          "rating": 59,
+          "rating": 73,
           "age": 31
         }
       }

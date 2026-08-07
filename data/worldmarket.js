@@ -481,6 +481,150 @@ const WORLD_MARKET = {
       "value": 2500000,
       "rating": 74,
       "age": 32
+    },
+    {
+      "name": "Bram Visser",
+      "club": "Catanzaro",
+      "nationality": "Hollanda",
+      "value": 2250000,
+      "rating": 72,
+      "age": 25
+    },
+    {
+      "name": "Jakub Wójcik",
+      "club": "Cremonese",
+      "nationality": "Polonya",
+      "value": 2500000,
+      "rating": 72,
+      "age": 23
+    },
+    {
+      "name": "Andrés Ramírez",
+      "club": "Catanzaro",
+      "nationality": "Kolombiya",
+      "value": 1250000,
+      "rating": 71,
+      "age": 31
+    },
+    {
+      "name": "Dimitris Papadopoulos",
+      "club": "Schalke 04",
+      "nationality": "Yunanistan",
+      "value": 1500000,
+      "rating": 70,
+      "age": 22
+    },
+    {
+      "name": "Kostas Nikolaou",
+      "club": "Norwich City",
+      "nationality": "Yunanistan",
+      "value": 1250000,
+      "rating": 69,
+      "age": 21
+    },
+    {
+      "name": "Zakaria Idrissi",
+      "club": "Blackburn Rovers",
+      "nationality": "Fas",
+      "value": 1000000,
+      "rating": 68,
+      "age": 28
+    },
+    {
+      "name": "Jack Wright",
+      "club": "Swansea City",
+      "nationality": "Avustralya",
+      "value": 1000000,
+      "rating": 68,
+      "age": 25
+    },
+    {
+      "name": "Yassine Ziani",
+      "club": "Schalke 04",
+      "nationality": "Fas",
+      "value": 300000,
+      "rating": 67,
+      "age": 34
+    },
+    {
+      "name": "Kofi Mensah",
+      "club": "Hannover 96",
+      "nationality": "Gana",
+      "value": 300000,
+      "rating": 66,
+      "age": 33
+    },
+    {
+      "name": "Adam Varga",
+      "club": "Elche",
+      "nationality": "Slovakya",
+      "value": 500000,
+      "rating": 65,
+      "age": 28
+    },
+    {
+      "name": "Filip Šimić",
+      "club": "Bari",
+      "nationality": "Hırvatistan",
+      "value": 300000,
+      "rating": 62,
+      "age": 26
+    },
+    {
+      "name": "Callum Grant",
+      "club": "Swansea City",
+      "nationality": "İngiltere",
+      "value": 300000,
+      "rating": 62,
+      "age": 23
+    },
+    {
+      "name": "Min-jun Kim",
+      "club": "Sparta Prag",
+      "nationality": "Güney Kore",
+      "value": 300000,
+      "rating": 60,
+      "age": 28
+    },
+    {
+      "name": "Georgi Dimitrov",
+      "club": "Millwall",
+      "nationality": "Bulgaristan",
+      "value": 300000,
+      "rating": 59,
+      "age": 31
+    },
+    {
+      "name": "Noa Maes",
+      "club": "Cremonese",
+      "nationality": "Belçika",
+      "value": 300000,
+      "rating": 57,
+      "age": 22
+    },
+    {
+      "name": "Chidi Balogun",
+      "club": "Sampdoria",
+      "nationality": "Nijerya",
+      "value": 300000,
+      "rating": 57,
+      "age": 28
+    },
+    {
+      "name": "Ethan Mitchell",
+      "club": "Pau FC",
+      "nationality": "Avustralya",
+      "value": 300000,
+      "rating": 56,
+      "age": 23
+    },
+    {
+      "name": "Emmanuel Asante",
+      "club": "Palermo",
+      "nationality": "Gana",
+      "value": 300000,
+      "rating": 56,
+      "age": 21
     }
   ],
   "rb": [
@@ -963,6 +1107,150 @@ const WORLD_MARKET = {
       "value": 1500000,
       "rating": 74,
       "age": 33
+    },
+    {
+      "name": "Emeka Balogun",
+      "club": "Grenoble Foot",
+      "nationality": "Nijerya",
+      "value": 1750000,
+      "rating": 71,
+      "age": 24
+    },
+    {
+      "name": "Callum Clarke",
+      "club": "Albacete",
+      "nationality": "İngiltere",
+      "value": 1500000,
+      "rating": 70,
+      "age": 25
+    },
+    {
+      "name": "Jack Smith",
+      "club": "Preston North End",
+      "nationality": "İngiltere",
+      "value": 500000,
+      "rating": 67,
+      "age": 32
+    },
+    {
+      "name": "Karim Bouazizi",
+      "club": "Albacete",
+      "nationality": "Tunus",
+      "value": 500000,
+      "rating": 65,
+      "age": 27
+    },
+    {
+      "name": "Miloš Nikolić",
+      "club": "Zulte Waregem",
+      "nationality": "Sırbistan",
+      "value": 300000,
+      "rating": 65,
+      "age": 30
+    },
+    {
+      "name": "Matěj Černý",
+      "club": "Willem II",
+      "nationality": "Çekya",
+      "value": 300000,
+      "rating": 63,
+      "age": 32
+    },
+    {
+      "name": "Tomáš Svoboda",
+      "club": "Nancy",
+      "nationality": "Çekya",
+      "value": 300000,
+      "rating": 63,
+      "age": 22
+    },
+    {
+      "name": "Ethan Morgan",
+      "club": "Legia Varşova",
+      "nationality": "ABD",
+      "value": 300000,
+      "rating": 62,
+      "age": 20
+    },
+    {
+      "name": "Ismail Ziani",
+      "club": "Palermo",
+      "nationality": "Fas",
+      "value": 300000,
+      "rating": 61,
+      "age": 21
+    },
+    {
+      "name": "Dean Clarke",
+      "club": "KV Kortrijk",
+      "nationality": "İngiltere",
+      "value": 300000,
+      "rating": 61,
+      "age": 33
+    },
+    {
+      "name": "Kofi Asante",
+      "club": "Racing Santander",
+      "nationality": "Gana",
+      "value": 300000,
+      "rating": 60,
+      "age": 29
+    },
+    {
+      "name": "Ivan Ivanov",
+      "club": "Sporting Gijón",
+      "nationality": "Bulgaristan",
+      "value": 300000,
+      "rating": 60,
+      "age": 31
+    },
+    {
+      "name": "Ryan Baker",
+      "club": "FC Volendam",
+      "nationality": "İngiltere",
+      "value": 300000,
+      "rating": 60,
+      "age": 19
+    },
+    {
+      "name": "Sean Murphy",
+      "club": "Catanzaro",
+      "nationality": "İrlanda",
+      "value": 300000,
+      "rating": 59,
+      "age": 24
+    },
+    {
+      "name": "Sebastián López",
+      "club": "Amiens SC",
+      "nationality": "Kolombiya",
+      "value": 300000,
+      "rating": 58,
+      "age": 32
+    },
+    {
+      "name": "Ivan Petrov",
+      "club": "NAC Breda",
+      "nationality": "Bulgaristan",
+      "value": 300000,
+      "rating": 57,
+      "age": 28
+    },
+    {
+      "name": "Nathan Janssens",
+      "club": "Hull City",
+      "nationality": "Belçika",
+      "value": 300000,
+      "rating": 57,
+      "age": 31
+    },
+    {
+      "name": "Conor Kelly",
+      "club": "Excelsior",
+      "nationality": "İrlanda",
+      "value": 300000,
+      "rating": 55,
+      "age": 27
     }
   ],
   "lb": [
@@ -1445,6 +1733,150 @@ const WORLD_MARKET = {
       "value": 3000000,
       "rating": 73,
       "age": 29
+    },
+    {
+      "name": "Sem Bakker",
+      "club": "Willem II",
+      "nationality": "Hollanda",
+      "value": 300000,
+      "rating": 68,
+      "age": 33
+    },
+    {
+      "name": "Yuto Takahashi",
+      "club": "Amiens SC",
+      "nationality": "Japonya",
+      "value": 300000,
+      "rating": 67,
+      "age": 33
+    },
+    {
+      "name": "Filip Kowalski",
+      "club": "Roda JC",
+      "nationality": "Polonya",
+      "value": 500000,
+      "rating": 66,
+      "age": 25
+    },
+    {
+      "name": "Sota Tanaka",
+      "club": "Willem II",
+      "nationality": "Japonya",
+      "value": 750000,
+      "rating": 66,
+      "age": 22
+    },
+    {
+      "name": "Bram Mulder",
+      "club": "Willem II",
+      "nationality": "Hollanda",
+      "value": 300000,
+      "rating": 64,
+      "age": 27
+    },
+    {
+      "name": "Georgi Georgiev",
+      "club": "Roda JC",
+      "nationality": "Bulgaristan",
+      "value": 500000,
+      "rating": 64,
+      "age": 23
+    },
+    {
+      "name": "Paul Lang",
+      "club": "Bari",
+      "nationality": "Almanya",
+      "value": 500000,
+      "rating": 64,
+      "age": 23
+    },
+    {
+      "name": "Maxime Willems",
+      "club": "Levante",
+      "nationality": "Belçika",
+      "value": 300000,
+      "rating": 62,
+      "age": 33
+    },
+    {
+      "name": "Riku Suzuki",
+      "club": "Coventry City",
+      "nationality": "Japonya",
+      "value": 300000,
+      "rating": 62,
+      "age": 32
+    },
+    {
+      "name": "Nikolay Dimitrov",
+      "club": "Sheffield Wednesday",
+      "nationality": "Bulgaristan",
+      "value": 300000,
+      "rating": 61,
+      "age": 25
+    },
+    {
+      "name": "Finn Fuchs",
+      "club": "Elche",
+      "nationality": "Almanya",
+      "value": 300000,
+      "rating": 61,
+      "age": 24
+    },
+    {
+      "name": "Ethan Reed",
+      "club": "Beerschot",
+      "nationality": "ABD",
+      "value": 300000,
+      "rating": 61,
+      "age": 29
+    },
+    {
+      "name": "Juan Rodríguez",
+      "club": "Pau FC",
+      "nationality": "Kolombiya",
+      "value": 300000,
+      "rating": 60,
+      "age": 34
+    },
+    {
+      "name": "Uche Eze",
+      "club": "Slavia Prag",
+      "nationality": "Nijerya",
+      "value": 300000,
+      "rating": 60,
+      "age": 21
+    },
+    {
+      "name": "Mihai Stan",
+      "club": "Hannover 96",
+      "nationality": "Romanya",
+      "value": 300000,
+      "rating": 60,
+      "age": 31
+    },
+    {
+      "name": "Dimitris Antoniou",
+      "club": "Elche",
+      "nationality": "Yunanistan",
+      "value": 300000,
+      "rating": 59,
+      "age": 26
+    },
+    {
+      "name": "Nikos Antoniou",
+      "club": "Nancy",
+      "nationality": "Yunanistan",
+      "value": 300000,
+      "rating": 57,
+      "age": 33
+    },
+    {
+      "name": "Kostas Antoniou",
+      "club": "Darmstadt 98",
+      "nationality": "Yunanistan",
+      "value": 300000,
+      "rating": 55,
+      "age": 21
     }
   ],
   "cb": [
@@ -1927,6 +2359,150 @@ const WORLD_MARKET = {
       "value": 3750000,
       "rating": 74,
       "age": 26
+    },
+    {
+      "name": "Bence Kovács",
+      "club": "Sheffield Wednesday",
+      "nationality": "Macaristan",
+      "value": 1750000,
+      "rating": 70,
+      "age": 19
+    },
+    {
+      "name": "Youssef Trabelsi",
+      "club": "Blackburn Rovers",
+      "nationality": "Tunus",
+      "value": 500000,
+      "rating": 69,
+      "age": 33
+    },
+    {
+      "name": "Kofi Owusu",
+      "club": "Darmstadt 98",
+      "nationality": "Gana",
+      "value": 1250000,
+      "rating": 69,
+      "age": 25
+    },
+    {
+      "name": "Adam Dvořák",
+      "club": "Zulte Waregem",
+      "nationality": "Çekya",
+      "value": 1000000,
+      "rating": 68,
+      "age": 23
+    },
+    {
+      "name": "Jonas Wagner",
+      "club": "Wisła Kraków",
+      "nationality": "Almanya",
+      "value": 750000,
+      "rating": 67,
+      "age": 26
+    },
+    {
+      "name": "Tomáš Černý",
+      "club": "Middlesbrough",
+      "nationality": "Çekya",
+      "value": 750000,
+      "rating": 66,
+      "age": 22
+    },
+    {
+      "name": "Uche Okafor",
+      "club": "Grenoble Foot",
+      "nationality": "Nijerya",
+      "value": 300000,
+      "rating": 66,
+      "age": 30
+    },
+    {
+      "name": "Tomás Gómez",
+      "club": "Bari",
+      "nationality": "Arjantin",
+      "value": 500000,
+      "rating": 66,
+      "age": 25
+    },
+    {
+      "name": "Filip Procházka",
+      "club": "Sporting Gijón",
+      "nationality": "Çekya",
+      "value": 750000,
+      "rating": 66,
+      "age": 23
+    },
+    {
+      "name": "Paul Becker",
+      "club": "Wisła Kraków",
+      "nationality": "Almanya",
+      "value": 500000,
+      "rating": 65,
+      "age": 28
+    },
+    {
+      "name": "Sam Wilson",
+      "club": "Swansea City",
+      "nationality": "İngiltere",
+      "value": 300000,
+      "rating": 64,
+      "age": 30
+    },
+    {
+      "name": "Adnan Mujić",
+      "club": "Hajduk Split",
+      "nationality": "Bosna Hersek",
+      "value": 300000,
+      "rating": 63,
+      "age": 24
+    },
+    {
+      "name": "Marko Šimić",
+      "club": "Sheffield Wednesday",
+      "nationality": "Hırvatistan",
+      "value": 300000,
+      "rating": 61,
+      "age": 31
+    },
+    {
+      "name": "Paul Vogel",
+      "club": "Roda JC",
+      "nationality": "Almanya",
+      "value": 300000,
+      "rating": 61,
+      "age": 33
+    },
+    {
+      "name": "Wesley Silva",
+      "club": "Levante",
+      "nationality": "Brezilya",
+      "value": 300000,
+      "rating": 60,
+      "age": 25
+    },
+    {
+      "name": "Aidan Doyle",
+      "club": "Hannover 96",
+      "nationality": "İrlanda",
+      "value": 300000,
+      "rating": 58,
+      "age": 20
+    },
+    {
+      "name": "Ji-ho Choi",
+      "club": "Catanzaro",
+      "nationality": "Güney Kore",
+      "value": 300000,
+      "rating": 56,
+      "age": 34
+    },
+    {
+      "name": "Youssef Jendoubi",
+      "club": "Bari",
+      "nationality": "Tunus",
+      "value": 300000,
+      "rating": 55,
+      "age": 30
     }
   ],
   "dm": [
@@ -2409,6 +2985,150 @@ const WORLD_MARKET = {
       "value": 4250000,
       "rating": 74,
       "age": 21
+    },
+    {
+      "name": "Alexandru Popescu",
+      "club": "Roda JC",
+      "nationality": "Romanya",
+      "value": 1250000,
+      "rating": 71,
+      "age": 32
+    },
+    {
+      "name": "Zakaria Ziani",
+      "club": "Millwall",
+      "nationality": "Fas",
+      "value": 1500000,
+      "rating": 70,
+      "age": 28
+    },
+    {
+      "name": "Emir Delić",
+      "club": "Sheffield Wednesday",
+      "nationality": "Bosna Hersek",
+      "value": 500000,
+      "rating": 69,
+      "age": 33
+    },
+    {
+      "name": "Darragh Byrne",
+      "club": "OH Leuven",
+      "nationality": "İrlanda",
+      "value": 1000000,
+      "rating": 68,
+      "age": 26
+    },
+    {
+      "name": "Haruto Suzuki",
+      "club": "Nancy",
+      "nationality": "Japonya",
+      "value": 500000,
+      "rating": 66,
+      "age": 25
+    },
+    {
+      "name": "Ji-ho Lee",
+      "club": "Grenoble Foot",
+      "nationality": "Güney Kore",
+      "value": 500000,
+      "rating": 65,
+      "age": 28
+    },
+    {
+      "name": "Giorgos Antoniou",
+      "club": "Preston North End",
+      "nationality": "Yunanistan",
+      "value": 300000,
+      "rating": 63,
+      "age": 19
+    },
+    {
+      "name": "Ivan Jurić",
+      "club": "Middlesbrough",
+      "nationality": "Hırvatistan",
+      "value": 300000,
+      "rating": 63,
+      "age": 31
+    },
+    {
+      "name": "Noa Janssens",
+      "club": "Hull City",
+      "nationality": "Belçika",
+      "value": 300000,
+      "rating": 63,
+      "age": 31
+    },
+    {
+      "name": "Paul Fuchs",
+      "club": "Sparta Prag",
+      "nationality": "Almanya",
+      "value": 300000,
+      "rating": 63,
+      "age": 34
+    },
+    {
+      "name": "Amar Kovačević",
+      "club": "Preston North End",
+      "nationality": "Bosna Hersek",
+      "value": 300000,
+      "rating": 61,
+      "age": 30
+    },
+    {
+      "name": "Marek Varga",
+      "club": "Coventry City",
+      "nationality": "Slovakya",
+      "value": 300000,
+      "rating": 59,
+      "age": 32
+    },
+    {
+      "name": "Mehdi Bouazizi",
+      "club": "Zulte Waregem",
+      "nationality": "Tunus",
+      "value": 300000,
+      "rating": 59,
+      "age": 31
+    },
+    {
+      "name": "Jack Baker",
+      "club": "Cardiff City",
+      "nationality": "İngiltere",
+      "value": 300000,
+      "rating": 58,
+      "age": 29
+    },
+    {
+      "name": "Matheus Souza",
+      "club": "Blackburn Rovers",
+      "nationality": "Brezilya",
+      "value": 300000,
+      "rating": 57,
+      "age": 24
+    },
+    {
+      "name": "Kacper Wiśniewski",
+      "club": "Blackburn Rovers",
+      "nationality": "Polonya",
+      "value": 300000,
+      "rating": 57,
+      "age": 21
+    },
+    {
+      "name": "Filip Zieliński",
+      "club": "Rijeka",
+      "nationality": "Polonya",
+      "value": 300000,
+      "rating": 56,
+      "age": 32
+    },
+    {
+      "name": "Franco Fernández",
+      "club": "Cardiff City",
+      "nationality": "Arjantin",
+      "value": 300000,
+      "rating": 55,
+      "age": 25
     }
   ],
   "rw": [
@@ -2891,6 +3611,150 @@ const WORLD_MARKET = {
       "value": 2500000,
       "rating": 74,
       "age": 32
+    },
+    {
+      "name": "Min-jun Lee",
+      "club": "Hamburger SV",
+      "nationality": "Güney Kore",
+      "value": 1250000,
+      "rating": 71,
+      "age": 30
+    },
+    {
+      "name": "Finn Becker",
+      "club": "Excelsior",
+      "nationality": "Almanya",
+      "value": 1250000,
+      "rating": 71,
+      "age": 31
+    },
+    {
+      "name": "Oliver Mitchell",
+      "club": "Norwich City",
+      "nationality": "Avustralya",
+      "value": 1750000,
+      "rating": 71,
+      "age": 29
+    },
+    {
+      "name": "Andrés López",
+      "club": "Millwall",
+      "nationality": "Kolombiya",
+      "value": 1000000,
+      "rating": 70,
+      "age": 31
+    },
+    {
+      "name": "Sem Mulder",
+      "club": "Elche",
+      "nationality": "Hollanda",
+      "value": 1500000,
+      "rating": 70,
+      "age": 23
+    },
+    {
+      "name": "Filip Jurić",
+      "club": "Willem II",
+      "nationality": "Hırvatistan",
+      "value": 1250000,
+      "rating": 69,
+      "age": 26
+    },
+    {
+      "name": "Karim Gharbi",
+      "club": "Hull City",
+      "nationality": "Tunus",
+      "value": 1500000,
+      "rating": 69,
+      "age": 20
+    },
+    {
+      "name": "Mateusz Wiśniewski",
+      "club": "KV Kortrijk",
+      "nationality": "Polonya",
+      "value": 750000,
+      "rating": 69,
+      "age": 32
+    },
+    {
+      "name": "Emmanuel Owusu",
+      "club": "Zulte Waregem",
+      "nationality": "Gana",
+      "value": 750000,
+      "rating": 67,
+      "age": 22
+    },
+    {
+      "name": "Niklas Wagner",
+      "club": "Hannover 96",
+      "nationality": "Almanya",
+      "value": 500000,
+      "rating": 67,
+      "age": 32
+    },
+    {
+      "name": "Logan Bennett",
+      "club": "Bari",
+      "nationality": "ABD",
+      "value": 500000,
+      "rating": 65,
+      "age": 22
+    },
+    {
+      "name": "Seo-jun Choi",
+      "club": "Cardiff City",
+      "nationality": "Güney Kore",
+      "value": 300000,
+      "rating": 64,
+      "age": 26
+    },
+    {
+      "name": "Bartosz Zieliński",
+      "club": "Coventry City",
+      "nationality": "Polonya",
+      "value": 300000,
+      "rating": 62,
+      "age": 25
+    },
+    {
+      "name": "Jack Bennett",
+      "club": "Valenciennes",
+      "nationality": "ABD",
+      "value": 300000,
+      "rating": 61,
+      "age": 33
+    },
+    {
+      "name": "Tomás Fernández",
+      "club": "Willem II",
+      "nationality": "Arjantin",
+      "value": 300000,
+      "rating": 59,
+      "age": 27
+    },
+    {
+      "name": "Paul Krüger",
+      "club": "Middlesbrough",
+      "nationality": "Almanya",
+      "value": 300000,
+      "rating": 59,
+      "age": 33
+    },
+    {
+      "name": "Bartosz Nowak",
+      "club": "Cremonese",
+      "nationality": "Polonya",
+      "value": 300000,
+      "rating": 56,
+      "age": 25
+    },
+    {
+      "name": "Haris Delić",
+      "club": "Middlesbrough",
+      "nationality": "Bosna Hersek",
+      "value": 300000,
+      "rating": 55,
+      "age": 34
     }
   ],
   "cam": [
@@ -3373,6 +4237,150 @@ const WORLD_MARKET = {
       "value": 2500000,
       "rating": 74,
       "age": 30
+    },
+    {
+      "name": "Ibrahima Diallo",
+      "club": "Coventry City",
+      "nationality": "Senegal",
+      "value": 750000,
+      "rating": 71,
+      "age": 33
+    },
+    {
+      "name": "Amar Delić",
+      "club": "Valenciennes",
+      "nationality": "Bosna Hersek",
+      "value": 500000,
+      "rating": 69,
+      "age": 34
+    },
+    {
+      "name": "Mateusz Nowak",
+      "club": "Roda JC",
+      "nationality": "Polonya",
+      "value": 750000,
+      "rating": 69,
+      "age": 30
+    },
+    {
+      "name": "Marko Jurić",
+      "club": "Hannover 96",
+      "nationality": "Hırvatistan",
+      "value": 1500000,
+      "rating": 69,
+      "age": 20
+    },
+    {
+      "name": "Kwame Mensah",
+      "club": "Cremonese",
+      "nationality": "Gana",
+      "value": 500000,
+      "rating": 68,
+      "age": 30
+    },
+    {
+      "name": "Sota Sato",
+      "club": "Hannover 96",
+      "nationality": "Japonya",
+      "value": 1000000,
+      "rating": 68,
+      "age": 29
+    },
+    {
+      "name": "Haris Kovačević",
+      "club": "Fortuna Düsseldorf",
+      "nationality": "Bosna Hersek",
+      "value": 1000000,
+      "rating": 68,
+      "age": 26
+    },
+    {
+      "name": "Nabil El Amrani",
+      "club": "Pau FC",
+      "nationality": "Fas",
+      "value": 500000,
+      "rating": 67,
+      "age": 31
+    },
+    {
+      "name": "Jakub Svoboda",
+      "club": "Elche",
+      "nationality": "Çekya",
+      "value": 750000,
+      "rating": 66,
+      "age": 23
+    },
+    {
+      "name": "Mason Morgan",
+      "club": "Preston North End",
+      "nationality": "ABD",
+      "value": 500000,
+      "rating": 66,
+      "age": 28
+    },
+    {
+      "name": "Ethan Bennett",
+      "club": "Sampdoria",
+      "nationality": "ABD",
+      "value": 300000,
+      "rating": 64,
+      "age": 34
+    },
+    {
+      "name": "Andrés Rodríguez",
+      "club": "Wisła Kraków",
+      "nationality": "Kolombiya",
+      "value": 300000,
+      "rating": 62,
+      "age": 22
+    },
+    {
+      "name": "Mihai Dumitru",
+      "club": "Elche",
+      "nationality": "Romanya",
+      "value": 300000,
+      "rating": 60,
+      "age": 34
+    },
+    {
+      "name": "Marek Baláž",
+      "club": "Sporting Gijón",
+      "nationality": "Slovakya",
+      "value": 300000,
+      "rating": 59,
+      "age": 31
+    },
+    {
+      "name": "Dávid Nagy",
+      "club": "Catanzaro",
+      "nationality": "Macaristan",
+      "value": 300000,
+      "rating": 58,
+      "age": 25
+    },
+    {
+      "name": "Louis Willems",
+      "club": "Valenciennes",
+      "nationality": "Belçika",
+      "value": 300000,
+      "rating": 58,
+      "age": 29
+    },
+    {
+      "name": "Mamadou Diop",
+      "club": "Elche",
+      "nationality": "Senegal",
+      "value": 300000,
+      "rating": 57,
+      "age": 19
+    },
+    {
+      "name": "Darragh Ryan",
+      "club": "Slovan Bratislava",
+      "nationality": "İrlanda",
+      "value": 300000,
+      "rating": 55,
+      "age": 29
     }
   ],
   "lw": [
@@ -3855,6 +4863,150 @@ const WORLD_MARKET = {
       "value": 2000000,
       "rating": 75,
       "age": 33
+    },
+    {
+      "name": "Emir Mujić",
+      "club": "KV Kortrijk",
+      "nationality": "Bosna Hersek",
+      "value": 1750000,
+      "rating": 71,
+      "age": 28
+    },
+    {
+      "name": "Ante Horvat",
+      "club": "Slavia Prag",
+      "nationality": "Hırvatistan",
+      "value": 1500000,
+      "rating": 70,
+      "age": 23
+    },
+    {
+      "name": "Zakaria Benali",
+      "club": "Amiens SC",
+      "nationality": "Fas",
+      "value": 1500000,
+      "rating": 70,
+      "age": 25
+    },
+    {
+      "name": "Matheus Santos",
+      "club": "Elche",
+      "nationality": "Brezilya",
+      "value": 1250000,
+      "rating": 69,
+      "age": 23
+    },
+    {
+      "name": "Haris Mujić",
+      "club": "Millwall",
+      "nationality": "Bosna Hersek",
+      "value": 1250000,
+      "rating": 69,
+      "age": 26
+    },
+    {
+      "name": "Jonas Krüger",
+      "club": "Roda JC",
+      "nationality": "Almanya",
+      "value": 1000000,
+      "rating": 68,
+      "age": 21
+    },
+    {
+      "name": "Amar Hodžić",
+      "club": "Rijeka",
+      "nationality": "Bosna Hersek",
+      "value": 1000000,
+      "rating": 68,
+      "age": 26
+    },
+    {
+      "name": "Máté Tóth",
+      "club": "KV Kortrijk",
+      "nationality": "Macaristan",
+      "value": 1000000,
+      "rating": 67,
+      "age": 20
+    },
+    {
+      "name": "Everton Souza",
+      "club": "Pau FC",
+      "nationality": "Brezilya",
+      "value": 750000,
+      "rating": 67,
+      "age": 28
+    },
+    {
+      "name": "Sam Baker",
+      "club": "Darmstadt 98",
+      "nationality": "İngiltere",
+      "value": 300000,
+      "rating": 66,
+      "age": 33
+    },
+    {
+      "name": "Dean Smith",
+      "club": "Sampdoria",
+      "nationality": "İngiltere",
+      "value": 500000,
+      "rating": 65,
+      "age": 23
+    },
+    {
+      "name": "Jakub Nowak",
+      "club": "Catanzaro",
+      "nationality": "Polonya",
+      "value": 300000,
+      "rating": 63,
+      "age": 25
+    },
+    {
+      "name": "Kostas Papadopoulos",
+      "club": "Racing Santander",
+      "nationality": "Yunanistan",
+      "value": 300000,
+      "rating": 60,
+      "age": 20
+    },
+    {
+      "name": "Tomáš Kováč",
+      "club": "Norwich City",
+      "nationality": "Slovakya",
+      "value": 300000,
+      "rating": 59,
+      "age": 34
+    },
+    {
+      "name": "Ji-ho Park",
+      "club": "Schalke 04",
+      "nationality": "Güney Kore",
+      "value": 300000,
+      "rating": 58,
+      "age": 21
+    },
+    {
+      "name": "Mehdi Trabelsi",
+      "club": "Catanzaro",
+      "nationality": "Tunus",
+      "value": 300000,
+      "rating": 57,
+      "age": 32
+    },
+    {
+      "name": "Emeka Okafor",
+      "club": "Excelsior",
+      "nationality": "Nijerya",
+      "value": 300000,
+      "rating": 56,
+      "age": 32
+    },
+    {
+      "name": "Tim Wagner",
+      "club": "Legia Varşova",
+      "nationality": "Almanya",
+      "value": 300000,
+      "rating": 56,
+      "age": 29
     }
   ],
   "st": [
@@ -4337,6 +5489,150 @@ const WORLD_MARKET = {
       "value": 2500000,
       "rating": 74,
       "age": 32
+    },
+    {
+      "name": "Ethan Taylor",
+      "club": "Sheffield Wednesday",
+      "nationality": "Avustralya",
+      "value": 2250000,
+      "rating": 72,
+      "age": 24
+    },
+    {
+      "name": "Gabriel Souza",
+      "club": "Swansea City",
+      "nationality": "Brezilya",
+      "value": 1750000,
+      "rating": 71,
+      "age": 24
+    },
+    {
+      "name": "Dávid Szabó",
+      "club": "Valenciennes",
+      "nationality": "Macaristan",
+      "value": 750000,
+      "rating": 69,
+      "age": 31
+    },
+    {
+      "name": "Moussa Diallo",
+      "club": "Excelsior",
+      "nationality": "Senegal",
+      "value": 1000000,
+      "rating": 68,
+      "age": 23
+    },
+    {
+      "name": "Máté Kovács",
+      "club": "Slovan Bratislava",
+      "nationality": "Macaristan",
+      "value": 750000,
+      "rating": 67,
+      "age": 27
+    },
+    {
+      "name": "Fraser Stewart",
+      "club": "Racing Santander",
+      "nationality": "İskoçya",
+      "value": 750000,
+      "rating": 66,
+      "age": 20
+    },
+    {
+      "name": "Nemanja Petrović",
+      "club": "Zulte Waregem",
+      "nationality": "Sırbistan",
+      "value": 500000,
+      "rating": 64,
+      "age": 19
+    },
+    {
+      "name": "Wesley Oliveira",
+      "club": "Darmstadt 98",
+      "nationality": "Brezilya",
+      "value": 300000,
+      "rating": 63,
+      "age": 33
+    },
+    {
+      "name": "Nikolay Georgiev",
+      "club": "Levante",
+      "nationality": "Bulgaristan",
+      "value": 300000,
+      "rating": 63,
+      "age": 19
+    },
+    {
+      "name": "Dávid Kovács",
+      "club": "Hannover 96",
+      "nationality": "Macaristan",
+      "value": 300000,
+      "rating": 63,
+      "age": 32
+    },
+    {
+      "name": "Stefan Jovanović",
+      "club": "Beerschot",
+      "nationality": "Sırbistan",
+      "value": 300000,
+      "rating": 62,
+      "age": 31
+    },
+    {
+      "name": "Youssef Bouazizi",
+      "club": "Coventry City",
+      "nationality": "Tunus",
+      "value": 300000,
+      "rating": 62,
+      "age": 32
+    },
+    {
+      "name": "Máté Szabó",
+      "club": "Palermo",
+      "nationality": "Macaristan",
+      "value": 300000,
+      "rating": 61,
+      "age": 27
+    },
+    {
+      "name": "Logan Reed",
+      "club": "Slavia Prag",
+      "nationality": "ABD",
+      "value": 300000,
+      "rating": 61,
+      "age": 32
+    },
+    {
+      "name": "Ethan Carter",
+      "club": "Schalke 04",
+      "nationality": "ABD",
+      "value": 300000,
+      "rating": 60,
+      "age": 30
+    },
+    {
+      "name": "Vuk Ristić",
+      "club": "Fortuna Düsseldorf",
+      "nationality": "Sırbistan",
+      "value": 300000,
+      "rating": 60,
+      "age": 28
+    },
+    {
+      "name": "Darragh Kelly",
+      "club": "Albacete",
+      "nationality": "İrlanda",
+      "value": 300000,
+      "rating": 59,
+      "age": 21
+    },
+    {
+      "name": "Chidi Okafor",
+      "club": "Slovan Bratislava",
+      "nationality": "Nijerya",
+      "value": 300000,
+      "rating": 58,
+      "age": 29
     }
   ]
 };

@@ -81,7 +81,7 @@
         <button class="option-btn active" data-draft="off">Kapalı</button>
         <button class="option-btn" data-draft="on">🎯 Draft Modu Açık</button>
       </div>
-      <p class="hint" id="botDraftModeHint">Kapalı: klasik akış. Açık: her sezon sonunda 3 rastgele mevki tek tek draft'a çıkar; ters lig sıralamasıyla (sonuncu ilk seçer) havuzdan rakip oyuncularından birini bedelsiz seçersin.</p>
+      <p class="hint" id="botDraftModeHint">Kapalı: klasik akış. Açık: her sezon sonunda 3 rastgele mevki draft'a çıkar. Her kulübün o 3 mevkideki oyuncusu ortak havuza girer; sırayla açık artırmayla rakip oyuncularına teklif verirsin. Sonra elinde kalan havuz oyuncularını istersen kendin satabilir, boşalan her mevkiye 5 adaydan birini imzalarsın.</p>
     </div>
 
     <div class="setup-row">
@@ -218,13 +218,22 @@
   <div class="draft-mode-body">
     <div class="draft-slots-row" id="draftSlotsRow"></div>
 
-    <div id="draftPickPanel" class="draft-pick-panel">
+    <div id="draftAuctionPanel" class="draft-pick-panel">
       <p class="draft-stage-title" id="draftStageTitle"></p>
       <div class="draft-pool-grid" id="draftPoolGrid"></div>
       <div class="draft-turn-row" id="draftTurnRow"></div>
       <p class="draft-hint" id="draftTurnHint"></p>
       <div class="draft-buttons">
         <button id="draftPassBtn" class="sell-btn">🏳️ Sıranı Pas Geç</button>
+      </div>
+    </div>
+
+    <div id="draftSellPanel" class="draft-sell-panel hidden">
+      <p class="draft-stage-title" id="draftSellTitle"></p>
+      <p class="draft-hint" id="draftSellHint"></p>
+      <div class="draft-sell-grid" id="draftSellGrid"></div>
+      <div class="draft-buttons">
+        <button id="draftSellConfirmBtn" class="primary-btn">✅ Kararımı Onayla</button>
       </div>
     </div>
 

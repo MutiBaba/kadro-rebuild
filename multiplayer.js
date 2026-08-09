@@ -138,24 +138,29 @@ function applyRemoteState(data) {
       }
     : null;
 
-  // Draft state'inde de boş dizi/nesne alanları (log, pool, picks, replaceCandidates…) Firebase
-  // tarafından sessizce düşürülebilir — hepsini tek tek varsayılana sabitliyoruz.
+  // Draft state'inde de boş dizi/nesne alanları (log, pool, sellDone, replaceCandidates…) ve
+  // 0 / "" değerleri Firebase tarafından sessizce düşürülebilir — hepsini tek tek varsayılana
+  // sabitliyoruz, yoksa guest tarafında undefined okunup ekran çökebiliyor.
   draftModeActive = !!data.draftModeActive;
   const ds = data.draftState;
   draftState = ds
     ? {
         slots: ds.slots || [],
-        slotIdx: ds.slotIdx || 0,
         stage: ds.stage,
         order: ds.order || [],
         turnIdx: ds.turnIdx || 0,
+        turnCounter: ds.turnCounter || 0,
+        passStreak: ds.passStreak || 0,
         pool: (ds.pool || []).map(e => ({
+          id: e.id,
+          slot: e.slot,
           ownerClubId: e.ownerClubId,
           player: e.player,
-          status: e.status || "open",
-          takenByClubId: e.takenByClubId || ""
+          bid: e.bid || 0,
+          highBidderClubId: e.highBidderClubId || "",
+          resolved: e.resolved || ""
         })),
-        picks: ds.picks || {},
+        sellDone: ds.sellDone || {},
         replaceCandidates: ds.replaceCandidates || {},
         replacePicks: ds.replacePicks || {},
         reservedNames: ds.reservedNames || [],
@@ -164,10 +169,11 @@ function applyRemoteState(data) {
       }
     : null;
 
+  const onDraftScreen = mpPhase === "draft" || mpPhase === "draftSell" || mpPhase === "draftReplace";
   rebuildScreen.classList.toggle("hidden", !(mpPhase === "decide" || mpPhase === "auction"));
-  draftScreen.classList.toggle("hidden", !(mpPhase === "draft" || mpPhase === "draftReplace"));
+  draftScreen.classList.toggle("hidden", !onDraftScreen);
 
-  if (mpPhase === "draft" || mpPhase === "draftReplace") {
+  if (onDraftScreen) {
     if (draftState) renderDraftScreen();
   } else if (mpPhase === "auction" && auction) {
     renderAuctionView();
@@ -208,14 +214,23 @@ function startHostActionListener() {
       // "Sonraki Sezona Geç" satırı, bu misafirin kararı setin TAMAMLAYAN son karar olsa bile
       // host bizzat bir şeye tıklamadığı sürece hiç yenilenmiyordu. Burada elle tetikliyoruz.
       if (mpPhase === "transfer") updateTransferContinueVisibility();
-    } else if (action.type === "draftPick") {
-      if (draftState && draftState.stage === "pick") {
-        applyDraftPick(participant, action.payload.target === "-" ? "" : action.payload.target);
-        draftStep();
+    } else if (action.type === "draftTurn") {
+      if (draftState && draftState.stage === "auction") {
+        applyDraftAuctionTurn(participant, action.payload.entryId === "-" ? "" : action.payload.entryId);
+        draftAuctionStep();
+      }
+    } else if (action.type === "draftSell") {
+      if (draftState && draftState.stage === "sell") {
+        // Firebase boş diziyi düşürdüğü için satış listesi virgüllü metin olarak taşınıyor.
+        const slots = (action.payload.slotsCsv || "").split(",").filter(Boolean);
+        applyDraftSellDecision(participant, slots);
+        renderDraftScreen();
+        mpPublish();
+        maybeFinishDraftSellStage();
       }
     } else if (action.type === "draftReplace") {
       if (draftState && draftState.stage === "replace") {
-        applyDraftReplacement(participant, action.payload.idx);
+        applyDraftReplacement(participant, action.payload.slot, action.payload.idx);
         renderDraftScreen();
         mpPublish();
         maybeFinishDraftReplaceStage();
@@ -331,7 +346,7 @@ function renderLobbyCreateConfig() {
         <button class="option-btn active" data-draft="off">Kapalı</button>
         <button class="option-btn" data-draft="on">🎯 Draft Modu Açık</button>
       </div>
-      <p class="hint">Her sezon sonunda 3 mevki tek tek draft'a çıkar; ters lig sıralamasıyla (sonuncu ilk seçer) havuzdan bir rakip oyuncusunu bedelsiz seçersin.</p>
+      <p class="hint">Her sezon sonunda 3 mevki draft'a çıkar; herkesin o mevkilerdeki oyuncusu ortak havuza girer ve sırayla açık artırmayla rakip oyuncularına teklif verirsin. Ardından elinde kalanları istersen kendin satar, boşalan her mevkiye 5 adaydan birini imzalarsın.</p>
     </div>
     <button id="lobbyCreateConfirmBtn" class="primary-btn">Lobiyi Oluştur</button>
   `;

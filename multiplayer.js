@@ -94,6 +94,9 @@ function serializeGameState() {
 function applyRemoteState(data) {
   if (!data) return;
   participants = data.participants;
+  // Firebase boş dizileri sessizce düşürüyor: draft modunda ayrı bir transfer penceresi
+  // açılmadığı için pendingOffers her katılımcıda boş kalır ve misafirde undefined gelirdi.
+  for (const p of participants) p.pendingOffers = p.pendingOffers || [];
   human = participants.find(p => p.clubId === myTeamClubId) || participants[0];
   const draftTitleTeamsEl = document.getElementById("draftTitleTeams");
   if (draftTitleTeamsEl) {
@@ -135,41 +138,36 @@ function applyRemoteState(data) {
       }
     : null;
 
-  // Draft state'inde de boş dizi/nesne alanları (log, results, wonBySlot, sellPicks…) Firebase
+  // Draft state'inde de boş dizi/nesne alanları (log, pool, picks, replaceCandidates…) Firebase
   // tarafından sessizce düşürülebilir — hepsini tek tek varsayılana sabitliyoruz.
   draftModeActive = !!data.draftModeActive;
   const ds = data.draftState;
   draftState = ds
     ? {
         slots: ds.slots || [],
-        entries: ds.entries || [],
-        entryIdx: ds.entryIdx || 0,
-        results: ds.results || [],
-        wonBySlot: ds.wonBySlot || {},
-        committed: ds.committed || {},
-        auction: ds.auction
-          ? {
-              slot: ds.auction.slot,
-              ownerClubId: ds.auction.ownerClubId,
-              player: ds.auction.player,
-              currentBid: ds.auction.currentBid || 0,
-              highBidderClubId: ds.auction.highBidderClubId || null,
-              order: ds.auction.order || [],
-              turnIdx: ds.auction.turnIdx || 0,
-              passes: ds.auction.passes || 0
-            }
-          : null,
-        log: ds.log || [],
+        slotIdx: ds.slotIdx || 0,
         stage: ds.stage,
-        sellPicks: ds.sellPicks || {},
+        order: ds.order || [],
+        turnIdx: ds.turnIdx || 0,
+        pool: (ds.pool || []).map(e => ({
+          ownerClubId: e.ownerClubId,
+          player: e.player,
+          status: e.status || "open",
+          takenByClubId: e.takenByClubId || ""
+        })),
+        picks: ds.picks || {},
+        replaceCandidates: ds.replaceCandidates || {},
+        replacePicks: ds.replacePicks || {},
+        reservedNames: ds.reservedNames || [],
+        log: ds.log || [],
         seq: ds.seq || 0
       }
     : null;
 
   rebuildScreen.classList.toggle("hidden", !(mpPhase === "decide" || mpPhase === "auction"));
-  draftScreen.classList.toggle("hidden", !(mpPhase === "draft" || mpPhase === "draftSell"));
+  draftScreen.classList.toggle("hidden", !(mpPhase === "draft" || mpPhase === "draftReplace"));
 
-  if (mpPhase === "draft" || mpPhase === "draftSell") {
+  if (mpPhase === "draft" || mpPhase === "draftReplace") {
     if (draftState) renderDraftScreen();
   } else if (mpPhase === "auction" && auction) {
     renderAuctionView();
@@ -210,13 +208,18 @@ function startHostActionListener() {
       // "Sonraki Sezona Geç" satırı, bu misafirin kararı setin TAMAMLAYAN son karar olsa bile
       // host bizzat bir şeye tıklamadığı sürece hiç yenilenmiyordu. Burada elle tetikliyoruz.
       if (mpPhase === "transfer") updateTransferContinueVisibility();
-    } else if (action.type === "draftTurn") {
-      if (draftState && draftState.stage === "auction" && draftState.auction) {
-        applyDraftTurn(participant, action.payload.action);
+    } else if (action.type === "draftPick") {
+      if (draftState && draftState.stage === "pick") {
+        applyDraftPick(participant, action.payload.target === "-" ? "" : action.payload.target);
         draftStep();
       }
-    } else if (action.type === "draftSell") {
-      applyDraftSellPick(participant, action.payload.slot);
+    } else if (action.type === "draftReplace") {
+      if (draftState && draftState.stage === "replace") {
+        applyDraftReplacement(participant, action.payload.idx);
+        renderDraftScreen();
+        mpPublish();
+        maybeFinishDraftReplaceStage();
+      }
     } else if (action.type === "academyDecision") {
       resolveAcademyOfferDecision(participant, action.payload.accept);
       if (mpPhase === "transfer") updateTransferContinueVisibility();
@@ -328,7 +331,7 @@ function renderLobbyCreateConfig() {
         <button class="option-btn active" data-draft="off">Kapalı</button>
         <button class="option-btn" data-draft="on">🎯 Draft Modu Açık</button>
       </div>
-      <p class="hint">Her sezon sonunda 3 mevki draft'a çıkar; rakiplerin oyuncularına açık artırmayla teklif verir, ardından kendi kadrondan bir oyuncuyu satışa çıkarırsın.</p>
+      <p class="hint">Her sezon sonunda 3 mevki tek tek draft'a çıkar; ters lig sıralamasıyla (sonuncu ilk seçer) havuzdan bir rakip oyuncusunu bedelsiz seçersin.</p>
     </div>
     <button id="lobbyCreateConfirmBtn" class="primary-btn">Lobiyi Oluştur</button>
   `;

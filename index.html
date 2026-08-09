@@ -81,7 +81,7 @@
         <button class="option-btn active" data-draft="off">Kapalı</button>
         <button class="option-btn" data-draft="on">🎯 Draft Modu Açık</button>
       </div>
-      <p class="hint" id="botDraftModeHint">Kapalı: klasik akış. Açık: her sezon sonunda 3 rastgele mevki draft'a çıkar, rakiplerin oyuncularına açık artırmayla teklif verirsin ve kendi kadrondan bir oyuncuyu satışa çıkarırsın.</p>
+      <p class="hint" id="botDraftModeHint">Kapalı: klasik akış. Açık: her sezon sonunda 3 rastgele mevki tek tek draft'a çıkar; ters lig sıralamasıyla (sonuncu ilk seçer) havuzdan rakip oyuncularından birini bedelsiz seçersin.</p>
     </div>
 
     <div class="setup-row">
@@ -218,23 +218,20 @@
   <div class="draft-mode-body">
     <div class="draft-slots-row" id="draftSlotsRow"></div>
 
-    <div id="draftAuctionPanel" class="draft-auction-panel">
+    <div id="draftPickPanel" class="draft-pick-panel">
       <p class="draft-stage-title" id="draftStageTitle"></p>
-      <div class="draft-player-card" id="draftPlayerCard"></div>
-      <div class="draft-bid-line">Güncel Teklif: <span id="draftCurrentBid"></span> <span id="draftHighBidder"></span></div>
+      <div class="draft-pool-grid" id="draftPoolGrid"></div>
       <div class="draft-turn-row" id="draftTurnRow"></div>
       <p class="draft-hint" id="draftTurnHint"></p>
       <div class="draft-buttons">
-        <button id="draftBidBtn" class="keep-btn">💰 Teklif Ver</button>
-        <button id="draftPassBtn" class="sell-btn">🏳️ Pas Geç</button>
+        <button id="draftPassBtn" class="sell-btn">🏳️ Sıranı Pas Geç</button>
       </div>
     </div>
 
-    <div id="draftSellPanel" class="draft-sell-panel hidden">
-      <p class="draft-stage-title">Kadrondan bir oyuncu seç ve satışa çıkar</p>
-      <p class="draft-hint" id="draftSellHint">Seçtiğin oyuncu için büyük Avrupa kulüplerinden 4 teklif gelecek.</p>
-      <div class="draft-sell-grid" id="draftSellGrid"></div>
-      <button id="draftSellConfirmBtn" class="primary-btn" disabled>Satışa Çıkar</button>
+    <div id="draftReplacePanel" class="draft-replace-panel hidden">
+      <p class="draft-stage-title" id="draftReplaceTitle"></p>
+      <p class="draft-hint" id="draftReplaceHint"></p>
+      <div class="draft-replace-grid" id="draftReplaceGrid"></div>
     </div>
 
     <div id="draftLog" class="round-log draft-log"></div>

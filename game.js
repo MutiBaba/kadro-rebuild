@@ -28,17 +28,10 @@ const PITCH_COORDS = {
 const START_BUDGET = 120_000_000;
 const EMPTY_START_BUDGET = 250_000_000;
 const BID_INCREMENT = 5_000_000;
-// Botlara karşı modda Süper Lig'deki 18 takımın TAMAMI seçilebilir; oyun hâlâ tam olarak
-// 3 katılımcıyla oynanır (sen + rastgele 2 bot rakip), sadece havuz genişledi.
+// Botlara karşı modda Süper Lig'deki 18 takımın TAMAMI seçilebilir. Büyük 3'ten biri seçilirse
+// 3 takımlı klasik format (bkz. pickOpponentsFor); diğer 15 takımdan biri seçilirse rakipler
+// her zaman o üç büyük takım olur (4 takımlı format).
 const ALL_CLUB_IDS = PLAYERS_DATA.clubs.map(c => c.id);
-function pickRandomOpponentIds(excludeId, count) {
-  const pool = ALL_CLUB_IDS.filter(id => id !== excludeId);
-  for (let i = pool.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [pool[i], pool[j]] = [pool[j], pool[i]];
-  }
-  return pool.slice(0, count);
-}
 // Sıfırdan Kadro modunda kimse gerçek bir kulübü "devralmıyor" — herkes aynı şartlarda,
 // isimsiz bir kadroyla başlıyor. Botlara bu havuzdan rastgele bir isim atanır.
 const FANTASY_CLUB_NAMES = [
@@ -116,6 +109,13 @@ let mpPhase = "decide";
 // kararıyla state yayınlarsa, guest'in yarım kalan aday seçim ekranı ezilmesin diye bekletiyoruz.
 let localChoicePendingKey = null;
 function currentRoundKey() { return round ? `${currentSeason}:${round.slot}` : null; }
+// Guest transfer ekranında bir karar gönderdiğinde, host'un onu işleyip yayınlaması bir ağ
+// gidiş-dönüşü alır. Bu süre içinde guest BAŞKA bir karta tıklayabilirse, host'un henüz o ikinci
+// kararı görmeden yaptığı bir yayın guest'in local iyimser güncellemesini SİLER (bütün state
+// bloğu halinde üzerine yazılıyor) — bir teklif hiç karara bağlanmamış gibi kalabiliyordu.
+// Bu yüzden guest tarafında aynı anda sadece TEK bir karar "uçuşta" olabilir; yeni bir state
+// gelene kadar diğer tüm kartlar kilitlenir.
+let guestDecisionInFlight = false;
 
 const setupScreen = document.getElementById("setupScreen");
 const rebuildScreen = document.getElementById("rebuildScreen");
@@ -172,12 +172,13 @@ function opponentCountFor(clubId) {
 }
 
 // Büyük 3'ten biri seçilirse klasik rekabet korunur (Fenerbahçe/Beşiktaş/Galatasaray hep
-// birbirine karşı) — rastgele rakip ataması sadece diğer 15 takımdan biri seçildiğinde devreye girer.
+// birbirine karşı, 3 takımlı). Diğer 15 takımdan biri seçilirse rakip HER ZAMAN o üç büyük
+// takımın kendisi olur (rastgele küçük takımlar değil) — 4 takımlı format, sen + üç büyükler.
 function pickOpponentsFor(clubId) {
   if (TRADITIONAL_BIG3.has(clubId)) {
     return [...TRADITIONAL_BIG3].filter(id => id !== clubId);
   }
-  return pickRandomOpponentIds(clubId, opponentCountFor(clubId));
+  return [...TRADITIONAL_BIG3];
 }
 
 let botSetupOpponentIds = pickOpponentsFor(botSetupClubId);
@@ -216,24 +217,67 @@ function renderTeamPickGrid() {
     btn.addEventListener("click", () => {
       if (btn.dataset.club === botSetupClubId) return;
       botSetupClubId = btn.dataset.club;
+      // Rakip sayısı değişebilir (büyük 3 <-> diğerleri) ve eski rakiplerden biri yeni
+      // takımın kendisi olabilir — bu yüzden varsayılan bir öneriyle sıfırdan başlıyoruz,
+      // kullanıcı aşağıdaki rakip ızgarasından istediği gibi değiştirebilir.
       botSetupOpponentIds = pickOpponentsFor(botSetupClubId);
       grid.querySelectorAll(".team-grid-btn").forEach(b => b.classList.toggle("active", b.dataset.club === botSetupClubId));
+      renderOpponentPickGrid();
       renderBotSetupText();
     });
   });
+}
+
+function renderOpponentPickGrid() {
+  const grid = document.getElementById("opponentPickGrid");
+  if (!grid) return;
+  const maxCount = opponentCountFor(botSetupClubId);
+  grid.innerHTML = PLAYERS_DATA.clubs.filter(c => c.id !== botSetupClubId).map(c => `
+    <button class="team-grid-btn${botSetupOpponentIds.includes(c.id) ? " active opponent-pick" : ""}" data-club="${c.id}">
+      ${clubBadgeHTML(c.id, c.name, "team-grid-logo")}
+      <span>${c.name}</span>
+      <span class="team-grid-rating">${clubAvgRating(c.id)}</span>
+    </button>
+  `).join("");
+  grid.querySelectorAll(".team-grid-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.club;
+      if (botSetupOpponentIds.includes(id)) {
+        botSetupOpponentIds = botSetupOpponentIds.filter(x => x !== id);
+      } else if (botSetupOpponentIds.length < maxCount) {
+        botSetupOpponentIds.push(id);
+      } else {
+        return; // zaten dolu — önce birini kaldırmalı
+      }
+      renderOpponentPickGrid();
+      renderBotSetupText();
+    });
+  });
+  const label = document.getElementById("opponentPickLabel");
+  if (label) label.textContent = `Rakiplerini Seç (${botSetupOpponentIds.length}/${maxCount})`;
+  const hint = document.getElementById("opponentPickHint");
+  if (hint) {
+    hint.textContent = botSetupOpponentIds.length < maxCount
+      ? `${maxCount - botSetupOpponentIds.length} rakip daha seç.`
+      : "Rakiplerin hazır — istersen birini kaldırıp başkasını seçebilirsin.";
+  }
 }
 
 function renderBotSetupText() {
   const club = PLAYERS_DATA.clubs.find(c => c.id === botSetupClubId);
   const teamNameEl = document.getElementById("setupTeamName");
   if (teamNameEl) teamNameEl.textContent = club.name;
+  const maxCount = opponentCountFor(botSetupClubId);
+  const isFourTeam = maxCount === 3;
+  const complete = botSetupOpponentIds.length === maxCount;
   const subtitleEl = document.getElementById("setupSubtitle");
-  const isFourTeam = botSetupOpponentIds.length === 3;
   if (subtitleEl) {
     const otherNames = botSetupOpponentIds.map(id => PLAYERS_DATA.clubs.find(c => c.id === id).name);
-    const opponentText = isFourTeam
-      ? `karşında <b>${otherNames[0]}</b>, <b>${otherNames[1]}</b> ve <b>${otherNames[2]}</b> botları var (4 takımlı format)`
-      : `karşında <b>${otherNames[0]}</b> ve <b>${otherNames[1]}</b> botları var`;
+    const opponentText = complete
+      ? (isFourTeam
+          ? `karşında <b>${otherNames[0]}</b>, <b>${otherNames[1]}</b> ve <b>${otherNames[2]}</b> botları var (4 takımlı format)`
+          : `karşında <b>${otherNames[0]}</b> ve <b>${otherNames[1]}</b> botları var`)
+      : `henüz ${maxCount - botSetupOpponentIds.length} rakip daha seçmen gerekiyor`;
     subtitleEl.innerHTML = `
       Sen ${club.name}'i yönetiyorsun, ${opponentText}.
       Herkesin ${botSetupEmptyStart ? "250M€" : "120M€"} bütçesi var${botSetupEmptyStart ? " ve kadronu sıfırdan kuruyorsun" : " ve kendi gerçek 11'i var"}.
@@ -253,7 +297,6 @@ function renderBotSetupText() {
       return `<div class="opponent-chip">${clubBadgeHTML(c.id, c.name, "opponent-chip-logo")}${c.name} 🤖</div>`;
     }).join("");
   }
-  document.getElementById("rerollOpponentsBtn")?.classList.toggle("hidden", TRADITIONAL_BIG3.has(botSetupClubId));
   const modeHintEl = document.getElementById("botModeHint");
   if (modeHintEl) {
     modeHintEl.textContent = botSetupEmptyStart
@@ -261,6 +304,8 @@ function renderBotSetupText() {
       : "Mevcut kadronla başlarsın, mevki mevki tut/sat kararı verirsin.";
   }
   document.getElementById("teamNameRow")?.classList.toggle("hidden", !botSetupEmptyStart);
+  startBtn.disabled = !complete;
+  startBtn.textContent = complete ? "Rebuild'e Başla" : `Önce ${maxCount - botSetupOpponentIds.length} rakip seç`;
 }
 
 document.getElementById("botModePickGroup")?.addEventListener("click", (e) => {
@@ -272,12 +317,6 @@ document.getElementById("botModePickGroup")?.addEventListener("click", (e) => {
   renderBotSetupText();
 });
 
-document.getElementById("rerollOpponentsBtn")?.addEventListener("click", () => {
-  if (TRADITIONAL_BIG3.has(botSetupClubId)) return; // klasik rekabet sabit, karıştırılmaz
-  botSetupOpponentIds = pickRandomOpponentIds(botSetupClubId, opponentCountFor(botSetupClubId));
-  renderBotSetupText();
-});
-
 // Mobilde takım ismi kutusuna dokununca klavye kart içini aşağı kaydırıyor; klavye
 // kapandığında (blur) kartı başa sarıyoruz ki bütçe/Başlat gibi üstteki içerik kaybolmasın.
 document.getElementById("teamNameInput")?.addEventListener("blur", () => {
@@ -285,6 +324,7 @@ document.getElementById("teamNameInput")?.addEventListener("blur", () => {
 });
 
 startBtn.addEventListener("click", () => {
+  if (botSetupOpponentIds.length !== opponentCountFor(botSetupClubId)) return;
   const defs = [
     { clubId: botSetupClubId, isBot: false },
     ...botSetupOpponentIds.map(id => ({ clubId: id, isBot: true }))
@@ -294,6 +334,7 @@ startBtn.addEventListener("click", () => {
   startRebuild(defs, botSetupClubId, botSetupEmptyStart, customTeamName);
 });
 renderTeamPickGrid();
+renderOpponentPickGrid();
 renderBotSetupText();
 restartBtn.addEventListener("click", () => {
   resultScreen.classList.add("hidden");
@@ -974,12 +1015,25 @@ function concedeBid(participant) {
 }
 
 function humanRaiseBid() {
-  if (mpActive() && !mpIsHost()) { MP.sendAction("raise", { clubId: human.clubId }); return; }
+  if (mpActive() && !mpIsHost()) {
+    // Host'un yayınına kadar geçen ağ gecikmesinde butonlar aynı şekilde tıklanabilir
+    // kalırsa sabırsız art arda tıklamalar niyet edilenden fazla teklif göndertebilir —
+    // yanıt gelene kadar iyimser (optimistic) olarak kilitliyoruz.
+    MP.sendAction("raise", { clubId: human.clubId });
+    raiseBidBtn.disabled = true;
+    concedeBidBtn.disabled = true;
+    return;
+  }
   raiseBid(human);
 }
 
 function humanConcede() {
-  if (mpActive() && !mpIsHost()) { MP.sendAction("concede", { clubId: human.clubId }); return; }
+  if (mpActive() && !mpIsHost()) {
+    MP.sendAction("concede", { clubId: human.clubId });
+    raiseBidBtn.disabled = true;
+    concedeBidBtn.disabled = true;
+    return;
+  }
   concedeBid(human);
 }
 
@@ -1324,6 +1378,9 @@ function applyAcademySigning(p, offer) {
 
 function renderTransferScreen(transferLogMessages, botsAccepted, botsTotal) {
   mpPhase = "transfer";
+  // Her taze render (ilk giriş ya da host'tan gelen yeni bir yayın), guest'in "uçuştaki karar"
+  // kilidini serbest bırakır — bkz. guestDecisionInFlight tanımı.
+  guestDecisionInFlight = false;
   // Çok oyunculuda misafirlerin bu ekranı senkron görebilmesi için host, bot teklif özetini
   // (mesajlar + kabul sayısı) yayınlanan state'e ekler — yoksa guest ekranı hiç güncellenmez.
   if (mpActive() && mpIsHost()) {
@@ -1441,35 +1498,58 @@ function resolveOfferDecision(participant, idx, accept) {
   mpPublish();
 }
 
-function handleAcademyOfferDecision(accept, card) {
-  if (mpActive() && !mpIsHost()) {
-    MP.sendAction("academyDecision", { clubId: human.clubId, accept });
-    return;
-  }
-  const offer = human.academyOffer;
-  if (!offer || offer.decided) return;
-  resolveAcademyOfferDecision(human, accept);
-  card.querySelector(".academy-status").textContent = offer.accepted
-    ? `✅ Kadroya katıldı — gerçek reytingi ${offer.actualRating}, değeri ${formatValue(offer.value)}`
-    : "❌ Reddedildi, oyuncu kadroda kaldı";
+function lockOfferCard(card, statusText) {
+  card.querySelector(".academy-status, .offer-status").textContent = statusText;
   card.querySelectorAll("button").forEach(b => (b.disabled = true));
   card.classList.add("decided");
+}
+
+// Transfer ekranındaki DİĞER (henüz karar verilmemiş) tüm kartların butonlarını da kilitler —
+// guestDecisionInFlight ile birlikte, guest'in aynı anda sadece TEK bir kararı "uçuşa"
+// çıkarabilmesini garanti eder (bkz. guestDecisionInFlight tanımı).
+function freezeOtherTransferCards() {
+  document.querySelectorAll("#academyOfferWrap button, #transferOffers button").forEach(b => (b.disabled = true));
+}
+
+function handleAcademyOfferDecision(accept, card) {
+  const offer = human.academyOffer;
+  if (!offer || offer.decided) return;
+  if (mpActive() && !mpIsHost()) {
+    if (guestDecisionInFlight) return;
+    guestDecisionInFlight = true;
+    MP.sendAction("academyDecision", { clubId: human.clubId, accept });
+    offer.decided = true;
+    offer.accepted = accept;
+    lockOfferCard(card, accept ? "✅ Kabul edildi — host onaylayınca gerçek reyting görünecek" : "❌ Reddedildi, oyuncu kadroda kaldı");
+    freezeOtherTransferCards();
+    updateTransferContinueVisibility();
+    return;
+  }
+  resolveAcademyOfferDecision(human, accept);
+  lockOfferCard(card, offer.accepted
+    ? `✅ Kadroya katıldı — gerçek reytingi ${offer.actualRating}, değeri ${formatValue(offer.value)}`
+    : "❌ Reddedildi, oyuncu kadroda kaldı");
   updateTransferContinueVisibility();
 }
 
 function handleOfferDecision(idx, accept, card) {
-  if (mpActive() && !mpIsHost()) {
-    MP.sendAction("offerDecision", { clubId: human.clubId, idx, accept });
-    return;
-  }
   const offer = human.pendingOffers[idx];
   if (!offer || offer.decided) return;
+  if (mpActive() && !mpIsHost()) {
+    if (guestDecisionInFlight) return;
+    guestDecisionInFlight = true;
+    MP.sendAction("offerDecision", { clubId: human.clubId, idx, accept });
+    offer.decided = true;
+    offer.accepted = accept;
+    lockOfferCard(card, accept ? `✅ Satıldı (+${formatValue(offer.offerValue)})` : "❌ Reddedildi, oyuncu kadroda kaldı");
+    freezeOtherTransferCards();
+    updateTransferContinueVisibility();
+    return;
+  }
   resolveOfferDecision(human, idx, accept);
-  card.querySelector(".offer-status").textContent = offer.accepted
+  lockOfferCard(card, offer.accepted
     ? `✅ Satıldı (+${formatValue(offer.offerValue)})`
-    : "❌ Reddedildi, oyuncu kadroda kaldı";
-  card.querySelectorAll("button").forEach(b => (b.disabled = true));
-  card.classList.add("decided");
+    : "❌ Reddedildi, oyuncu kadroda kaldı");
   updateTransferContinueVisibility();
 }
 

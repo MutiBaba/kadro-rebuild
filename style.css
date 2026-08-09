@@ -278,8 +278,6 @@ body {
 
 .hint-inline { font-weight: 400; color: var(--muted); font-size: 0.78em; }
 
-.small-btn { padding: 0.5rem; font-size: 0.82rem; margin-top: 0.5rem; margin-bottom: 0; }
-
 .team-pick-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -321,6 +319,10 @@ body {
   padding: 0.05rem 0.4rem;
 }
 .team-grid-btn.active .team-grid-rating { color: #06210f; background: rgba(6, 33, 15, 0.18); }
+
+/* Rakip ızgarasındaki seçim "senin takımın" (yeşil) ile karışmasın diye ayrı bir renk. */
+.team-grid-btn.active.opponent-pick { background: var(--danger); border-color: var(--danger); color: #3a0a0a; }
+.team-grid-btn.active.opponent-pick .team-grid-rating { color: #3a0a0a; background: rgba(58, 10, 10, 0.18); }
 
 .primary-btn {
   width: 100%;
@@ -1502,7 +1504,6 @@ body {
   .team-grid-btn { padding: 0.35rem 0.2rem; font-size: 0.6rem; gap: 0.15rem; }
   .team-grid-logo { width: 20px; height: 20px; font-size: 0.56rem; }
   .team-grid-rating { font-size: 0.52rem; padding: 0.03rem 0.3rem; }
-  .small-btn { padding: 0.4rem; font-size: 0.72rem; margin-top: 0.3rem; }
   #teamNameRow .lobby-input { padding: 0.5rem 0.7rem; font-size: 0.85rem; }
   .budget-display { padding: 0.4rem; margin-bottom: 0.4rem; }
   .budget-label { font-size: 0.68rem; }

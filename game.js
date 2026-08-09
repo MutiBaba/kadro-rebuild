@@ -1664,6 +1664,10 @@ function onContinueSeason() {
   currentSeason++;
   slotIndex = 0;
   transferScreen.classList.add("hidden");
+  if (draftModeActive) {
+    simulateSeasonAndShowTable();
+    return;
+  }
   rebuildScreen.classList.remove("hidden");
   renderPitch();
   renderBotStatus();

@@ -95,21 +95,75 @@ const TOP_SCORER_CAREER_POINT = 1;
 const POSITION_UPGRADE_CAREER_POINT = 1;
 
 // Her sezon sonunda altyapıdan çıkan genç oyuncu için isim havuzu — bir isim bir kez kullanılır.
-const ACADEMY_NAME_POOL = [
-  "Burak Öztürk", "Şevki Kıvanç Özcan", "Furkan Mehmetcik",
-  "Emirhan Kaya", "Berat Yavaş", "Doğukan Çetiner", "Yiğit Aslanoğlu", "Kerem Balcı",
-  "Alperen Doğan", "Efe Karadeniz", "Baran Uçar", "Mert Solmaz", "Ege Tuncer",
-  "Arda Kesici", "Utku Şener", "Poyraz İnan", "Tolga Bayrak", "Onur Kement",
-  "Bartu Sezgin", "Çınar Akalın", "Görkem Tarhan", "Deniz Özkaya", "Umut Bilgiç",
-  "Atakan Yörük", "Kaan Selvi", "Metehan Turgut", "Alp Eren Coşkun", "Barış Demirtaş",
-  "Enes Karaman", "Yusuf Ziya Erden", "Taha Girgin", "Ozan Bektaş", "Emir Sağlam",
-  "Rüzgar Aytaç", "Tuna Kayacan", "Batuhan Erol", "Bora Yücel", "Kağan Törenli",
-  "Sarp Değirmenci", "Cem Kutluay", "İlkay Bostancı", "Rıdvan Şener", "Doruk Alkan",
-  "Mira Han Aksu", "Kayra Baysal", "Berke Onaran", "Volkan Peker", "Sinan Ergüven",
-  "Halil Kocabaş", "Recep Tuğrul", "Emrecan Uğurlu", "Serhat Batur", "Toprak Yalman",
-  "Ozan Kaçar", "Alihan Tezcan", "Boran Şevik", "Erdem Kutay", "Timur Aygün"
-];
+const ACADEMY_NAME_POOLS = {
+  superlig: [
+    "Burak Öztürk", "Şevki Kıvanç Özcan", "Furkan Mehmetcik",
+    "Emirhan Kaya", "Berat Yavaş", "Doğukan Çetiner", "Yiğit Aslanoğlu", "Kerem Balcı",
+    "Alperen Doğan", "Efe Karadeniz", "Baran Uçar", "Mert Solmaz", "Ege Tuncer",
+    "Arda Kesici", "Utku Şener", "Poyraz İnan", "Tolga Bayrak", "Onur Kement",
+    "Bartu Sezgin", "Çınar Akalın", "Görkem Tarhan", "Deniz Özkaya", "Umut Bilgiç",
+    "Atakan Yörük", "Kaan Selvi", "Metehan Turgut", "Alp Eren Coşkun", "Barış Demirtaş",
+    "Enes Karaman", "Yusuf Ziya Erden", "Taha Girgin", "Ozan Bektaş", "Emir Sağlam",
+    "Rüzgar Aytaç", "Tuna Kayacan", "Batuhan Erol", "Bora Yücel", "Kağan Törenli",
+    "Sarp Değirmenci", "Cem Kutluay", "İlkay Bostancı", "Rıdvan Şener", "Doruk Alkan",
+    "Mira Han Aksu", "Kayra Baysal", "Berke Onaran", "Volkan Peker", "Sinan Ergüven",
+    "Halil Kocabaş", "Recep Tuğrul", "Emrecan Uğurlu", "Serhat Batur", "Toprak Yalman",
+    "Ozan Kaçar", "Alihan Tezcan", "Boran Şevik", "Erdem Kutay", "Timur Aygün"
+  ],
+  premierleague: [
+    "Jack Harrison", "Oliver Bennett", "Harry Whitfield", "George Sutton", "Charlie Mercer",
+    "Thomas Bardsley", "James Holloway", "William Pryce", "Joseph Attwood", "Daniel Kestrel",
+    "Alfie Nunn", "Freddie Colston", "Archie Fenwick", "Leo Sandford", "Oscar Whitlock",
+    "Finley Rourke", "Theo Standish", "Ethan Marchant", "Noah Kellerman", "Jacob Trench",
+    "Callum Ashworth", "Ryan Petit", "Dylan Ferriby", "Lewis Cartmell", "Connor Blakemore",
+    "Bradley Fenn", "Kai Rutledge", "Elliot Sowerby", "Reece Alderton", "Jamie Corfield",
+    "Owen Blackstock", "Toby Winstone", "Max Larrimore", "Sam Ecclestone", "Ben Withington",
+    "Luke Farrant", "Adam Broxton", "Josh Kingsleigh", "Aaron Dunmore", "LiamOsgathorpe",
+    "Tyler Rushworth", "Nathan Colefax", "Harvey Standen", "Ollie Braithewick", "Riley Cussen",
+    "Mason Fairclough", "Jude Pemberton", "Cole Wetherby", "Blake Sowden", "Dean Halloway"
+  ],
+  laliga: [
+    "Pablo Serra", "Álvaro Feijoo", "Iker Zubiaurre", "Nacho Perales", "Mateo Cifuentes",
+    "Hugo Bermejo", "Diego Larraz", "Marcos Peláez", "Adrián Otxoa", "Rubén Cascales",
+    "Guillermo Vidales", "Javier Montull", "Lucas Herranz", "Bruno Escoriaza", "Enzo Padrón",
+    "Izan Trujillano", "Martín Ausejo", "Gonzalo Belástegui", "Darío Miralbes", "Samuel Orozco",
+    "Leo Zurutuza", "Sergio Millares", "Rodrigo Escamilla", "Aitor Loinaz", "Óliver Segurola",
+    "Christian Farelo", "Marc Iturbide", "Unai Belóstegui", "Eric Somoza", "Iván Pellicer",
+    "Andrés Uranga", "Raúl Berastegi", "Fernando Ochandiano", "Yeray Solabarrieta", "Cristian Muinelo",
+    "Alonso Errandonea", "Ismael Bilbatua", "Aaron Legarreta", "David Zubizarreta", "Pol Sarabia",
+    "Manu Retolaza", "Kepa Undabeitia", "Jon Etxaniz", "Asier Larrañeta", "Iñigo Zorrozua",
+    "Aimar Beskoetxea", "Ander Uriarte", "Mikel Astarloa", "Julen Barandiaran", "Gorka Intxausti"
+  ],
+  bundesliga: [
+    "Jonas Vogtmann", "Lukas Beisenherz", "Finn Ottersbach", "Paul Kesselring", "Max Wienecke",
+    "Elias Brachmann", "Felix Hallervorden", "Moritz Schallenberg", "Nico Trettenbach", "Tim Wackernagel",
+    "Leon Bergsträsser", "Julian Rehkopf", "David Steglitz", "Fabian Osterhagen", "Simon Wachendorf",
+    "Jannik Kranenburg", "Erik Dallmeier", "Tom Sassenberg", "Kevin Lindenmayer", "Marvin Achterberg",
+    "Niklas Bruckmoser", "Robin Fassbender", "Alexander Storbeck", "Philipp Kranzler", "Sebastian Moosbrugger",
+    "Benedikt Wispelaere", "Christoph Riedmayer", "Florian Enskat", "Matthias Grünewald", "Dominik Herrgesell",
+    "Jan Uhlenbrock", "Timo Bickelhaupt", "Marius Kreutzberg", "Justus Rothacker", "Anton Wehmeyer",
+    "Lorenz Kaltenegger", "Vincent Strassburger", "Adrian Rohleder", "Konstantin Meiwald", "Emil Buschbeck",
+    "Frederik Steinkühler", "Henrik Ohlendorf", "Malte Vollbrecht", "Bastian Kienberger", "Hannes Falkenrath",
+    "Lennard Grasmück", "Wilhelm Ebersbach", "Oskar Reifschneider", "Theodor Winklhofer", "Arthur Deichgräber"
+  ],
+  ligue1: [
+    "Nathan Provost", "Théo Lambrecht", "Enzo Bellanger", "Hugo Chartrain", "Maxence Duvauchel",
+    "Lucas Fresneau", "Antoine Vermande", "Louis Chastagner", "Gabriel Mourousi", "Baptiste Rocourt",
+    "Mathis Delacourt", "Léo Pontonnier", "Noé Salembier", "Rayan Vantomme", "Timéo Grangier",
+    "Ethan Bouscaren", "Sacha Ferrandou", "Adam Descelliers", "Yanis Brossois", "Malo Tercinier",
+    "Axel Guilloux", "Romain Château", "Kylian Ostertag", "Valentin Merceron", "Clément Anfossi",
+    "Julien Chavanon", "Quentin Delvincourt", "Bastien Rousserie", "Corentin Faverjon", "Victor Ledoyen",
+    "Paul Grandcolas", "Arnaud Lechevalier", "Simon Boissenot", "Florian Delombre", "Mathéo Perruchon",
+    "Alexandre Vannier", "Gaspard Rolando", "Tristan Cazenave", "Loris Berhault", "Dorian Bouziane",
+    "Mickaël Fontanel", "Sébastien Aymonier", "Yohan Descharmes", "Gauthier Prunier", "Wesley Trannoy",
+    "Benoît Charrance", "Killian Vasseleu", "Anthony Grosjean", "Damien Fauveau", "Guillaume Sartiaux"
+  ]
+};
 let usedAcademyNames = new Set();
+
+function activeAcademyNamePool() {
+  return ACADEMY_NAME_POOLS[activeLeagueId] || ACADEMY_NAME_POOLS.superlig;
+}
 
 // ---- Draft Modu ----
 const DRAFT_SLOT_COUNT = 3;
@@ -771,24 +825,69 @@ function renderForcedFill() {
 }
 
 // Her turda gösterilen 3 aday sabit bir formülle seçilir: 1 pahalı (82+ reyting),
-// 1 orta segment (74-82 reyting) dünya piyasasından, ve 1 bedava transfer — yurtdışının
-// düşük profilli kulüplerinden (73 reyting altı, ücretsiz). Süper Lig'deki TÜM takımlar
-// artık tek oyunculuda seçilebildiği için bedava transfer havuzu artık Süper Lig'den değil,
-// yabancı alt/orta seviye kulüplerden geliyor. Kimseyi alamayan oyuncu bedava transferi
-// almak zorunda kalır çünkü değeri her zaman 0'dır.
+// 1 orta segment (74-82 reyting), ve 1 bedava transfer (73 reyting altı, ücretsiz).
+// ADAY KAYNAĞI: artık kurgusal WORLD_MARKET değil, DİĞER 4 LİGİN GERÇEK oyuncuları
+// (bkz. crossLeaguePlayerPool). Oynanan ligin kulüpleri "hikâyenin içinde" (rakip/rakip
+// adayı) olduğu için o ligden asla oyuncu satılmaz. Kimseyi alamayan oyuncu bedava
+// transferi almak zorunda kalır çünkü değeri her zaman 0'dır.
 function pickRandomFromPool(pool) {
   if (!pool || pool.length === 0) return null;
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
+// Aktif lig DIŞINDAKİ tüm liglerin tüm kulüplerinden, istenen mevki kategorisine düşen
+// gerçek oyuncular. Her lig dosyası aynı slot anahtarlarını kullandığı için SLOT_CATEGORY
+// doğrudan uygulanabilir. Sonuç kopya (clone) döner — orijinal lig verisi asla mutasyona
+// uğramasın diye. Havuzun kendisi lig+kategori bazında cache'lenir.
+const crossLeaguePoolCache = {};
+function crossLeaguePlayerPool(category) {
+  const key = `${activeLeagueId}|${category}`;
+  let pool = crossLeaguePoolCache[key];
+  if (!pool) {
+    pool = [];
+    // Lig verilerinde aynı isim birden fazla ligde geçebiliyor (aynı oyuncunun farklı
+    // liglerdeki kaydı). Aktif ligin kadrolarında geçen HİÇBİR isim havuza girmez —
+    // yoksa "kendi liginden transfer" sızıntısı olur.
+    const seen = new Set();
+    for (const club of leagueClubs()) {
+      for (const slot of SLOTS) {
+        const p = club.xi && club.xi[slot];
+        if (p && p.name) seen.add(p.name);
+      }
+    }
+    for (const league of LEAGUES) {
+      if (league.id === activeLeagueId) continue;
+      for (const club of league.data.clubs) {
+        for (const slot of SLOTS) {
+          if (SLOT_CATEGORY[slot] !== category) continue;
+          const p = club.xi && club.xi[slot];
+          if (!p || !p.name || seen.has(p.name)) continue;
+          seen.add(p.name);
+          pool.push({
+            name: p.name,
+            club: club.name,
+            nationality: p.nationality || "—",
+            value: p.value,
+            rating: p.rating,
+            age: p.age,
+            leagueId: league.id
+          });
+        }
+      }
+    }
+    crossLeaguePoolCache[key] = pool;
+  }
+  return pool.map(p => ({ ...p }));
+}
+
 function freeTransferPool(category) {
-  return WORLD_MARKET[category]
+  return crossLeaguePlayerPool(category)
     .filter(p => p.rating < 73 && !usedWorldNames.has(p.name))
     .map(p => ({ name: p.name, club: p.club, nationality: p.nationality, value: 0, rating: p.rating, age: p.age }));
 }
 
-// Üç sabit segment: Yıldız Transfer (82+), Orta Segment (74-82) dünya piyasasından, ve
-// Bedava Transfer (73 altı, diğer Süper Lig takımlarından, €0). Her tur bu 3 aday gösterilir.
+// Üç sabit segment: Yıldız Transfer (82+), Orta Segment (74-82) ve Bedava Transfer
+// (73 altı, €0) — hepsi oynanan lig DIŞINDAKİ 4 ligin gerçek oyuncularından seçilir.
 // 3 katılımcılı (geleneksel Fenerbahçe/Beşiktaş/Galatasaray) formatta 3 sabit segment:
 // Yıldız Transfer (82+), Orta Segment (74-82), Bedava Transfer (73 altı, yurtdışı, €0).
 // 4 katılımcılı formatta (büyük 3 dışında bir takım seçildiğinde) araya bir "Ucuz Transfer"
@@ -796,13 +895,17 @@ function freeTransferPool(category) {
 // tıkanmasına (sürekli açık artırma / aday tükenmesi) yol açabiliyordu.
 function buildSlotCandidates(category) {
   const fourTeamFormat = participants.length >= 4;
-  const available = WORLD_MARKET[category].filter(p => !usedWorldNames.has(p.name));
+  const available = crossLeaguePlayerPool(category).filter(p => !usedWorldNames.has(p.name));
   const freePool = freeTransferPool(category);
   const picked = [];
   const notPicked = (p) => !picked.some(c => c.name === p.name);
 
   const expensivePool = available.filter(p => p.rating >= 82);
-  const expensive = pickRandomFromPool(expensivePool.filter(notPicked)) || pickRandomFromPool(available.filter(notPicked)) || makeFreeAgent(category);
+  // Yıldız havuzu (özellikle bek mevkilerinde gerçek 82+ oyuncu sayısı az) uzun kariyerlerde
+  // tükenebilir; o durumda bandı bir kademe (80+) gevşetip yine de gerçek oyuncu sunuyoruz.
+  const expensive = pickRandomFromPool(expensivePool.filter(notPicked))
+    || pickRandomFromPool(available.filter(p => p.rating >= 80).filter(notPicked))
+    || pickRandomFromPool(available.filter(notPicked)) || makeFreeAgent(category);
   if (expensive) picked.push(expensive);
 
   if (fourTeamFormat) {
@@ -886,7 +989,7 @@ function makeFreeAgent(category, maxValue) {
 }
 
 function categoryPool(category) {
-  const pool = WORLD_MARKET[category].filter(p => !usedWorldNames.has(p.name));
+  const pool = crossLeaguePlayerPool(category).filter(p => !usedWorldNames.has(p.name));
   const withFree = [...pool, ...freeTransferPool(category)];
   return withFree.length > 0 ? withFree : [makeFreeAgent(category)];
 }
@@ -1418,7 +1521,7 @@ function computeAcademyValue(rating, age) {
 }
 
 function pickUnusedAcademyName() {
-  const pool = ACADEMY_NAME_POOL.filter(n => !usedAcademyNames.has(n));
+  const pool = activeAcademyNamePool().filter(n => !usedAcademyNames.has(n));
   if (pool.length === 0) return null; // isim havuzu tükendi (çok uzun kariyer) — bu sezon oluşturulmaz
   const name = pool[Math.floor(Math.random() * pool.length)];
   usedAcademyNames.add(name);
@@ -1980,7 +2083,7 @@ function buildDraftReplacementCandidates(participant, slot) {
   };
 
   for (const spec of DRAFT_REPLACEMENT_TIERS) {
-    const market = WORLD_MARKET[category] || [];
+    const market = crossLeaguePlayerPool(category);
     let pick = null;
     if (spec.tier === "free") {
       pick = pickRandomFromPool(fresh(freeTransferPool(category)));
@@ -1988,7 +2091,10 @@ function buildDraftReplacementCandidates(participant, slot) {
       if (!pick) pick = makeFreeAgent(category, 0);
     } else {
       const range = spec.tier === "cheap" ? [73, 78] : spec.tier === "mid" ? [78, 82] : [82, 200];
+      // Yıldız bandı tükenirse 80+'a gevşet (bkz. buildSlotCandidates'teki aynı davranış).
+      const relaxed = spec.tier === "star" ? 80 : range[0];
       pick = pickRandomFromPool(fresh(market.filter(p => p.rating >= range[0] && p.rating < range[1])))
+        || pickRandomFromPool(fresh(market.filter(p => p.rating >= relaxed && p.rating < range[1])))
         || pickRandomFromPool(fresh(market))
         || makeFreeAgent(category);
     }

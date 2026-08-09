@@ -32,6 +32,36 @@ const BID_INCREMENT = 5_000_000;
 // 3 takımlı klasik format (bkz. pickOpponentsFor); diğer 15 takımdan biri seçilirse rakipler
 // her zaman o üç büyük takım olur (4 takımlı format).
 const ALL_CLUB_IDS = PLAYERS_DATA.clubs.map(c => c.id);
+
+// ---- Lig kayıtları (sadece BOTLARA KARŞI modu için) ----
+// Çok oyunculu (online) mod her zaman Süper Lig'dir; lig seçici MP akışında görünmez.
+// Diğer liglerin oyuncu verileri şu an PLACEHOLDER'dır (bkz. data/players_*.js).
+const LEAGUES = [
+  { id: "superlig",      name: "Süper Lig",      flag: "🇹🇷", data: PLAYERS_DATA },
+  { id: "premierleague", name: "Premier League", flag: "🏴", data: typeof PREMIER_LEAGUE_DATA !== "undefined" ? PREMIER_LEAGUE_DATA : null },
+  { id: "laliga",        name: "La Liga",        flag: "🇪🇸", data: typeof LA_LIGA_DATA !== "undefined" ? LA_LIGA_DATA : null },
+  { id: "bundesliga",    name: "Bundesliga",     flag: "🇩🇪", data: typeof BUNDESLIGA_DATA !== "undefined" ? BUNDESLIGA_DATA : null },
+  { id: "ligue1",        name: "Ligue 1",        flag: "🇫🇷", data: typeof LIGUE1_DATA !== "undefined" ? LIGUE1_DATA : null }
+].filter(l => l.data && Array.isArray(l.data.clubs) && l.data.clubs.length > 0);
+
+let activeLeagueId = "superlig";
+function activeLeague() {
+  return LEAGUES.find(l => l.id === activeLeagueId) || LEAGUES[0];
+}
+function activeLeagueData() { return activeLeague().data; }
+function leagueClubs() { return activeLeagueData().clubs; }
+// Kulüp araması önce aktif ligde yapılır; bulunamazsa TÜM ligler taranır. Böylece
+// çok oyunculu mod (her zaman Süper Lig kimlikleriyle çalışır) aktif lig ne olursa
+// olsun kulübünü bulmaya devam eder.
+function findClub(clubId) {
+  let c = leagueClubs().find(x => x.id === clubId);
+  if (c) return c;
+  for (const l of LEAGUES) {
+    c = l.data.clubs.find(x => x.id === clubId);
+    if (c) return c;
+  }
+  return null;
+}
 // Sıfırdan Kadro modunda kimse gerçek bir kulübü "devralmıyor" — herkes aynı şartlarda,
 // isimsiz bir kadroyla başlıyor. Botlara bu havuzdan rastgele bir isim atanır.
 const FANTASY_CLUB_NAMES = [
@@ -212,14 +242,31 @@ let botSetupDraftMode = false;
 // bot) — havuzda daha fazla takım rekabet ettiği için tek bir 3'lü ortak aday listesi sık sık
 // çakışıp oyunun tıkanmasına yol açabiliyordu; 4. bir "Ucuz Transfer" segmenti bu yüzden devreye
 // giriyor (bkz. buildSlotCandidates), böylece her turda katılımcı sayısı kadar seçenek olur.
+// Süper Lig dışındaki liglerde "üç büyükler" gibi kültürel bir karşılık yok. Bu yüzden
+// oralarda format HER ZAMAN 4 takımlıdır (sen + 3 bot) ve varsayılan rakipler o ligin
+// başlangıç 11'i ortalamasına göre EN GÜÇLÜ 3 kulübüdür (kullanıcı ızgaradan değiştirebilir).
+function isSuperLig() { return activeLeagueId === "superlig"; }
+
 function opponentCountFor(clubId) {
+  if (!isSuperLig()) return 3;
   return TRADITIONAL_BIG3.has(clubId) ? 2 : 3;
+}
+
+// Aktif ligin başlangıç 11'i ortalamasına göre en güçlü N kulübü (id listesi).
+function topClubIdsByRating(n, excludeId) {
+  return leagueClubs()
+    .filter(c => c.id !== excludeId)
+    .map(c => ({ id: c.id, avg: parseFloat(clubAvgRating(c.id)) }))
+    .sort((a, b) => b.avg - a.avg || a.id.localeCompare(b.id))
+    .slice(0, n)
+    .map(c => c.id);
 }
 
 // Büyük 3'ten biri seçilirse klasik rekabet korunur (Fenerbahçe/Beşiktaş/Galatasaray hep
 // birbirine karşı, 3 takımlı). Diğer 15 takımdan biri seçilirse rakip HER ZAMAN o üç büyük
 // takımın kendisi olur (rastgele küçük takımlar değil) — 4 takımlı format, sen + üç büyükler.
 function pickOpponentsFor(clubId) {
+  if (!isSuperLig()) return topClubIdsByRating(3, clubId);
   if (TRADITIONAL_BIG3.has(clubId)) {
     return [...TRADITIONAL_BIG3].filter(id => id !== clubId);
   }
@@ -229,7 +276,7 @@ function pickOpponentsFor(clubId) {
 let botSetupOpponentIds = pickOpponentsFor(botSetupClubId);
 
 function clubAvgRating(clubId) {
-  const club = PLAYERS_DATA.clubs.find(c => c.id === clubId);
+  const club = findClub(clubId);
   const ratings = Object.values(club.xi).map(p => p.rating);
   return (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1);
 }
@@ -248,10 +295,47 @@ function clubBadgeHTML(clubId, name, sizeClass) {
   return `<span class="club-badge ${sizeClass}" style="background: hsl(${hue}, 55%, 32%); color: hsl(${hue}, 70%, 88%);">${initials}</span>`;
 }
 
+// Lig seçici — sadece botlara karşı kurulum ekranında. Kulüp logolarımız olmadığı için
+// kulüp rozetleriyle aynı görsel dili kullanıp bayrak emojisi gösteriyoruz.
+function renderLeaguePickGrid() {
+  const grid = document.getElementById("leaguePickGroup");
+  if (!grid) return;
+  grid.innerHTML = LEAGUES.map(l => `
+    <button class="team-grid-btn league-grid-btn${l.id === activeLeagueId ? " active" : ""}" data-league="${l.id}">
+      <span class="league-grid-flag">${l.flag}</span>
+      <span>${l.name}</span>
+      <span class="team-grid-rating">${l.data.clubs.length} takım</span>
+    </button>
+  `).join("");
+  grid.querySelectorAll(".league-grid-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (btn.dataset.league === activeLeagueId) return;
+      activeLeagueId = btn.dataset.league;
+      // Yeni ligde eski kulüp id'leri geçersiz — varsayılanlara sıfırlıyoruz.
+      botSetupClubId = isSuperLig()
+        ? "fenerbahce"
+        : (topClubIdsByRating(1, null)[0] || leagueClubs()[0].id);
+      botSetupOpponentIds = pickOpponentsFor(botSetupClubId);
+      renderLeaguePickGrid();
+      renderTeamPickGrid();
+      renderOpponentPickGrid();
+      renderBotSetupText();
+    });
+  });
+  const hint = document.getElementById("leaguePickHint");
+  if (hint) {
+    hint.textContent = isSuperLig()
+      ? "Süper Lig: gerçek kadrolar. Üç büyüklerden birini seçersen 3 takımlı klasik format."
+      : `${activeLeague().name}: kadro verileri şu an placeholder. Format her zaman 4 takımlı (sen + 3 bot).`;
+  }
+  const teamLabel = document.getElementById("teamPickLabelHint");
+  if (teamLabel) teamLabel.textContent = `(${activeLeague().name}'deki ${leagueClubs().length} takımdan biri)`;
+}
+
 function renderTeamPickGrid() {
   const grid = document.getElementById("botTeamPickGroup");
   if (!grid) return;
-  grid.innerHTML = PLAYERS_DATA.clubs.map(c => `
+  grid.innerHTML = leagueClubs().map(c => `
     <button class="team-grid-btn${c.id === botSetupClubId ? " active" : ""}" data-club="${c.id}">
       ${clubBadgeHTML(c.id, c.name, "team-grid-logo")}
       <span>${c.name}</span>
@@ -277,7 +361,7 @@ function renderOpponentPickGrid() {
   const grid = document.getElementById("opponentPickGrid");
   if (!grid) return;
   const maxCount = opponentCountFor(botSetupClubId);
-  grid.innerHTML = PLAYERS_DATA.clubs.filter(c => c.id !== botSetupClubId).map(c => `
+  grid.innerHTML = leagueClubs().filter(c => c.id !== botSetupClubId).map(c => `
     <button class="team-grid-btn${botSetupOpponentIds.includes(c.id) ? " active opponent-pick" : ""}" data-club="${c.id}">
       ${clubBadgeHTML(c.id, c.name, "team-grid-logo")}
       <span>${c.name}</span>
@@ -309,7 +393,7 @@ function renderOpponentPickGrid() {
 }
 
 function renderBotSetupText() {
-  const club = PLAYERS_DATA.clubs.find(c => c.id === botSetupClubId);
+  const club = findClub(botSetupClubId);
   const teamNameEl = document.getElementById("setupTeamName");
   if (teamNameEl) teamNameEl.textContent = club.name;
   const maxCount = opponentCountFor(botSetupClubId);
@@ -317,7 +401,7 @@ function renderBotSetupText() {
   const complete = botSetupOpponentIds.length === maxCount;
   const subtitleEl = document.getElementById("setupSubtitle");
   if (subtitleEl) {
-    const otherNames = botSetupOpponentIds.map(id => PLAYERS_DATA.clubs.find(c => c.id === id).name);
+    const otherNames = botSetupOpponentIds.map(id => findClub(id).name);
     const opponentText = complete
       ? (isFourTeam
           ? `karşında <b>${otherNames[0]}</b>, <b>${otherNames[1]}</b> ve <b>${otherNames[2]}</b> botları var (4 takımlı format)`
@@ -338,7 +422,7 @@ function renderBotSetupText() {
   const opponentsRow = document.getElementById("setupOpponentsRow");
   if (opponentsRow) {
     opponentsRow.innerHTML = botSetupOpponentIds.map(id => {
-      const c = PLAYERS_DATA.clubs.find(cc => cc.id === id);
+      const c = findClub(id);
       return `<div class="opponent-chip">${clubBadgeHTML(c.id, c.name, "opponent-chip-logo")}${c.name} 🤖</div>`;
     }).join("");
   }
@@ -395,6 +479,7 @@ startBtn.addEventListener("click", () => {
   const customTeamName = botSetupEmptyStart ? (teamNameInput?.value.trim() || null) : null;
   startRebuild(defs, botSetupClubId, botSetupEmptyStart, customTeamName, botSetupSeasonCount, botSetupDraftMode);
 });
+renderLeaguePickGrid();
 renderTeamPickGrid();
 renderOpponentPickGrid();
 renderBotSetupText();
@@ -464,6 +549,9 @@ function makeVacantSlot() {
 
 function startRebuild(customDefs, myClubId, emptyStart, customTeamName, seasonCount, draftMode) {
   const defs = customDefs || PARTICIPANT_DEFS;
+  // Çok oyunculu mod her zaman Süper Lig — kullanıcı daha önce kurulum ekranında başka bir
+  // lig seçmiş olsa bile MP başlarken aktif ligi Süper Lig'e sabitliyoruz.
+  if (mpActive()) activeLeagueId = "superlig";
   isEmptyStartMode = !!emptyStart;
   MAX_SEASONS = seasonCount || 5;
   draftModeActive = !!draftMode;
@@ -474,7 +562,7 @@ function startRebuild(customDefs, myClubId, emptyStart, customTeamName, seasonCo
   const takenFantasyNames = new Set();
   if (isEmptyStartMode && customTeamName) takenFantasyNames.add(customTeamName);
   participants = defs.map(def => {
-    const club = PLAYERS_DATA.clubs.find(c => c.id === def.clubId);
+    const club = findClub(def.clubId);
     const squad = {};
     for (const slot of SLOTS) {
       if (isEmptyStartMode) {

@@ -56,7 +56,13 @@
     </p>
 
     <div class="setup-row">
-      <label>Takımını Seç <span class="hint-inline">(Süper Lig'deki 18 takımdan biri)</span></label>
+      <label>Ligini Seç</label>
+      <div class="team-pick-grid league-pick-grid" id="leaguePickGroup"></div>
+      <p class="hint" id="leaguePickHint"></p>
+    </div>
+
+    <div class="setup-row">
+      <label>Takımını Seç <span class="hint-inline" id="teamPickLabelHint">(Süper Lig&#39;deki 18 takımdan biri)</span></label>
       <div class="team-pick-grid" id="botTeamPickGroup"></div>
     </div>
 
@@ -279,6 +285,10 @@
 </section>
 
 <script src="data/players.js"></script>
+<script src="data/players_premierleague.js"></script>
+<script src="data/players_laliga.js"></script>
+<script src="data/players_bundesliga.js"></script>
+<script src="data/players_ligue1.js"></script>
 <script src="data/worldmarket.js"></script>
 <script src="pixelavatar.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>

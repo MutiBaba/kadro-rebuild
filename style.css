@@ -329,6 +329,15 @@ body {
 }
 .team-grid-btn.active .team-grid-rating { color: #06210f; background: rgba(6, 33, 15, 0.18); }
 
+/* Lig seçici — takım ızgarasıyla aynı görsel dil, ama az sayıda öğe olduğu için
+   kaydırmasız ve daha geniş hücrelerle. */
+.league-pick-grid {
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  max-height: none;
+  overflow-y: visible;
+}
+.league-grid-flag { font-size: 1.5rem; line-height: 1; }
+
 /* Rakip ızgarasındaki seçim "senin takımın" (yeşil) ile karışmasın diye ayrı bir renk. */
 .team-grid-btn.active.opponent-pick { background: var(--danger); border-color: var(--danger); color: #3a0a0a; }
 .team-grid-btn.active.opponent-pick .team-grid-rating { color: #3a0a0a; background: rgba(58, 10, 10, 0.18); }
@@ -1512,6 +1521,8 @@ body {
   .team-pick-grid { grid-template-columns: repeat(3, 1fr); max-height: 180px; gap: 0.35rem; }
   .team-grid-btn { padding: 0.35rem 0.2rem; font-size: 0.6rem; gap: 0.15rem; }
   .team-grid-logo { width: 20px; height: 20px; font-size: 0.56rem; }
+  .league-pick-grid { grid-template-columns: repeat(3, 1fr); max-height: none; }
+  .league-grid-flag { font-size: 1.1rem; }
   .team-grid-rating { font-size: 0.52rem; padding: 0.03rem 0.3rem; }
   #teamNameRow .lobby-input { padding: 0.5rem 0.7rem; font-size: 0.85rem; }
   .budget-display { padding: 0.4rem; margin-bottom: 0.4rem; }

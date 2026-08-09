@@ -68,12 +68,12 @@ const PLAYERS_DATA = {
           "age": 30
         },
         "dm2": {
-          "name": "Berkan Kutlu",
-          "value": 8000000,
-          "nationality": "Türkiye",
+          "name": "Lesley Ugochukwu",
+          "value": 22000000,
+          "nationality": "Fransa",
           "photo": null,
-          "rating": 78,
-          "age": 28
+          "rating": 80,
+          "age": 22
         },
         "rw": {
           "name": "Leroy Sané",
@@ -131,20 +131,20 @@ const PLAYERS_DATA = {
           "age": 27
         },
         "cb1": {
-          "name": "Milan Škriniar",
-          "value": 10000000,
-          "nationality": "Slovakya",
-          "photo": null,
-          "rating": 82,
-          "age": 31
-        },
-        "cb2": {
           "name": "Jayden Oosterwolde",
           "value": 20000000,
           "nationality": "Hollanda",
           "photo": null,
           "rating": 79,
           "age": 25
+        },
+        "cb2": {
+          "name": "Nathan Aké",
+          "value": 12000000,
+          "nationality": "Hollanda",
+          "photo": null,
+          "rating": 80,
+          "age": 31
         },
         "lb": {
           "name": "Archie Brown",
@@ -155,14 +155,6 @@ const PLAYERS_DATA = {
           "age": 24
         },
         "dm1": {
-          "name": "Edson Álvarez",
-          "value": 15000000,
-          "nationality": "Meksika",
-          "photo": null,
-          "rating": 82,
-          "age": 28
-        },
-        "dm2": {
           "name": "İsmail Yüksek",
           "value": 15000000,
           "nationality": "Türkiye",
@@ -170,21 +162,29 @@ const PLAYERS_DATA = {
           "rating": 78,
           "age": 27
         },
-        "rw": {
-          "name": "Dorgeles Nene",
-          "value": 20000000,
-          "nationality": "Mali",
+        "dm2": {
+          "name": "Sofyan Amrabat",
+          "value": 10000000,
+          "nationality": "Fas",
           "photo": null,
-          "rating": 80,
-          "age": 23
+          "rating": 79,
+          "age": 29
+        },
+        "rw": {
+          "name": "Mason Greenwood",
+          "value": 55000000,
+          "nationality": "İngiltere",
+          "photo": null,
+          "rating": 85,
+          "age": 24
         },
         "cam": {
-          "name": "Sebastian Szymański",
-          "value": 12000000,
-          "nationality": "Polonya",
+          "name": "Marco Asensio",
+          "value": 15000000,
+          "nationality": "İspanya",
           "photo": null,
           "rating": 82,
-          "age": 27
+          "age": 30
         },
         "lw": {
           "name": "Kerem Aktürkoğlu",
@@ -195,12 +195,12 @@ const PLAYERS_DATA = {
           "age": 27
         },
         "st": {
-          "name": "Youssef En-Nesyri",
-          "value": 17000000,
-          "nationality": "Fas",
+          "name": "Sidiki Chérif",
+          "value": 18000000,
+          "nationality": "Gine",
           "photo": null,
-          "rating": 83,
-          "age": 29
+          "rating": 74,
+          "age": 19
         }
       }
     },
@@ -210,12 +210,12 @@ const PLAYERS_DATA = {
       "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/BesiktasJK-Logo.svg/250px-BesiktasJK-Logo.svg.png",
       "xi": {
         "gk": {
-          "name": "Ersin Destanoğlu",
-          "value": 4000000,
-          "nationality": "Türkiye",
+          "name": "Alexander Nübel",
+          "value": 12000000,
+          "nationality": "Almanya",
           "photo": null,
-          "rating": 79,
-          "age": 25
+          "rating": 80,
+          "age": 29
         },
         "rb": {
           "name": "Amir Murillo",
@@ -242,28 +242,28 @@ const PLAYERS_DATA = {
           "age": 26
         },
         "lb": {
-          "name": "Rıdvan Yılmaz",
-          "value": 5000000,
-          "nationality": "Türkiye",
+          "name": "Kassoum Ouattara",
+          "value": 12000000,
+          "nationality": "Fransa",
           "photo": null,
           "rating": 77,
-          "age": 25
+          "age": 21
         },
         "dm1": {
-          "name": "Kristjan Asllani",
-          "value": 12000000,
-          "nationality": "Arnavutluk",
-          "photo": null,
-          "rating": 80,
-          "age": 24
-        },
-        "dm2": {
           "name": "Wilfred Ndidi",
           "value": 8000000,
           "nationality": "Nijerya",
           "photo": null,
           "rating": 79,
           "age": 29
+        },
+        "dm2": {
+          "name": "Moatasem Al-Musrati",
+          "value": 4500000,
+          "nationality": "Libya",
+          "photo": null,
+          "rating": 76,
+          "age": 30
         },
         "rw": {
           "name": "Václav Černý",
@@ -274,28 +274,28 @@ const PLAYERS_DATA = {
           "age": 28
         },
         "cam": {
-          "name": "Ernest Muçi",
-          "value": 11000000,
-          "nationality": "Arnavutluk",
+          "name": "Orkun Kökçü",
+          "value": 25000000,
+          "nationality": "Türkiye",
           "photo": null,
-          "rating": 79,
+          "rating": 83,
           "age": 25
         },
         "lw": {
-          "name": "El Bilal Touré",
-          "value": 13000000,
-          "nationality": "Mali",
+          "name": "Leandro Trossard",
+          "value": 18000000,
+          "nationality": "Belçika",
           "photo": null,
-          "rating": 78,
-          "age": 24
+          "rating": 82,
+          "age": 31
         },
         "st": {
-          "name": "Tammy Abraham",
-          "value": 18000000,
-          "nationality": "İngiltere",
+          "name": "Hyeon-gyu Oh",
+          "value": 15000000,
+          "nationality": "Güney Kore",
           "photo": null,
-          "rating": 81,
-          "age": 28
+          "rating": 78,
+          "age": 25
         }
       }
     },
@@ -329,20 +329,20 @@ const PLAYERS_DATA = {
           "age": 24
         },
         "cb2": {
-          "name": "Stefan Savić",
-          "value": 400000,
-          "nationality": "Karadağ",
+          "name": "Chibuike Nwaiwu",
+          "value": 10000000,
+          "nationality": "Nijerya",
           "photo": null,
           "rating": 75,
-          "age": 35
+          "age": 23
         },
         "lb": {
-          "name": "Mustafa Eskihellaç",
-          "value": 4000000,
-          "nationality": "Türkiye",
+          "name": "Sidny Lopes Cabral",
+          "value": 10000000,
+          "nationality": "Yeşil Burun Adaları",
           "photo": null,
-          "rating": 73,
-          "age": 29
+          "rating": 75,
+          "age": 23
         },
         "dm1": {
           "name": "Batista Mendy",
@@ -353,36 +353,36 @@ const PLAYERS_DATA = {
           "age": 26
         },
         "dm2": {
-          "name": "Okay Yokuşlu",
-          "value": 1200000,
+          "name": "Salih Malkoçoğlu",
+          "value": 1500000,
+          "nationality": "Türkiye",
+          "photo": null,
+          "rating": 72,
+          "age": 21
+        },
+        "rw": {
+          "name": "Mohamed Salah",
+          "value": 22000000,
+          "nationality": "Mısır",
+          "photo": null,
+          "rating": 84,
+          "age": 34
+        },
+        "cam": {
+          "name": "Ernest Muçi",
+          "value": 11000000,
+          "nationality": "Arnavutluk",
+          "photo": null,
+          "rating": 78,
+          "age": 25
+        },
+        "lw": {
+          "name": "Aral Şimşir",
+          "value": 10000000,
           "nationality": "Türkiye",
           "photo": null,
           "rating": 75,
-          "age": 32
-        },
-        "rw": {
-          "name": "Oleksandr Zubkov",
-          "value": 6000000,
-          "nationality": "Ukrayna",
-          "photo": null,
-          "rating": 77,
-          "age": 29
-        },
-        "cam": {
-          "name": "Anastasios Bakasetas",
-          "value": 5000000,
-          "nationality": "Yunanistan",
-          "photo": null,
-          "rating": 78,
-          "age": 32
-        },
-        "lw": {
-          "name": "Kazeem Olaigbe",
-          "value": 4000000,
-          "nationality": "Nijerya",
-          "photo": null,
-          "rating": 74,
-          "age": 23
+          "age": 24
         },
         "st": {
           "name": "Paul Onuachu",

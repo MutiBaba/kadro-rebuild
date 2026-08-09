@@ -57,7 +57,7 @@ const BIG_CLUBS = [
   "Real Madrid", "Manchester City", "Bayern Münih", "Paris Saint-Germain", "Liverpool",
   "Barcelona", "Chelsea", "Juventus", "Arsenal", "Inter", "Manchester United", "Atletico Madrid"
 ];
-const MAX_SEASONS = 5;
+let MAX_SEASONS = 5; // Botlara karşı modda 5'in katları halinde (max 30) seçilebilir.
 const LEAGUE_PRIZES = [60_000_000, 40_000_000, 20_000_000];
 const LEAGUE_CAREER_POINTS = [3, 2, 1];
 const TOP_SCORER_PRIZE = 10_000_000;
@@ -113,9 +113,24 @@ function currentRoundKey() { return round ? `${currentSeason}:${round.slot}` : n
 // gidiş-dönüşü alır. Bu süre içinde guest BAŞKA bir karta tıklayabilirse, host'un henüz o ikinci
 // kararı görmeden yaptığı bir yayın guest'in local iyimser güncellemesini SİLER (bütün state
 // bloğu halinde üzerine yazılıyor) — bir teklif hiç karara bağlanmamış gibi kalabiliyordu.
-// Bu yüzden guest tarafında aynı anda sadece TEK bir karar "uçuşta" olabilir; yeni bir state
-// gelene kadar diğer tüm kartlar kilitlenir.
-let guestDecisionInFlight = false;
+// Bu yüzden guest tarafında aynı anda sadece TEK bir karar "uçuşta" olabilir; sadece O KARARI
+// onaylayan bir state gelene kadar diğer tüm kartlar kilitlenir. { type: "offer", idx } ya da
+// { type: "academy" } şeklinde HANGİ karar bekleniyor onu tutar — 3+ gerçek oyunculu bir odada
+// BAŞKA bir oyuncunun kararının tetiklediği alakasız bir yayın bu kilidi asla erken açmamalı.
+let guestDecisionInFlight = null;
+
+// Taze bir state geldiğinde (renderTransferScreen her çağrıldığında) kilidi SADECE kendi
+// bekleyen kararımız gerçekten onaylanmışsa açar — başka bir oyuncunun kararının tetiklediği
+// alakasız bir yayınla erken açılmasını önler.
+function refreshGuestDecisionLock() {
+  if (!guestDecisionInFlight) return;
+  if (guestDecisionInFlight.type === "academy") {
+    if (!human.academyOffer || human.academyOffer.decided) guestDecisionInFlight = null;
+  } else if (guestDecisionInFlight.type === "offer") {
+    const offer = human.pendingOffers[guestDecisionInFlight.idx];
+    if (!offer || offer.decided) guestDecisionInFlight = null;
+  }
+}
 
 const setupScreen = document.getElementById("setupScreen");
 const rebuildScreen = document.getElementById("rebuildScreen");
@@ -162,6 +177,7 @@ const seasonTableContinueBtn = document.getElementById("seasonTableContinueBtn")
 const TRADITIONAL_BIG3 = new Set(["fenerbahce", "besiktas", "galatasaray"]);
 let botSetupClubId = "fenerbahce";
 let botSetupEmptyStart = false;
+let botSetupSeasonCount = 5; // 5'in katları, max 30 (bkz. #botSeasonCountGroup)
 
 // Fenerbahçe/Beşiktaş/Galatasaray dışında bir takım seçilirse format 4 takıma çıkar (sen + 3
 // bot) — havuzda daha fazla takım rekabet ettiği için tek bir 3'lü ortak aday listesi sık sık
@@ -285,7 +301,7 @@ function renderBotSetupText() {
       <b>${isFourTeam ? "aynı 4 alternatif" : "aynı 3 alternatif"}</b> sunulur. Aynı oyuncuyu birden fazla taraf isterse
       <b>açık artırma</b> başlar; kaybedersen kalan adaylardan birini almak zorundasın. Amaç: EA FC ratingine göre
       en güçlü 11'i kurmak. Her sezon sonunda büyük Avrupa kulüpleri her takımdan <b>3 oyuncuya</b>, yaşına ve
-      potansiyeline göre teklif gönderir. Kariyer 5 sezon sürer.
+      potansiyeline göre teklif gönderir. Kariyer <b>${botSetupSeasonCount} sezon</b> sürer.
     `;
   }
   const budgetEl = document.getElementById("setupBudgetAmount");
@@ -317,6 +333,15 @@ document.getElementById("botModePickGroup")?.addEventListener("click", (e) => {
   renderBotSetupText();
 });
 
+document.getElementById("botSeasonCountGroup")?.addEventListener("click", (e) => {
+  const btn = e.target.closest(".option-btn");
+  if (!btn) return;
+  document.querySelectorAll("#botSeasonCountGroup .option-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  botSetupSeasonCount = parseInt(btn.dataset.seasons, 10);
+  renderBotSetupText();
+});
+
 // Mobilde takım ismi kutusuna dokununca klavye kart içini aşağı kaydırıyor; klavye
 // kapandığında (blur) kartı başa sarıyoruz ki bütçe/Başlat gibi üstteki içerik kaybolmasın.
 document.getElementById("teamNameInput")?.addEventListener("blur", () => {
@@ -331,7 +356,7 @@ startBtn.addEventListener("click", () => {
   ];
   const teamNameInput = document.getElementById("teamNameInput");
   const customTeamName = botSetupEmptyStart ? (teamNameInput?.value.trim() || null) : null;
-  startRebuild(defs, botSetupClubId, botSetupEmptyStart, customTeamName);
+  startRebuild(defs, botSetupClubId, botSetupEmptyStart, customTeamName, botSetupSeasonCount);
 });
 renderTeamPickGrid();
 renderOpponentPickGrid();
@@ -394,9 +419,10 @@ function makeVacantSlot() {
   return { name: "Boş Mevki", value: 0, rating: 0, age: 0, nationality: "—", club: "", origin: "vacant", vacant: true };
 }
 
-function startRebuild(customDefs, myClubId, emptyStart, customTeamName) {
+function startRebuild(customDefs, myClubId, emptyStart, customTeamName, seasonCount) {
   const defs = customDefs || PARTICIPANT_DEFS;
   isEmptyStartMode = !!emptyStart;
+  MAX_SEASONS = seasonCount || 5;
   // Sıfırdan Kadro modunda kimse gerçek kulüp kimliğini taşımaz — herkes aynı şartlarda
   // yarışır. İnsan oyuncu kendi takımına isim verebilir, botlara rastgele bir isim atanır.
   const takenFantasyNames = new Set();
@@ -1379,8 +1405,8 @@ function applyAcademySigning(p, offer) {
 function renderTransferScreen(transferLogMessages, botsAccepted, botsTotal) {
   mpPhase = "transfer";
   // Her taze render (ilk giriş ya da host'tan gelen yeni bir yayın), guest'in "uçuştaki karar"
-  // kilidini serbest bırakır — bkz. guestDecisionInFlight tanımı.
-  guestDecisionInFlight = false;
+  // kilidini SADECE o karar gerçekten onaylanmışsa serbest bırakır — bkz. refreshGuestDecisionLock.
+  refreshGuestDecisionLock();
   // Çok oyunculuda misafirlerin bu ekranı senkron görebilmesi için host, bot teklif özetini
   // (mesajlar + kabul sayısı) yayınlanan state'e ekler — yoksa guest ekranı hiç güncellenmez.
   if (mpActive() && mpIsHost()) {
@@ -1429,6 +1455,9 @@ function renderTransferScreen(transferLogMessages, botsAccepted, botsTotal) {
       card.classList.add("decided");
       card.querySelectorAll("button").forEach(b => (b.disabled = true));
       card.querySelector(".offer-status").textContent = offer.accepted ? "✅ Karar verildi (kabul)" : "❌ Karar verildi (ret)";
+    } else if (guestDecisionInFlight) {
+      // Başka bir teklifim/altyapı kararım hâlâ host onayı bekliyor — bu kart geçici olarak kilitli.
+      card.querySelectorAll("button").forEach(b => (b.disabled = true));
     } else {
       card.querySelector(".accept-btn").addEventListener("click", () => handleOfferDecision(idx, true, card));
       card.querySelector(".reject-btn").addEventListener("click", () => handleOfferDecision(idx, false, card));
@@ -1467,6 +1496,8 @@ function renderAcademyCard() {
     card.querySelector(".academy-status").textContent = offer.accepted
       ? `✅ Kadroya katıldı — gerçek reytingi ${offer.actualRating}, değeri ${formatValue(offer.value)}`
       : "❌ Reddedildi, oyuncu kadroda kaldı";
+  } else if (guestDecisionInFlight) {
+    card.querySelectorAll("button").forEach(b => (b.disabled = true));
   } else {
     card.querySelector(".academy-accept-btn").addEventListener("click", () => handleAcademyOfferDecision(true, card));
     card.querySelector(".academy-reject-btn").addEventListener("click", () => handleAcademyOfferDecision(false, card));
@@ -1516,7 +1547,7 @@ function handleAcademyOfferDecision(accept, card) {
   if (!offer || offer.decided) return;
   if (mpActive() && !mpIsHost()) {
     if (guestDecisionInFlight) return;
-    guestDecisionInFlight = true;
+    guestDecisionInFlight = { type: "academy" };
     MP.sendAction("academyDecision", { clubId: human.clubId, accept });
     offer.decided = true;
     offer.accepted = accept;
@@ -1537,7 +1568,7 @@ function handleOfferDecision(idx, accept, card) {
   if (!offer || offer.decided) return;
   if (mpActive() && !mpIsHost()) {
     if (guestDecisionInFlight) return;
-    guestDecisionInFlight = true;
+    guestDecisionInFlight = { type: "offer", idx };
     MP.sendAction("offerDecision", { clubId: human.clubId, idx, accept });
     offer.decided = true;
     offer.accepted = accept;

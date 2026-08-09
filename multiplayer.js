@@ -105,7 +105,17 @@ function applyRemoteState(data) {
   seasonHistory = data.seasonHistory || [];
   positionBonusBreakdown = data.positionBonusBreakdown || [];
   mpPhase = data.phase;
-  mpTransferSnapshot = data.transferSnapshot || null;
+  // Firebase Realtime Database boş dizileri ([]) yazma/okuma sırasında sessizce düşürüyor —
+  // hiç bot olmayan (tamamı gerçek oyunculardan oluşan) bir lobide transferLogMessages boş
+  // kalabiliyor, bu da messages alanının guest tarafında undefined gelip .map() çağrısında
+  // çökmesine yol açıyordu. Her alt alanı ayrı ayrı varsayılan değere sabitliyoruz.
+  mpTransferSnapshot = data.transferSnapshot
+    ? {
+        messages: data.transferSnapshot.messages || [],
+        botsAccepted: data.transferSnapshot.botsAccepted || 0,
+        botsTotal: data.transferSnapshot.botsTotal || 0
+      }
+    : null;
 
   round = data.round
     ? { slot: data.round.slot, category: data.round.category, sharedCandidates: data.round.sharedCandidates, decisions: data.round.decisions || {} }
@@ -160,8 +170,13 @@ function startHostActionListener() {
       if (auction) concedeBid(participant);
     } else if (action.type === "offerDecision") {
       resolveOfferDecision(participant, action.payload.idx, action.payload.accept);
+      // resolveOfferDecision sadece state'i günceller/yayınlar — host'un KENDİ ekranındaki
+      // "Sonraki Sezona Geç" satırı, bu misafirin kararı setin TAMAMLAYAN son karar olsa bile
+      // host bizzat bir şeye tıklamadığı sürece hiç yenilenmiyordu. Burada elle tetikliyoruz.
+      if (mpPhase === "transfer") updateTransferContinueVisibility();
     } else if (action.type === "academyDecision") {
       resolveAcademyOfferDecision(participant, action.payload.accept);
+      if (mpPhase === "transfer") updateTransferContinueVisibility();
     }
   });
 }

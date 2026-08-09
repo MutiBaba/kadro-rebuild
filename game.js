@@ -81,6 +81,16 @@ const ACADEMY_NAME_POOL = [
 ];
 let usedAcademyNames = new Set();
 
+// ---- Draft Modu ----
+const DRAFT_SLOT_COUNT = 3;
+const DRAFT_START_PRICE = 5_000_000;
+const DRAFT_BID_STEP = 5_000_000;
+let draftModeActive = false;
+let draftState = null;
+// Guest'in draft ekranında uçuşta olan tek aksiyonu (teklif/pas ya da satılık oyuncu seçimi) —
+// bkz. guestDecisionInFlight; aynı yarış koşulunu draft ekranında da engeller.
+let guestDraftInFlight = null;
+
 let participants = [];
 let isEmptyStartMode = false;
 let human = null;
@@ -172,12 +182,30 @@ const tableSeasonNum = document.getElementById("tableSeasonNum");
 const leagueTableBody = document.getElementById("leagueTableBody");
 const scorerList = document.getElementById("scorerList");
 const seasonTableContinueBtn = document.getElementById("seasonTableContinueBtn");
+const draftScreen = document.getElementById("draftScreen");
+const draftSeasonNum = document.getElementById("draftSeasonNum");
+const draftBudgetPill = document.getElementById("draftBudgetPill");
+const draftSlotsRow = document.getElementById("draftSlotsRow");
+const draftAuctionPanel = document.getElementById("draftAuctionPanel");
+const draftStageTitle = document.getElementById("draftStageTitle");
+const draftPlayerCard = document.getElementById("draftPlayerCard");
+const draftCurrentBid = document.getElementById("draftCurrentBid");
+const draftHighBidder = document.getElementById("draftHighBidder");
+const draftTurnRow = document.getElementById("draftTurnRow");
+const draftTurnHint = document.getElementById("draftTurnHint");
+const draftBidBtn = document.getElementById("draftBidBtn");
+const draftPassBtn = document.getElementById("draftPassBtn");
+const draftSellPanel = document.getElementById("draftSellPanel");
+const draftSellGrid = document.getElementById("draftSellGrid");
+const draftSellConfirmBtn = document.getElementById("draftSellConfirmBtn");
+const draftLog = document.getElementById("draftLog");
 
 /* ---------------- BOT MODE SETUP SCREEN: takım + mod seçimi ---------------- */
 const TRADITIONAL_BIG3 = new Set(["fenerbahce", "besiktas", "galatasaray"]);
 let botSetupClubId = "fenerbahce";
 let botSetupEmptyStart = false;
 let botSetupSeasonCount = 5; // 5'in katları, max 30 (bkz. #botSeasonCountGroup)
+let botSetupDraftMode = false;
 
 // Fenerbahçe/Beşiktaş/Galatasaray dışında bir takım seçilirse format 4 takıma çıkar (sen + 3
 // bot) — havuzda daha fazla takım rekabet ettiği için tek bir 3'lü ortak aday listesi sık sık
@@ -333,6 +361,14 @@ document.getElementById("botModePickGroup")?.addEventListener("click", (e) => {
   renderBotSetupText();
 });
 
+document.getElementById("botDraftModeGroup")?.addEventListener("click", (e) => {
+  const btn = e.target.closest(".option-btn");
+  if (!btn) return;
+  document.querySelectorAll("#botDraftModeGroup .option-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  botSetupDraftMode = btn.dataset.draft === "on";
+});
+
 document.getElementById("botSeasonCountGroup")?.addEventListener("click", (e) => {
   const btn = e.target.closest(".option-btn");
   if (!btn) return;
@@ -356,7 +392,7 @@ startBtn.addEventListener("click", () => {
   ];
   const teamNameInput = document.getElementById("teamNameInput");
   const customTeamName = botSetupEmptyStart ? (teamNameInput?.value.trim() || null) : null;
-  startRebuild(defs, botSetupClubId, botSetupEmptyStart, customTeamName, botSetupSeasonCount);
+  startRebuild(defs, botSetupClubId, botSetupEmptyStart, customTeamName, botSetupSeasonCount, botSetupDraftMode);
 });
 renderTeamPickGrid();
 renderOpponentPickGrid();
@@ -382,8 +418,15 @@ continueSeasonBtn.addEventListener("click", hostOnlyGuard(onContinueSeason));
 endCareerBtn.addEventListener("click", hostOnlyGuard(() => showResults(false)));
 seasonTableContinueBtn.addEventListener("click", hostOnlyGuard(() => {
   seasonTableScreen.classList.add("hidden");
-  runTransferWindow();
+  if (draftModeActive) startDraftPhase();
+  else runTransferWindow();
 }));
+draftBidBtn.addEventListener("click", () => submitDraftTurn("bid"));
+draftPassBtn.addEventListener("click", () => submitDraftTurn("pass"));
+draftSellConfirmBtn.addEventListener("click", () => {
+  const slot = draftSellGrid.querySelector(".draft-sell-card.selected")?.dataset.slot;
+  if (slot) submitDraftSellPick(slot);
+});
 function formatValue(v) {
   return "€" + (v / 1_000_000).toFixed(1).replace(".", ",") + "M";
 }
@@ -419,10 +462,13 @@ function makeVacantSlot() {
   return { name: "Boş Mevki", value: 0, rating: 0, age: 0, nationality: "—", club: "", origin: "vacant", vacant: true };
 }
 
-function startRebuild(customDefs, myClubId, emptyStart, customTeamName, seasonCount) {
+function startRebuild(customDefs, myClubId, emptyStart, customTeamName, seasonCount, draftMode) {
   const defs = customDefs || PARTICIPANT_DEFS;
   isEmptyStartMode = !!emptyStart;
   MAX_SEASONS = seasonCount || 5;
+  draftModeActive = !!draftMode;
+  draftState = null;
+  guestDraftInFlight = null;
   // Sıfırdan Kadro modunda kimse gerçek kulüp kimliğini taşımaz — herkes aynı şartlarda
   // yarışır. İnsan oyuncu kendi takımına isim verebilir, botlara rastgele bir isim atanır.
   const takenFantasyNames = new Set();
@@ -474,6 +520,7 @@ function startRebuild(customDefs, myClubId, emptyStart, customTeamName, seasonCo
   resultScreen.classList.add("hidden");
   transferScreen.classList.add("hidden");
   seasonTableScreen.classList.add("hidden");
+  draftScreen.classList.add("hidden");
   rebuildScreen.classList.remove("hidden");
 
   const draftTitleTeamsEl = document.getElementById("draftTitleTeams");
@@ -1188,8 +1235,10 @@ function renderSeasonTableScreen(table, scorers) {
   mpPhase = "seasonTable";
   mpPublish();
   rebuildScreen.classList.add("hidden");
+  draftScreen.classList.add("hidden");
   seasonTableScreen.classList.remove("hidden");
   tableSeasonNum.textContent = `${currentSeason} / ${MAX_SEASONS}`;
+  seasonTableContinueBtn.textContent = draftModeActive ? "🎯 Draft'a Geç" : "Transfer Tekliflerine Geç";
 
   leagueTableBody.innerHTML = table.map(row => {
     const gd = row.gf - row.ga;
@@ -1290,10 +1339,11 @@ function pickUnusedAcademyName() {
 
 // Teklif anında sadece bir reyting ARALIĞI gösterilir (ör. 78-85) — gerçek reyting ancak
 // kabul edilirse ortaya çıkar. Çoğunlukla mütevazı bir yetenek, nadiren gerçek bir yıldız adayı.
-function generateAcademyOffer(p) {
+function generateAcademyOffer(p, excludeSlots) {
   const name = pickUnusedAcademyName();
   if (!name) return null;
-  const slot = SLOTS[Math.floor(Math.random() * SLOTS.length)];
+  const pool = excludeSlots ? SLOTS.filter(s => !excludeSlots.includes(s)) : SLOTS;
+  const slot = pool[Math.floor(Math.random() * pool.length)];
   const roll = Math.random();
   let low;
   if (roll < 0.6) low = 65 + Math.floor(Math.random() * 10);       // %60: mütevazı yetenek
@@ -1416,6 +1466,7 @@ function renderTransferScreen(transferLogMessages, botsAccepted, botsTotal) {
   rebuildScreen.classList.add("hidden");
   resultScreen.classList.add("hidden");
   seasonTableScreen.classList.add("hidden");
+  draftScreen.classList.add("hidden");
   transferScreen.classList.remove("hidden");
 
   transferSeasonNum.textContent = currentSeason;
@@ -1525,6 +1576,13 @@ function resolveOfferDecision(participant, idx, accept) {
   if (accept) {
     participant.budget += offer.offerValue;
     participant.squad[offer.slot].vacant = true;
+    // Draft modunda 4 teklifin hepsi AYNI oyuncu içindir — biri kabul edilince oyuncu
+    // kadrodan çıkar, kalan teklifler kendiliğinden geçersiz olur.
+    if (draftModeActive) {
+      for (const other of participant.pendingOffers) {
+        if (other !== offer && !other.decided) { other.decided = true; other.accepted = false; }
+      }
+    }
   }
   mpPublish();
 }
@@ -1618,6 +1676,437 @@ function onContinueSeason() {
   renderPitch();
   renderBotStatus();
   startSlotRound();
+}
+
+/* ---------------- DRAFT MODU ---------------- */
+// Her sezon tablosundan SONRA, normal transfer ekranından ÖNCE çalışır. 3 rastgele mevki
+// seçilir; o mevkilerde oynayan TÜM katılımcı oyuncuları teker teker açık artırmaya çıkar
+// (sahibi kendi oyuncusuna teklif veremez). Ardından herkes kendi kadrosundan bir oyuncuyu
+// satışa çıkarır ve o oyuncu için 4 teklif gelir (normal transfer ekranı yeniden kullanılır).
+
+function cloneSquadPlayer(player) {
+  return JSON.parse(JSON.stringify(player));
+}
+
+function draftRemainingBudget(participant) {
+  return participant.budget - (draftState.committed[participant.clubId] || 0);
+}
+
+function isDraftHumanControlled(participant) {
+  return requiredHumanClubIds().has(participant.clubId);
+}
+
+function draftParticipant(clubId) {
+  return participants.find(p => p.clubId === clubId);
+}
+
+function startDraftPhase() {
+  const slots = sampleSlots(DRAFT_SLOT_COUNT);
+  const entries = [];
+  for (const slot of slots) {
+    for (const p of participants) {
+      if (!p.squad[slot].vacant) entries.push({ slot, ownerClubId: p.clubId, player: cloneSquadPlayer(p.squad[slot]) });
+    }
+  }
+  draftState = {
+    slots,
+    entries,
+    entryIdx: 0,
+    results: [],
+    wonBySlot: {},
+    committed: {},
+    auction: null,
+    log: [`🎯 Bu sezonun draft mevkileri: ${slots.map(s => SLOT_LABELS[s]).join(", ")}`],
+    stage: "auction",
+    sellPicks: {},
+    seq: 0
+  };
+  guestDraftInFlight = null;
+  draftStep();
+}
+
+// Sıradaki açık artırmayı kurar. Hiç uygun teklif veren kalmadıysa (ör. herkes o mevkide
+// zaten bir oyuncu kazandıysa) oyuncu sahibinde kalır. Tüm havuz bitince sonuçlar uygulanır.
+function setupNextDraftAuction() {
+  const ds = draftState;
+  while (ds.entryIdx < ds.entries.length) {
+    const entry = ds.entries[ds.entryIdx];
+    const won = ds.wonBySlot[entry.slot] || [];
+    const order = participants
+      .filter(p => p.clubId !== entry.ownerClubId && !won.includes(p.clubId))
+      .map(p => p.clubId);
+    if (order.length === 0) {
+      ds.log.push(`— ${entry.player.name} için teklif veren kalmadı, ${draftParticipant(entry.ownerClubId).name} kadrosunda kaldı.`);
+      ds.entryIdx++;
+      continue;
+    }
+    ds.auction = {
+      slot: entry.slot,
+      ownerClubId: entry.ownerClubId,
+      player: entry.player,
+      currentBid: DRAFT_START_PRICE,
+      highBidderClubId: null,
+      order,
+      turnIdx: 0,
+      passes: 0
+    };
+    return true;
+  }
+  applyDraftResults();
+  startDraftSellStage();
+  return false;
+}
+
+function draftNextBidAmount() {
+  const a = draftState.auction;
+  return a.highBidderClubId ? a.currentBid + DRAFT_BID_STEP : a.currentBid;
+}
+
+// En yüksek teklifi veren kendi teklifini artırmak zorunda değil — sıradan çıkarılır.
+function draftActiveBidderCount() {
+  const a = draftState.auction;
+  return a.order.filter(id => id !== a.highBidderClubId).length;
+}
+
+function draftAdvanceTurn() {
+  const a = draftState.auction;
+  for (let i = 0; i < a.order.length; i++) {
+    a.turnIdx = (a.turnIdx + 1) % a.order.length;
+    if (a.order[a.turnIdx] !== a.highBidderClubId) return;
+  }
+}
+
+// Botlar: bütçesinin makul bir dilimini aşmadığı ve oyuncu kendi mevkisindekinden iyi olduğu
+// sürece teklif verir (bkz. botDecide — aynı "sadece yükseltiyorsa al" mantığı).
+function botDraftWantsBid(participant) {
+  const a = draftState.auction;
+  const next = draftNextBidAmount();
+  if (next > draftRemainingBudget(participant)) return false;
+  const current = participant.squad[a.slot];
+  if (!current.vacant && a.player.rating <= current.rating) return false;
+  const maxWillingness = Math.min(draftRemainingBudget(participant) * 0.6, a.player.value * 1.2);
+  return next <= maxWillingness;
+}
+
+function applyDraftTurn(participant, action) {
+  const ds = draftState;
+  const a = ds.auction;
+  if (!a || a.order[a.turnIdx] !== participant.clubId) return;
+  ds.seq++;
+  const amount = draftNextBidAmount();
+  if (action === "bid" && amount <= draftRemainingBudget(participant)) {
+    a.currentBid = amount;
+    a.highBidderClubId = participant.clubId;
+    a.passes = 0;
+    ds.log.push(`💰 <b>${participant.name}</b>, ${a.player.name} için ${formatValue(amount)} teklif verdi.`);
+  } else {
+    a.passes++;
+    ds.log.push(`🏳️ <b>${participant.name}</b>, ${a.player.name} için pas geçti.`);
+  }
+  draftAdvanceTurn();
+}
+
+function finishDraftAuction() {
+  const ds = draftState;
+  const a = ds.auction;
+  const owner = draftParticipant(a.ownerClubId);
+  if (a.highBidderClubId) {
+    const winner = draftParticipant(a.highBidderClubId);
+    ds.results.push({ slot: a.slot, ownerClubId: a.ownerClubId, winnerClubId: winner.clubId, price: a.currentBid, player: a.player });
+    ds.wonBySlot[a.slot] = [...(ds.wonBySlot[a.slot] || []), winner.clubId];
+    ds.committed[winner.clubId] = (ds.committed[winner.clubId] || 0) + a.currentBid;
+    ds.log.push(`🔨 <b>${winner.name}</b>, ${owner.name} takımından <b>${a.player.name}</b> oyuncusunu ${formatValue(a.currentBid)} karşılığında aldı.`);
+  } else {
+    ds.log.push(`— <b>${a.player.name}</b> için kimse teklif vermedi, ${owner.name} kadrosunda kaldı.`);
+  }
+  ds.auction = null;
+  ds.entryIdx++;
+}
+
+// Bot sıralarını senkron işler; sıra gerçek bir oyuncuya gelince ekranı çizip durur.
+function draftStep() {
+  const ds = draftState;
+  for (let guard = 0; guard < 500; guard++) {
+    if (!draftState || ds.stage !== "auction") return;
+    if (!ds.auction && !setupNextDraftAuction()) return;
+    const a = ds.auction;
+    if (a.passes >= draftActiveBidderCount()) { finishDraftAuction(); continue; }
+    const participant = draftParticipant(a.order[a.turnIdx]);
+    if (isDraftHumanControlled(participant)) {
+      renderDraftScreen();
+      mpPublish();
+      return;
+    }
+    applyDraftTurn(participant, botDraftWantsBid(participant) ? "bid" : "pass");
+  }
+}
+
+// Tüm açık artırmalar bittikten SONRA tek seferde uygulanır: önce satıcılar (mevki boşalır,
+// para kasaya girer), sonra alıcılar. Böylece havuz, faz başındaki kadrolar üzerinden tutarlı
+// kalır ve bir kulüp aynı mevkide iki oyuncu kazanamaz (bkz. wonBySlot).
+function applyDraftResults() {
+  const ds = draftState;
+  for (const r of ds.results) {
+    const seller = draftParticipant(r.ownerClubId);
+    seller.budget += r.price;
+    seller.squad[r.slot].vacant = true;
+  }
+  for (const r of ds.results) {
+    const winner = draftParticipant(r.winnerClubId);
+    const old = winner.squad[r.slot];
+    if (!old.vacant) winner.budget += old.value;
+    winner.budget -= r.price;
+    winner.squad[r.slot] = { ...cloneSquadPlayer(r.player), origin: "bought", vacant: false };
+  }
+}
+
+function submitDraftTurn(action) {
+  if (!draftState || draftState.stage !== "auction" || !draftState.auction) return;
+  if (draftState.auction.order[draftState.auction.turnIdx] !== human.clubId) return;
+  if (mpActive() && !mpIsHost()) {
+    if (guestDraftInFlight) return;
+    const a = draftState.auction;
+    guestDraftInFlight = { type: "turn", key: `${a.slot}:${a.ownerClubId}` };
+    MP.sendAction("draftTurn", { clubId: human.clubId, action });
+    draftBidBtn.disabled = true;
+    draftPassBtn.disabled = true;
+    return;
+  }
+  applyDraftTurn(human, action);
+  draftStep();
+}
+
+/* ---- Satılık oyuncu seçimi ---- */
+
+function botDraftSellSlot(participant) {
+  let picked = null;
+  for (const slot of SLOTS) {
+    const player = participant.squad[slot];
+    if (player.vacant) continue;
+    if (!picked || player.rating < participant.squad[picked].rating) picked = slot;
+  }
+  return picked;
+}
+
+function startDraftSellStage() {
+  const ds = draftState;
+  ds.stage = "sell";
+  ds.auction = null;
+  ds.seq++;
+  for (const p of participants) {
+    const slot = botDraftSellSlot(p);
+    // Botlar en zayıf oyuncusunu satışa çıkarır; kadrosunda satılabilir tek bir oyuncu bile
+    // kalmamış bir gerçek oyuncu da ekranda kilitlenmesin diye otomatik geçilir.
+    if (p.isBot) ds.sellPicks[p.clubId] = slot || SLOTS[0];
+    else if (!slot) ds.sellPicks[p.clubId] = SLOTS[0];
+  }
+  renderDraftScreen();
+  mpPublish();
+  maybeFinishDraftSellStage();
+}
+
+function applyDraftSellPick(participant, slot) {
+  const ds = draftState;
+  if (!ds || ds.stage !== "sell" || ds.sellPicks[participant.clubId]) return;
+  if (!SLOTS.includes(slot) || participant.squad[slot].vacant) return;
+  ds.sellPicks[participant.clubId] = slot;
+  ds.seq++;
+  renderDraftScreen();
+  mpPublish();
+  maybeFinishDraftSellStage();
+}
+
+function submitDraftSellPick(slot) {
+  if (!draftState || draftState.stage !== "sell") return;
+  if (mpActive() && !mpIsHost()) {
+    if (guestDraftInFlight) return;
+    guestDraftInFlight = { type: "sell" };
+    MP.sendAction("draftSell", { clubId: human.clubId, slot });
+    draftSellConfirmBtn.disabled = true;
+    return;
+  }
+  applyDraftSellPick(human, slot);
+}
+
+function maybeFinishDraftSellStage() {
+  if (!participants.every(p => draftState.sellPicks[p.clubId])) return;
+  runDraftTransferWindow();
+}
+
+/* ---- Seçilen oyuncu için 4 teklif — mevcut transfer ekranı yeniden kullanılır ---- */
+
+function buildDraftOffers(slot, player) {
+  const buyers = [...BIG_CLUBS].sort(() => Math.random() - 0.5).slice(0, 4);
+  return buyers.map(buyerClub => ({
+    slot,
+    player,
+    offerValue: computeOffer(player),
+    buyerClub,
+    decided: false,
+    accepted: null
+  }));
+}
+
+function runDraftTransferWindow() {
+  const transferLogMessages = [];
+  const sellPicks = draftState.sellPicks;
+
+  for (const p of participants) {
+    const slot = sellPicks[p.clubId];
+    p.academyOffer = generateAcademyOffer(p, [slot]);
+    const player = p.squad[slot];
+    p.pendingOffers = player.vacant ? [] : buildDraftOffers(slot, player);
+  }
+
+  let botsAccepted = 0;
+  let botsTotal = 0;
+  for (const p of participants.filter(x => x.isBot)) {
+    botsTotal++;
+    let bestIdx = -1;
+    p.pendingOffers.forEach((o, i) => {
+      if (bestIdx < 0 || o.offerValue > p.pendingOffers[bestIdx].offerValue) bestIdx = i;
+    });
+    const best = bestIdx >= 0 ? p.pendingOffers[bestIdx] : null;
+    const accept = !!best && best.offerValue > best.player.value * 1.15;
+    p.pendingOffers.forEach((o, i) => {
+      o.decided = true;
+      o.accepted = accept && i === bestIdx;
+    });
+    if (accept) {
+      botsAccepted++;
+      p.budget += best.offerValue;
+      p.squad[best.slot].vacant = true;
+      transferLogMessages.push(`📤 <b>${p.name}</b>: Draft'ta satışa çıkardığı ${best.player.name}, ${best.buyerClub}'a ${formatValue(best.offerValue)} karşılığında transfer oldu.`);
+    } else if (best) {
+      transferLogMessages.push(`🚫 <b>${p.name}</b>: ${best.player.name} için gelen tekliflerin hiçbirini kabul etmedi.`);
+    }
+    if (p.academyOffer) resolveAcademyOffer(p, p.academyOffer, transferLogMessages);
+  }
+
+  for (const msg of draftState.log) transferLogMessages.push(msg);
+  draftState = null;
+  guestDraftInFlight = null;
+  renderTransferScreen(transferLogMessages, botsAccepted, botsTotal);
+}
+
+/* ---- Draft ekranı ---- */
+
+// Guest'in uçuştaki draft aksiyonunu SADECE gerçekten işlendiğinde serbest bırakır — başka
+// bir oyuncunun aksiyonunun tetiklediği yayınlarla erken açılmasını önler.
+function refreshGuestDraftLock() {
+  if (!guestDraftInFlight || !draftState) return;
+  if (guestDraftInFlight.type === "sell") {
+    if (draftState.stage !== "sell" || draftState.sellPicks[human.clubId]) guestDraftInFlight = null;
+    return;
+  }
+  const a = draftState.auction;
+  if (draftState.stage !== "auction" || !a) { guestDraftInFlight = null; return; }
+  if (`${a.slot}:${a.ownerClubId}` !== guestDraftInFlight.key || a.order[a.turnIdx] !== human.clubId) {
+    guestDraftInFlight = null;
+  }
+}
+
+function renderDraftScreen() {
+  if (!draftState) return;
+  mpPhase = draftState.stage === "sell" ? "draftSell" : "draft";
+  refreshGuestDraftLock();
+
+  rebuildScreen.classList.add("hidden");
+  seasonTableScreen.classList.add("hidden");
+  transferScreen.classList.add("hidden");
+  resultScreen.classList.add("hidden");
+  draftScreen.classList.remove("hidden");
+
+  draftSeasonNum.textContent = currentSeason;
+  draftBudgetPill.textContent = "Bütçe: " + formatValue(draftRemainingBudget(human));
+  draftSlotsRow.innerHTML = draftState.slots.map(slot => {
+    const active = draftState.stage === "auction" && draftState.auction && draftState.auction.slot === slot;
+    return `<span class="draft-slot-chip${active ? " active" : ""}">${SLOT_LABELS[slot]}</span>`;
+  }).join("");
+  draftLog.innerHTML = draftState.log.slice(-14).map(m => `<div>${m}</div>`).join("");
+
+  if (draftState.stage === "sell") renderDraftSellPanel();
+  else renderDraftAuctionPanel();
+}
+
+function renderDraftAuctionPanel() {
+  draftSellPanel.classList.add("hidden");
+  draftAuctionPanel.classList.remove("hidden");
+
+  const a = draftState.auction;
+  if (!a) return;
+  const owner = draftParticipant(a.ownerClubId);
+  const player = a.player;
+  draftStageTitle.textContent = `${SLOT_LABELS[a.slot]} · ${owner.name} kadrosundan açık artırmaya çıktı`;
+  draftPlayerCard.innerHTML = `
+    <div class="rating-badge small">${player.rating}</div>
+    <div class="player-photo">${pixelAvatarSVG(player.name)}</div>
+    <div class="candidate-name">${player.name}</div>
+    <div class="candidate-meta">${player.age} yaş · ${player.nationality}</div>
+    <div class="candidate-value">Piyasa Değeri: ${formatValue(player.value)}</div>
+  `;
+  draftCurrentBid.textContent = a.highBidderClubId ? formatValue(a.currentBid) : `${formatValue(a.currentBid)} (başlangıç)`;
+  draftHighBidder.textContent = a.highBidderClubId ? `· En yüksek: ${draftParticipant(a.highBidderClubId).name}` : "· henüz teklif yok";
+
+  const turnClubId = a.order[a.turnIdx];
+  draftTurnRow.innerHTML = a.order.map(id => {
+    const p = draftParticipant(id);
+    const cls = id === turnClubId ? " turn" : "";
+    const me = p === human ? " you" : "";
+    return `<span class="bidder-chip${cls}${me}">${p.name}${p === human ? " (Sen)" : ""}</span>`;
+  }).join("");
+
+  const myTurn = turnClubId === human.clubId && mpControlsClub(human.clubId);
+  const nextAmount = draftNextBidAmount();
+  const affordable = nextAmount <= draftRemainingBudget(human);
+  const locked = !!guestDraftInFlight;
+  draftBidBtn.disabled = !myTurn || !affordable || locked;
+  draftPassBtn.disabled = !myTurn || locked;
+  draftBidBtn.textContent = affordable ? `💰 Teklif Ver (${formatValue(nextAmount)})` : "💸 Bütçen Yetmiyor";
+  if (a.ownerClubId === human.clubId) {
+    draftTurnHint.textContent = "Kendi oyuncun açık artırmada — teklif veremezsin, sonucu izliyorsun.";
+  } else if (myTurn) {
+    draftTurnHint.textContent = locked ? "Kararın gönderildi, host'un onayı bekleniyor…" : "Sıra sende: teklif ver ya da pas geç.";
+  } else {
+    draftTurnHint.textContent = `${draftParticipant(turnClubId).name} bekleniyor…`;
+  }
+}
+
+function renderDraftSellPanel() {
+  draftAuctionPanel.classList.add("hidden");
+  draftSellPanel.classList.remove("hidden");
+
+  const myPick = draftState.sellPicks[human.clubId];
+  const waiting = participants.filter(p => !draftState.sellPicks[p.clubId] && p !== human).map(p => p.name);
+  document.getElementById("draftSellHint").textContent = myPick
+    ? (waiting.length > 0 ? `Seçimini yaptın — bekleniyor: ${waiting.join(", ")}` : "Seçimini yaptın, teklifler hazırlanıyor…")
+    : "Seçtiğin oyuncu için büyük Avrupa kulüplerinden 4 teklif gelecek.";
+
+  draftSellGrid.innerHTML = SLOTS.map(slot => {
+    const player = human.squad[slot];
+    if (player.vacant) return "";
+    const selected = myPick === slot ? " selected" : "";
+    return `<div class="draft-sell-card${selected}${myPick ? " locked" : ""}" data-slot="${slot}">
+      <span class="pos-tag">${SLOT_SHORT[slot]}</span>
+      <span class="rating-badge small">${player.rating}</span>
+      <div class="player-photo">${pixelAvatarSVG(player.name)}</div>
+      <div class="candidate-name">${player.name}</div>
+      <div class="candidate-meta">${player.age} yaş</div>
+      <div class="candidate-value">${formatValue(player.value)}</div>
+    </div>`;
+  }).join("");
+
+  if (!myPick) {
+    draftSellGrid.querySelectorAll(".draft-sell-card").forEach(card => {
+      card.addEventListener("click", () => {
+        draftSellGrid.querySelectorAll(".draft-sell-card").forEach(c => c.classList.remove("selected"));
+        card.classList.add("selected");
+        draftSellConfirmBtn.disabled = false;
+      });
+    });
+  }
+  draftSellConfirmBtn.disabled = !!myPick || !!guestDraftInFlight || !draftSellGrid.querySelector(".draft-sell-card.selected");
+  draftSellConfirmBtn.textContent = myPick ? "✅ Satışa Çıkarıldı" : "Satışa Çıkar";
 }
 
 /* ---------------- RENDER: PITCH & BOT STATUS ---------------- */
@@ -1784,6 +2273,7 @@ function showResults() {
   rebuildScreen.classList.add("hidden");
   transferScreen.classList.add("hidden");
   seasonTableScreen.classList.add("hidden");
+  draftScreen.classList.add("hidden");
   resultScreen.classList.remove("hidden");
 
   resultTitle.textContent = isFullCareer

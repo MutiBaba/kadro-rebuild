@@ -86,6 +86,8 @@ function serializeGameState() {
       }
     : null;
   state.transferSnapshot = mpTransferSnapshot;
+  state.draftModeActive = draftModeActive;
+  state.draftState = draftState ? JSON.parse(JSON.stringify(draftState)) : null;
   return state;
 }
 
@@ -133,9 +135,43 @@ function applyRemoteState(data) {
       }
     : null;
 
-  rebuildScreen.classList.toggle("hidden", !(mpPhase === "decide" || mpPhase === "auction"));
+  // Draft state'inde de boş dizi/nesne alanları (log, results, wonBySlot, sellPicks…) Firebase
+  // tarafından sessizce düşürülebilir — hepsini tek tek varsayılana sabitliyoruz.
+  draftModeActive = !!data.draftModeActive;
+  const ds = data.draftState;
+  draftState = ds
+    ? {
+        slots: ds.slots || [],
+        entries: ds.entries || [],
+        entryIdx: ds.entryIdx || 0,
+        results: ds.results || [],
+        wonBySlot: ds.wonBySlot || {},
+        committed: ds.committed || {},
+        auction: ds.auction
+          ? {
+              slot: ds.auction.slot,
+              ownerClubId: ds.auction.ownerClubId,
+              player: ds.auction.player,
+              currentBid: ds.auction.currentBid || 0,
+              highBidderClubId: ds.auction.highBidderClubId || null,
+              order: ds.auction.order || [],
+              turnIdx: ds.auction.turnIdx || 0,
+              passes: ds.auction.passes || 0
+            }
+          : null,
+        log: ds.log || [],
+        stage: ds.stage,
+        sellPicks: ds.sellPicks || {},
+        seq: ds.seq || 0
+      }
+    : null;
 
-  if (mpPhase === "auction" && auction) {
+  rebuildScreen.classList.toggle("hidden", !(mpPhase === "decide" || mpPhase === "auction"));
+  draftScreen.classList.toggle("hidden", !(mpPhase === "draft" || mpPhase === "draftSell"));
+
+  if (mpPhase === "draft" || mpPhase === "draftSell") {
+    if (draftState) renderDraftScreen();
+  } else if (mpPhase === "auction" && auction) {
     renderAuctionView();
   } else if (mpPhase === "decide" && round) {
     renderPitch();
@@ -174,6 +210,13 @@ function startHostActionListener() {
       // "Sonraki Sezona Geç" satırı, bu misafirin kararı setin TAMAMLAYAN son karar olsa bile
       // host bizzat bir şeye tıklamadığı sürece hiç yenilenmiyordu. Burada elle tetikliyoruz.
       if (mpPhase === "transfer") updateTransferContinueVisibility();
+    } else if (action.type === "draftTurn") {
+      if (draftState && draftState.stage === "auction" && draftState.auction) {
+        applyDraftTurn(participant, action.payload.action);
+        draftStep();
+      }
+    } else if (action.type === "draftSell") {
+      applyDraftSellPick(participant, action.payload.slot);
     } else if (action.type === "academyDecision") {
       resolveAcademyOfferDecision(participant, action.payload.accept);
       if (mpPhase === "transfer") updateTransferContinueVisibility();
@@ -279,10 +322,26 @@ function renderLobbyCreateConfig() {
         <button class="option-btn" data-mode="empty">🌱 Sıfırdan Kadro (€250M)</button>
       </div>
     </div>
+    <div class="setup-row">
+      <label>Draft Modu</label>
+      <div class="option-group" id="lobbyDraftGroup">
+        <button class="option-btn active" data-draft="off">Kapalı</button>
+        <button class="option-btn" data-draft="on">🎯 Draft Modu Açık</button>
+      </div>
+      <p class="hint">Her sezon sonunda 3 mevki draft'a çıkar; rakiplerin oyuncularına açık artırmayla teklif verir, ardından kendi kadrondan bir oyuncuyu satışa çıkarırsın.</p>
+    </div>
     <button id="lobbyCreateConfirmBtn" class="primary-btn">Lobiyi Oluştur</button>
   `;
   let size = 2;
   let emptyStart = false;
+  let draftMode = false;
+  document.getElementById("lobbyDraftGroup").addEventListener("click", (e) => {
+    const btn = e.target.closest(".option-btn");
+    if (!btn) return;
+    document.querySelectorAll("#lobbyDraftGroup .option-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    draftMode = btn.dataset.draft === "on";
+  });
   document.getElementById("lobbySizeGroup").addEventListener("click", (e) => {
     const btn = e.target.closest(".option-btn");
     if (!btn) return;
@@ -297,10 +356,10 @@ function renderLobbyCreateConfig() {
     btn.classList.add("active");
     emptyStart = btn.dataset.mode === "empty";
   });
-  document.getElementById("lobbyCreateConfirmBtn").addEventListener("click", () => createRoom(size, emptyStart));
+  document.getElementById("lobbyCreateConfirmBtn").addEventListener("click", () => createRoom(size, emptyStart, draftMode));
 }
 
-function createRoom(maxPlayers, emptyStart) {
+function createRoom(maxPlayers, emptyStart, draftMode) {
   const code = randomRoomCode();
   roomCode = code;
   isHostFlag = true;
@@ -309,6 +368,7 @@ function createRoom(maxPlayers, emptyStart) {
     createdAt: Date.now(),
     maxPlayers,
     emptyStart: !!emptyStart,
+    draftMode: !!draftMode,
     hostId: myClientId,
     status: "lobby",
     players: {
@@ -377,7 +437,7 @@ function renderLobbyRoom(data) {
 
   lobbyContent.innerHTML = `
     <h1>Lobi <span class="accent">${roomCode}</span></h1>
-    <p class="subtitle">Bu kodu arkadaşlarına gönder: <b>${roomCode}</b> — (${players.length}/${data.maxPlayers} kişi) · ${data.emptyStart ? "🌱 Sıfırdan Kadro (€250M)" : "🔁 Kadro Rebuild (€120M)"}</p>
+    <p class="subtitle">Bu kodu arkadaşlarına gönder: <b>${roomCode}</b> — (${players.length}/${data.maxPlayers} kişi) · ${data.emptyStart ? "🌱 Sıfırdan Kadro (€250M)" : "🔁 Kadro Rebuild (€120M)"}${data.draftMode ? " · 🎯 Draft Modu" : ""}</p>
     <div class="setup-row">
       <label>Takımını Seç</label>
       <div class="option-group lobby-team-group">${teamButtons}</div>
@@ -414,7 +474,8 @@ function startMultiplayerGame(data) {
     status: "playing",
     defs,
     humanClubIds,
-    emptyStart: !!data.emptyStart
+    emptyStart: !!data.emptyStart,
+    draftMode: !!data.draftMode
   });
 }
 
@@ -430,7 +491,7 @@ function launchMultiplayerGame(data) {
 
   if (isHostFlag) {
     startHostActionListener();
-    startRebuild(data.defs, myTeamClubId, !!data.emptyStart);
+    startRebuild(data.defs, myTeamClubId, !!data.emptyStart, null, null, !!data.draftMode);
   } else {
     startRemoteGameListener();
     // İlk state gelene kadar basit bir bekleme ekranı göster

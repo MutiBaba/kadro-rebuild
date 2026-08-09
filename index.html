@@ -76,6 +76,15 @@
     </div>
 
     <div class="setup-row">
+      <label>Draft Modu</label>
+      <div class="option-group" id="botDraftModeGroup">
+        <button class="option-btn active" data-draft="off">Kapalı</button>
+        <button class="option-btn" data-draft="on">🎯 Draft Modu Açık</button>
+      </div>
+      <p class="hint" id="botDraftModeHint">Kapalı: klasik akış. Açık: her sezon sonunda 3 rastgele mevki draft'a çıkar, rakiplerin oyuncularına açık artırmayla teklif verirsin ve kendi kadrondan bir oyuncuyu satışa çıkarırsın.</p>
+    </div>
+
+    <div class="setup-row">
       <label>Kariyer Uzunluğu</label>
       <div class="option-group wrap-group" id="botSeasonCountGroup">
         <button class="option-btn active" data-seasons="5">5 Sezon</button>
@@ -197,6 +206,38 @@
     <div class="scorer-list" id="scorerList"></div>
 
     <button id="seasonTableContinueBtn" class="primary-btn">Transfer Tekliflerine Geç</button>
+  </div>
+</section>
+
+<!-- DRAFT MODE SCREEN -->
+<section id="draftScreen" class="screen hidden">
+  <header class="draft-header">
+    <div class="draft-title">Sezon <span class="accent" id="draftSeasonNum"></span> — 🎯 Draft</div>
+    <div class="budget-pill" id="draftBudgetPill">Bütçe: €0M</div>
+  </header>
+  <div class="draft-mode-body">
+    <div class="draft-slots-row" id="draftSlotsRow"></div>
+
+    <div id="draftAuctionPanel" class="draft-auction-panel">
+      <p class="draft-stage-title" id="draftStageTitle"></p>
+      <div class="draft-player-card" id="draftPlayerCard"></div>
+      <div class="draft-bid-line">Güncel Teklif: <span id="draftCurrentBid"></span> <span id="draftHighBidder"></span></div>
+      <div class="draft-turn-row" id="draftTurnRow"></div>
+      <p class="draft-hint" id="draftTurnHint"></p>
+      <div class="draft-buttons">
+        <button id="draftBidBtn" class="keep-btn">💰 Teklif Ver</button>
+        <button id="draftPassBtn" class="sell-btn">🏳️ Pas Geç</button>
+      </div>
+    </div>
+
+    <div id="draftSellPanel" class="draft-sell-panel hidden">
+      <p class="draft-stage-title">Kadrondan bir oyuncu seç ve satışa çıkar</p>
+      <p class="draft-hint" id="draftSellHint">Seçtiğin oyuncu için büyük Avrupa kulüplerinden 4 teklif gelecek.</p>
+      <div class="draft-sell-grid" id="draftSellGrid"></div>
+      <button id="draftSellConfirmBtn" class="primary-btn" disabled>Satışa Çıkar</button>
+    </div>
+
+    <div id="draftLog" class="round-log draft-log"></div>
   </div>
 </section>
 

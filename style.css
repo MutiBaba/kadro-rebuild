@@ -1843,9 +1843,8 @@ body {
 
 .draft-pool-status.open { color: var(--muted); }
 .draft-pool-status.taken { color: var(--accent); }
-.draft-pool-status.bid { color: var(--gold); font-weight: 800; }
 
-.draft-pick-btn, .draft-bid-btn, .draft-sell-toggle {
+.draft-pick-btn, .draft-sell-toggle {
   width: 100%;
   padding: 0.35rem;
   font-size: 0.78rem;
@@ -1924,4 +1923,12 @@ body {
 @media (max-width: 640px) {
   .draft-mode-body { padding: 1rem; }
   .draft-pool-card, .draft-sell-card { width: 46%; }
+}
+
+.public-room-row { gap: 0.6rem; }
+.public-room-row span { flex: 1; text-align: left; }
+.public-room-row .public-room-join {
+  flex: 0 0 auto;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.8rem;
 }

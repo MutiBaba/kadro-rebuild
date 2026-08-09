@@ -6,6 +6,13 @@
         ".write": true,
         ".validate": "newData.hasChildren(['createdAt'])"
       }
+    },
+    "publicRooms": {
+      ".read": true,
+      "$roomCode": {
+        ".write": true,
+        ".validate": "newData.hasChildren(['hostName', 'maxPlayers', 'createdAt'])"
+      }
     }
   }
 }

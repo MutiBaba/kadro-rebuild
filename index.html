@@ -81,7 +81,7 @@
         <button class="option-btn active" data-draft="off">Kapalı</button>
         <button class="option-btn" data-draft="on">🎯 Draft Modu Açık</button>
       </div>
-      <p class="hint" id="botDraftModeHint">Kapalı: klasik akış. Açık: her sezon sonunda 3 rastgele mevki draft'a çıkar. Her kulübün o 3 mevkideki oyuncusu ortak havuza girer; sırayla açık artırmayla rakip oyuncularına teklif verirsin. Sonra elinde kalan havuz oyuncularını istersen kendin satabilir, boşalan her mevkiye 5 adaydan birini imzalarsın.</p>
+      <p class="hint" id="botDraftModeHint">Kapalı: klasik akış. Açık: her sezon sonunda 3 rastgele mevki draft'a çıkar. Her kulübün o mevkideki oyuncusu ortak havuza girer ve ters lig sırasıyla (sonuncu ilk seçer) herkes havuzdan bedelsiz bir rakip oyuncusu seçer. Draft bitince boşalan her mevkiye 5 adaydan birini imzalar, ardından kadrondan istediğin bir oyuncuyu satıp onun yerine de 5 adaydan birini alırsın.</p>
     </div>
 
     <div class="setup-row">
@@ -218,7 +218,7 @@
   <div class="draft-mode-body">
     <div class="draft-slots-row" id="draftSlotsRow"></div>
 
-    <div id="draftAuctionPanel" class="draft-pick-panel">
+    <div id="draftPickPanel" class="draft-pick-panel">
       <p class="draft-stage-title" id="draftStageTitle"></p>
       <div class="draft-pool-grid" id="draftPoolGrid"></div>
       <div class="draft-turn-row" id="draftTurnRow"></div>

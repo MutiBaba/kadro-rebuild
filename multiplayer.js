@@ -31,6 +31,9 @@ if (!myClientId) {
 
 let roomCode = null;
 let isHostFlag = false;
+let isPublicRoom = false;
+// Açık lobi listesinden katılma isteği uçuştayken ikinci bir tıklamayı engeller.
+let lobbyJoinInFlight = false;
 let myTeamClubId = null;
 let myName = "Oyuncu";
 let lobbyPlayersRef = null;
@@ -146,21 +149,22 @@ function applyRemoteState(data) {
   draftState = ds
     ? {
         slots: ds.slots || [],
+        slotIdx: ds.slotIdx || 0,
         stage: ds.stage,
         order: ds.order || [],
         turnIdx: ds.turnIdx || 0,
         turnCounter: ds.turnCounter || 0,
-        passStreak: ds.passStreak || 0,
         pool: (ds.pool || []).map(e => ({
-          id: e.id,
           slot: e.slot,
           ownerClubId: e.ownerClubId,
           player: e.player,
-          bid: e.bid || 0,
-          highBidderClubId: e.highBidderClubId || "",
-          resolved: e.resolved || ""
+          status: e.status || "open",
+          takenByClubId: e.takenByClubId || ""
         })),
         sellDone: ds.sellDone || {},
+        sellChoice: ds.sellChoice || {},
+        replaceRound: ds.replaceRound || 0,
+        replaceTargets: ds.replaceTargets || [],
         replaceCandidates: ds.replaceCandidates || {},
         replacePicks: ds.replacePicks || {},
         reservedNames: ds.reservedNames || [],
@@ -214,16 +218,15 @@ function startHostActionListener() {
       // "Sonraki Sezona Geç" satırı, bu misafirin kararı setin TAMAMLAYAN son karar olsa bile
       // host bizzat bir şeye tıklamadığı sürece hiç yenilenmiyordu. Burada elle tetikliyoruz.
       if (mpPhase === "transfer") updateTransferContinueVisibility();
-    } else if (action.type === "draftTurn") {
-      if (draftState && draftState.stage === "auction") {
-        applyDraftAuctionTurn(participant, action.payload.entryId === "-" ? "" : action.payload.entryId);
-        draftAuctionStep();
+    } else if (action.type === "draftPick") {
+      if (draftState && draftState.stage === "pick") {
+        applyDraftPick(participant, action.payload.target === "-" ? "" : action.payload.target);
+        draftStep();
       }
     } else if (action.type === "draftSell") {
       if (draftState && draftState.stage === "sell") {
-        // Firebase boş diziyi düşürdüğü için satış listesi virgüllü metin olarak taşınıyor.
-        const slots = (action.payload.slotsCsv || "").split(",").filter(Boolean);
-        applyDraftSellDecision(participant, slots);
+        // "Satmıyorum" kararı Firebase'de boş metin olarak kaybolmasın diye "-" ile taşınıyor.
+        applyDraftSellDecision(participant, action.payload.slot === "-" ? "" : action.payload.slot);
         renderDraftScreen();
         mpPublish();
         maybeFinishDraftSellStage();
@@ -284,8 +287,15 @@ function leaveLobbyCleanup() {
   if (roomCode && !isHostFlag) {
     db.ref(`rooms/${roomCode}/players/${myClientId}`).remove();
   }
+  // Host lobiden çıkarsa oda da açık lobi listesinden düşer, yoksa kimsenin katılamayacağı
+  // ölü bir kayıt listede kalırdı.
+  if (roomCode && isHostFlag && isPublicRoom) {
+    publicRoomIndexRef(roomCode).remove();
+  }
   roomCode = null;
   isHostFlag = false;
+  isPublicRoom = false;
+  lobbyJoinInFlight = false;
   myTeamClubId = null;
 }
 
@@ -299,20 +309,24 @@ function randomRoomCode() {
 function renderLobbyChoice() {
   lobbyContent.innerHTML = `
     <h1>Arkadaşlarla <span class="accent">Oyna</span></h1>
-    <p class="subtitle">Bir lobi kur ve kodunu arkadaşlarına gönder, ya da sana verilen kodla mevcut bir lobiye katıl.</p>
+    <p class="subtitle">Herkese açık bir lobi kur ve listeden gelenleri bekle, özel bir lobi kurup kodunu sadece arkadaşlarına gönder, ya da açık lobi listesinden birine katıl.</p>
     <div class="setup-row">
       <label>Adın</label>
       <input type="text" id="lobbyNameInput" class="lobby-input" placeholder="Adını yaz" maxlength="16" value="${myName}">
     </div>
-    <button id="lobbyCreateBtn" class="primary-btn">🆕 Lobi Kur</button>
+    <button id="lobbyPublicCreateBtn" class="primary-btn">🌍 Lobi Kur</button>
+    <button id="lobbyCreateBtn" class="primary-btn secondary-btn-style">🔒 Özel Lobi Kur</button>
+    <button id="lobbyBrowseBtn" class="primary-btn secondary-btn-style">📋 Lobiye Katıl</button>
     <div class="setup-row">
-      <label>Lobi Kodu</label>
+      <label>Kod ile katıl (özel lobi)</label>
       <input type="text" id="lobbyCodeInput" class="lobby-input" placeholder="ör. AB3XZ" maxlength="5" style="text-transform:uppercase">
     </div>
-    <button id="lobbyJoinBtn" class="primary-btn secondary-btn-style">🔑 Lobiye Katıl</button>
+    <button id="lobbyJoinBtn" class="primary-btn secondary-btn-style">🔑 Kodla Katıl</button>
     <p class="hint" id="lobbyErrorHint"></p>
   `;
-  document.getElementById("lobbyCreateBtn").addEventListener("click", renderLobbyCreateConfig);
+  document.getElementById("lobbyPublicCreateBtn").addEventListener("click", () => renderLobbyCreateConfig(true));
+  document.getElementById("lobbyCreateBtn").addEventListener("click", () => renderLobbyCreateConfig(false));
+  document.getElementById("lobbyBrowseBtn").addEventListener("click", renderPublicLobbyList);
   document.getElementById("lobbyJoinBtn").addEventListener("click", () => {
     myName = document.getElementById("lobbyNameInput").value.trim() || "Oyuncu";
     const code = document.getElementById("lobbyCodeInput").value.trim().toUpperCase();
@@ -321,10 +335,69 @@ function renderLobbyChoice() {
   });
 }
 
-function renderLobbyCreateConfig() {
+// Açık lobi listesi: /publicRooms hafif bir dizindir (oda verisinin kendisi rooms/ altında
+// kalır). Sadece açık, başlamamış ve dolmamış odalar listelenir; özel lobiler bu dizine hiç
+// yazılmadığı için burada asla görünmez.
+function renderPublicLobbyList() {
   myName = document.getElementById("lobbyNameInput")?.value.trim() || myName || "Oyuncu";
   lobbyContent.innerHTML = `
-    <h1>Lobi <span class="accent">Kur</span></h1>
+    <h1>Açık <span class="accent">Lobiler</span></h1>
+    <p class="subtitle">Listeden bir lobiye kodsuz katılabilirsin.</p>
+    <div class="lobby-player-list" id="publicRoomList"><p class="hint">Yükleniyor…</p></div>
+    <button id="publicRefreshBtn" class="primary-btn secondary-btn-style">🔄 Yenile</button>
+    <div class="setup-row">
+      <label>Kod ile katıl (özel lobi)</label>
+      <input type="text" id="lobbyCodeInput" class="lobby-input" placeholder="ör. AB3XZ" maxlength="5" style="text-transform:uppercase">
+    </div>
+    <button id="lobbyJoinBtn" class="primary-btn secondary-btn-style">🔑 Kodla Katıl</button>
+    <p class="hint" id="lobbyErrorHint"></p>
+  `;
+  document.getElementById("publicRefreshBtn").addEventListener("click", loadPublicRooms);
+  document.getElementById("lobbyJoinBtn").addEventListener("click", () => {
+    const code = document.getElementById("lobbyCodeInput").value.trim().toUpperCase();
+    if (!code) return;
+    joinRoom(code);
+  });
+  loadPublicRooms();
+}
+
+function loadPublicRooms() {
+  const listEl = document.getElementById("publicRoomList");
+  db.ref("publicRooms").get().then(snap => {
+    if (!document.getElementById("publicRoomList")) return;
+    const rooms = Object.entries(snap.val() || {})
+      .map(([code, r]) => ({ code, ...r }))
+      .filter(r => (r.status || "lobby") === "lobby" && (r.players || 1) < (r.maxPlayers || 2))
+      .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    if (rooms.length === 0) {
+      listEl.innerHTML = `<p class="hint">Şu anda açık lobi yok. Kendin bir tane kurabilirsin.</p>`;
+      return;
+    }
+    listEl.innerHTML = rooms.map(r => `<div class="lobby-player-row public-room-row">
+      <span>👑 ${r.hostName} — <b>${r.players || 1}/${r.maxPlayers}</b> kişi${r.takenTeams ? ` · ${r.takenTeams}` : ""}</span>
+      <button class="option-btn public-room-join" data-code="${r.code}">Katıl</button>
+    </div>`).join("");
+    listEl.querySelectorAll(".public-room-join").forEach(btn => {
+      btn.addEventListener("click", () => {
+        // Katılma isteği uçuştayken ikinci bir tıklama iki ayrı odaya yazmasın.
+        if (lobbyJoinInFlight) return;
+        lobbyJoinInFlight = true;
+        listEl.querySelectorAll(".public-room-join").forEach(b => (b.disabled = true));
+        joinRoom(btn.dataset.code);
+      });
+    });
+  });
+}
+
+function publicRoomIndexRef(code) {
+  return db.ref(`publicRooms/${code}`);
+}
+
+function renderLobbyCreateConfig(isPublic) {
+  myName = document.getElementById("lobbyNameInput")?.value.trim() || myName || "Oyuncu";
+  lobbyContent.innerHTML = `
+    <h1>${isPublic ? "Açık" : "Özel"} Lobi <span class="accent">Kur</span></h1>
+    <p class="subtitle">${isPublic ? "Bu lobi herkese açık listede görünür, isteyen kodsuz katılabilir." : "Bu lobi listede görünmez; sadece kodunu verdiğin kişiler katılabilir."}</p>
     <div class="setup-row">
       <label>Kaç kişi oynayacak?</label>
       <div class="option-group" id="lobbySizeGroup">
@@ -346,7 +419,7 @@ function renderLobbyCreateConfig() {
         <button class="option-btn active" data-draft="off">Kapalı</button>
         <button class="option-btn" data-draft="on">🎯 Draft Modu Açık</button>
       </div>
-      <p class="hint">Her sezon sonunda 3 mevki draft'a çıkar; herkesin o mevkilerdeki oyuncusu ortak havuza girer ve sırayla açık artırmayla rakip oyuncularına teklif verirsin. Ardından elinde kalanları istersen kendin satar, boşalan her mevkiye 5 adaydan birini imzalarsın.</p>
+      <p class="hint">Her sezon sonunda 3 mevki draft'a çıkar; herkesin o mevkideki oyuncusu ortak havuza girer ve ters lig sırasıyla herkes bedelsiz bir rakip oyuncusu seçer. Ardından boşalan her mevkiye 5 adaydan birini imzalar, kadrondan istediğin bir oyuncuyu satıp yerine yine 5 adaydan birini alırsın.</p>
     </div>
     <button id="lobbyCreateConfirmBtn" class="primary-btn">Lobiyi Oluştur</button>
   `;
@@ -374,25 +447,41 @@ function renderLobbyCreateConfig() {
     btn.classList.add("active");
     emptyStart = btn.dataset.mode === "empty";
   });
-  document.getElementById("lobbyCreateConfirmBtn").addEventListener("click", () => createRoom(size, emptyStart, draftMode));
+  document.getElementById("lobbyCreateConfirmBtn").addEventListener("click", () => createRoom(size, emptyStart, draftMode, isPublic));
 }
 
-function createRoom(maxPlayers, emptyStart, draftMode) {
+function createRoom(maxPlayers, emptyStart, draftMode, isPublic) {
   const code = randomRoomCode();
   roomCode = code;
   isHostFlag = true;
+  isPublicRoom = !!isPublic;
   const roomRef = db.ref(`rooms/${code}`);
   roomRef.set({
     createdAt: Date.now(),
     maxPlayers,
     emptyStart: !!emptyStart,
     draftMode: !!draftMode,
+    public: !!isPublic,
     hostId: myClientId,
     status: "lobby",
     players: {
       [myClientId]: { name: myName, team: null, joinedAt: Date.now() }
     }
   }).then(() => {
+    if (isPublicRoom) {
+      publicRoomIndexRef(code).set({
+        hostName: myName,
+        maxPlayers,
+        players: 1,
+        status: "lobby",
+        emptyStart: !!emptyStart,
+        draftMode: !!draftMode,
+        takenTeams: "",
+        createdAt: Date.now()
+      });
+      // Host sekmesi kapanırsa dizin kaydı ortada kalmasın.
+      publicRoomIndexRef(code).onDisconnect().remove();
+    }
     listenToLobby();
   });
 }
@@ -402,12 +491,20 @@ function joinRoom(code) {
   roomRef.get().then(snap => {
     const data = snap.val();
     const errEl = document.getElementById("lobbyErrorHint");
-    if (!data) { if (errEl) errEl.textContent = "Bu kodda bir lobi bulunamadı."; return; }
-    if (data.status !== "lobby") { if (errEl) errEl.textContent = "Bu lobi zaten başlamış."; return; }
+    const fail = (msg) => {
+      lobbyJoinInFlight = false;
+      if (errEl) errEl.textContent = msg;
+      // Listeden gelen katılım başarısızsa liste yeniden yüklenip güncel hale gelsin.
+      if (document.getElementById("publicRoomList")) loadPublicRooms();
+    };
+    if (!data) { fail("Bu kodda bir lobi bulunamadı."); return; }
+    if (data.status !== "lobby") { fail("Bu lobi zaten başlamış."); return; }
     const playerCount = Object.keys(data.players || {}).length;
-    if (playerCount >= data.maxPlayers) { if (errEl) errEl.textContent = "Lobi dolu."; return; }
+    if (playerCount >= data.maxPlayers) { fail("Lobi dolu."); return; }
     roomCode = code;
     isHostFlag = data.hostId === myClientId;
+    isPublicRoom = !!data.public;
+    lobbyJoinInFlight = false;
     db.ref(`rooms/${code}/players/${myClientId}`).set({ name: myName, team: null, joinedAt: Date.now() }).then(() => {
       listenToLobby();
     });
@@ -455,7 +552,7 @@ function renderLobbyRoom(data) {
 
   lobbyContent.innerHTML = `
     <h1>Lobi <span class="accent">${roomCode}</span></h1>
-    <p class="subtitle">Bu kodu arkadaşlarına gönder: <b>${roomCode}</b> — (${players.length}/${data.maxPlayers} kişi) · ${data.emptyStart ? "🌱 Sıfırdan Kadro (€250M)" : "🔁 Kadro Rebuild (€120M)"}${data.draftMode ? " · 🎯 Draft Modu" : ""}</p>
+    <p class="subtitle">Bu kodu arkadaşlarına gönder: <b>${roomCode}</b> — (${players.length}/${data.maxPlayers} kişi) · ${data.emptyStart ? "🌱 Sıfırdan Kadro (€250M)" : "🔁 Kadro Rebuild (€120M)"}${data.draftMode ? " · 🎯 Draft Modu" : ""} · ${data.public ? "🌍 Açık Lobi" : "🔒 Özel Lobi"}</p>
     <div class="setup-row">
       <label>Takımını Seç</label>
       <div class="option-group lobby-team-group">${teamButtons}</div>
@@ -477,6 +574,14 @@ function renderLobbyRoom(data) {
     });
   });
 
+  // Açık lobi dizinini oda değiştikçe güncel tut — dolan lobi listeden kendiliğinden düşer.
+  if (isHostFlag && isPublicRoom) {
+    publicRoomIndexRef(roomCode).update({
+      players: players.length,
+      takenTeams: MP_CLUBS.filter(c => takenTeams.has(c.id)).map(c => c.name).join(", ")
+    });
+  }
+
   if (isHostFlag) {
     const startBtnEl = document.getElementById("lobbyStartBtn");
     if (startBtnEl) startBtnEl.addEventListener("click", () => startMultiplayerGame(data));
@@ -484,6 +589,8 @@ function renderLobbyRoom(data) {
 }
 
 function startMultiplayerGame(data) {
+  // Oyun başlayınca oda artık katılıma kapalıdır; açık lobi listesinden düşer.
+  if (isPublicRoom) publicRoomIndexRef(roomCode).remove();
   const players = Object.entries(data.players || {}).map(([clientId, p]) => ({ clientId, ...p }));
   const takenTeams = new Set(players.map(p => p.team));
   const defs = MP_CLUBS.map(club => ({ clubId: club.id, isBot: !takenTeams.has(club.id) }));

@@ -900,20 +900,20 @@ function buildSlotCandidates(category) {
   const picked = [];
   const notPicked = (p) => !picked.some(c => c.name === p.name);
 
-  const expensivePool = available.filter(p => p.rating >= 82);
-  // Yıldız havuzu (özellikle bek mevkilerinde gerçek 82+ oyuncu sayısı az) uzun kariyerlerde
-  // tükenebilir; o durumda bandı bir kademe (80+) gevşetip yine de gerçek oyuncu sunuyoruz.
+  // Gerçek 5 lig havuzunda 82+ oyuncu bek/kanat gibi mevkilerde çok az olduğundan (kategori
+  // başına tek haneli sayılara düşebiliyor), yıldız eşiği 80'e çekildi — daha geniş bir havuzdan
+  // besleniyor ve uzun kariyerlerde tükenme riski büyük ölçüde azalıyor.
+  const expensivePool = available.filter(p => p.rating >= 80);
   const expensive = pickRandomFromPool(expensivePool.filter(notPicked))
-    || pickRandomFromPool(available.filter(p => p.rating >= 80).filter(notPicked))
     || pickRandomFromPool(available.filter(notPicked)) || makeFreeAgent(category);
   if (expensive) picked.push(expensive);
 
   if (fourTeamFormat) {
-    const midPool = available.filter(p => p.rating >= 78 && p.rating < 82);
+    const midPool = available.filter(p => p.rating >= 76 && p.rating < 80);
     const mid = pickRandomFromPool(midPool.filter(notPicked)) || pickRandomFromPool(available.filter(notPicked)) || makeFreeAgent(category);
     if (mid) picked.push(mid);
 
-    const cheapPool = available.filter(p => p.rating >= 73 && p.rating < 78);
+    const cheapPool = available.filter(p => p.rating >= 73 && p.rating < 76);
     const cheap = pickRandomFromPool(cheapPool.filter(notPicked)) || pickRandomFromPool(available.filter(notPicked)) || makeFreeAgent(category);
     if (cheap) picked.push(cheap);
 
@@ -921,7 +921,7 @@ function buildSlotCandidates(category) {
     return [expensive, mid, cheap, free].filter(Boolean);
   }
 
-  const midPool = available.filter(p => p.rating >= 74 && p.rating < 82);
+  const midPool = available.filter(p => p.rating >= 73 && p.rating < 80);
   const mid = pickRandomFromPool(midPool.filter(notPicked)) || pickRandomFromPool(available.filter(notPicked)) || makeFreeAgent(category);
   if (mid) picked.push(mid);
   const free = pickRandomFromPool(freePool) || makeFreeAgent(category, 0);
@@ -951,8 +951,8 @@ function renderCandidateSelection(slot, budget, bannerText, candidates, onPick) 
     let tierLabel = "";
     if (cand === freeAgentFallback) tierLabel = "Bütçene Uygun";
     else if (cand.value === 0) tierLabel = "Bedava Transfer";
-    else if (cand.rating >= 82) tierLabel = "Yıldız Transfer";
-    else if (participants.length >= 4 && cand.rating < 78) tierLabel = "Ucuz Transfer";
+    else if (cand.rating >= 80) tierLabel = "Yıldız Transfer";
+    else if (participants.length >= 4 && cand.rating < 76) tierLabel = "Ucuz Transfer";
     else tierLabel = "Orta Segment";
     card.innerHTML = `
       ${tierLabel ? `<div class="tier-tag">${tierLabel}</div>` : ""}
@@ -2090,11 +2090,10 @@ function buildDraftReplacementCandidates(participant, slot) {
       if (pick) pick = { ...pick, value: 0 };
       if (!pick) pick = makeFreeAgent(category, 0);
     } else {
-      const range = spec.tier === "cheap" ? [73, 78] : spec.tier === "mid" ? [78, 82] : [82, 200];
-      // Yıldız bandı tükenirse 80+'a gevşet (bkz. buildSlotCandidates'teki aynı davranış).
-      const relaxed = spec.tier === "star" ? 80 : range[0];
+      // bkz. buildSlotCandidates'teki aynı eşikler (73/76/80) — gerçek 5 lig havuzunda
+      // tükenme riskini azaltmak için yıldız bandı 80'den başlıyor.
+      const range = spec.tier === "cheap" ? [73, 76] : spec.tier === "mid" ? [76, 80] : [80, 200];
       pick = pickRandomFromPool(fresh(market.filter(p => p.rating >= range[0] && p.rating < range[1])))
-        || pickRandomFromPool(fresh(market.filter(p => p.rating >= relaxed && p.rating < range[1])))
         || pickRandomFromPool(fresh(market))
         || makeFreeAgent(category);
     }

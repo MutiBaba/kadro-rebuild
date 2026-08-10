@@ -293,6 +293,7 @@ let botSetupClubId = "fenerbahce";
 let botSetupEmptyStart = false;
 let botSetupSeasonCount = 5; // 5'in katları, max 30 (bkz. #botSeasonCountGroup)
 let botSetupDraftMode = false;
+let botSetupBudgetMultiplier = 1; // bkz. #botBudgetGroup — START_BUDGET/EMPTY_START_BUDGET'a uygulanır
 
 // Fenerbahçe/Beşiktaş/Galatasaray dışında bir takım seçilirse format 4 takıma çıkar (sen + 3
 // bot) — havuzda daha fazla takım rekabet ettiği için tek bir 3'lü ortak aday listesi sık sık
@@ -466,14 +467,14 @@ function renderBotSetupText() {
     subtitleEl.innerHTML = t("setup.subtitle", {
       club: club.name,
       opponents: opponentText,
-      budget: formatValue(botSetupEmptyStart ? EMPTY_START_BUDGET : START_BUDGET),
+      budget: formatValue((botSetupEmptyStart ? EMPTY_START_BUDGET : START_BUDGET) * botSetupBudgetMultiplier),
       squadNote: botSetupEmptyStart ? t("setup.subtitleSquadEmpty") : t("setup.subtitleSquadReal"),
       candidateCount: isFourTeam ? t("setup.candidates4") : t("setup.candidates3"),
       seasons: botSetupSeasonCount
     });
   }
   const budgetEl = document.getElementById("setupBudgetAmount");
-  if (budgetEl) budgetEl.textContent = formatValue(botSetupEmptyStart ? EMPTY_START_BUDGET : START_BUDGET);
+  if (budgetEl) budgetEl.textContent = formatValue((botSetupEmptyStart ? EMPTY_START_BUDGET : START_BUDGET) * botSetupBudgetMultiplier);
   const opponentsRow = document.getElementById("setupOpponentsRow");
   if (opponentsRow) {
     opponentsRow.innerHTML = botSetupOpponentIds.map(id => {
@@ -521,6 +522,15 @@ document.getElementById("botSeasonCountGroup")?.addEventListener("click", (e) =>
   renderBotSetupText();
 });
 
+document.getElementById("botBudgetGroup")?.addEventListener("click", (e) => {
+  const btn = e.target.closest(".option-btn");
+  if (!btn) return;
+  document.querySelectorAll("#botBudgetGroup .option-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  botSetupBudgetMultiplier = parseFloat(btn.dataset.budget);
+  renderBotSetupText();
+});
+
 // Mobilde takım ismi kutusuna dokununca klavye kart içini aşağı kaydırıyor; klavye
 // kapandığında (blur) kartı başa sarıyoruz ki bütçe/Başlat gibi üstteki içerik kaybolmasın.
 document.getElementById("teamNameInput")?.addEventListener("blur", () => {
@@ -535,7 +545,7 @@ startBtn.addEventListener("click", () => {
   ];
   const teamNameInput = document.getElementById("teamNameInput");
   const customTeamName = botSetupEmptyStart ? (teamNameInput?.value.trim() || null) : null;
-  startRebuild(defs, botSetupClubId, botSetupEmptyStart, customTeamName, botSetupSeasonCount, botSetupDraftMode);
+  startRebuild(defs, botSetupClubId, botSetupEmptyStart, customTeamName, botSetupSeasonCount, botSetupDraftMode, botSetupBudgetMultiplier);
 });
 renderLeaguePickGrid();
 renderTeamPickGrid();
@@ -617,13 +627,15 @@ function makeVacantSlot() {
   return { name: t("player.vacant"), value: 0, rating: 0, age: 0, nationality: "—", club: "", origin: "vacant", vacant: true };
 }
 
-function startRebuild(customDefs, myClubId, emptyStart, customTeamName, seasonCount, draftMode) {
+function startRebuild(customDefs, myClubId, emptyStart, customTeamName, seasonCount, draftMode, budgetMultiplier) {
   const defs = customDefs || PARTICIPANT_DEFS;
   // Çok oyunculu mod her zaman Süper Lig — kullanıcı daha önce kurulum ekranında başka bir
   // lig seçmiş olsa bile MP başlarken aktif ligi Süper Lig'e sabitliyoruz.
   if (mpActive()) activeLeagueId = "superlig";
   isEmptyStartMode = !!emptyStart;
   MAX_SEASONS = seasonCount || 5;
+  // Çok oyunculuda herkes aynı şartlarda yarışmalı — bütçe çarpanı sadece offline (bot) modda.
+  const budgetMult = mpActive() ? 1 : (budgetMultiplier || 1);
   draftModeActive = !!draftMode;
   draftState = null;
   guestDraftInFlight = null;
@@ -648,7 +660,9 @@ function startRebuild(customDefs, myClubId, emptyStart, customTeamName, seasonCo
         ? customTeamName
         : pickRandomFantasyName(takenFantasyNames);
     }
-    return { clubId: def.clubId, name: displayName, logo: club.logo, isBot: def.isBot, budget: isEmptyStartMode ? EMPTY_START_BUDGET : START_BUDGET, squad };
+    const baseBudget = isEmptyStartMode ? EMPTY_START_BUDGET : START_BUDGET;
+    const budget = Math.round((baseBudget * budgetMult) / 250000) * 250000;
+    return { clubId: def.clubId, name: displayName, logo: club.logo, isBot: def.isBot, budget, squad };
   });
   human = participants.find(p => p.clubId === (myClubId || defs[0].clubId)) || participants[0];
   slotIndex = 0;

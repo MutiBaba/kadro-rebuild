@@ -914,7 +914,6 @@ function freeTransferPool(category) {
 // (73-77) segmenti daha girer — yoksa 3 aday üzerinde 4 taraf sık sık çakışıp oyunun
 // tıkanmasına (sürekli açık artırma / aday tükenmesi) yol açabiliyordu.
 function buildSlotCandidates(category) {
-  const fourTeamFormat = participants.length >= 4;
   const available = crossLeaguePlayerPool(category).filter(p => !usedWorldNames.has(p.name));
   const freePool = freeTransferPool(category);
   const picked = [];
@@ -928,24 +927,18 @@ function buildSlotCandidates(category) {
     || pickRandomFromPool(available.filter(notPicked)) || makeFreeAgent(category);
   if (expensive) picked.push(expensive);
 
-  if (fourTeamFormat) {
-    const midPool = available.filter(p => p.rating >= 76 && p.rating < 80);
-    const mid = pickRandomFromPool(midPool.filter(notPicked)) || pickRandomFromPool(available.filter(notPicked)) || makeFreeAgent(category);
-    if (mid) picked.push(mid);
-
-    const cheapPool = available.filter(p => p.rating >= 73 && p.rating < 76);
-    const cheap = pickRandomFromPool(cheapPool.filter(notPicked)) || pickRandomFromPool(available.filter(notPicked)) || makeFreeAgent(category);
-    if (cheap) picked.push(cheap);
-
-    const free = pickRandomFromPool(freePool) || makeFreeAgent(category, 0);
-    return [expensive, mid, cheap, free].filter(Boolean);
-  }
-
-  const midPool = available.filter(p => p.rating >= 73 && p.rating < 80);
+  // Kaç katılımcı olursa olsun (3'lü büyük takım formatı dahil) her zaman 4 aday: yıldız,
+  // orta segment, ucuz transfer, bedava transfer — tüm formatlarda aynı deneyim.
+  const midPool = available.filter(p => p.rating >= 76 && p.rating < 80);
   const mid = pickRandomFromPool(midPool.filter(notPicked)) || pickRandomFromPool(available.filter(notPicked)) || makeFreeAgent(category);
   if (mid) picked.push(mid);
+
+  const cheapPool = available.filter(p => p.rating >= 73 && p.rating < 76);
+  const cheap = pickRandomFromPool(cheapPool.filter(notPicked)) || pickRandomFromPool(available.filter(notPicked)) || makeFreeAgent(category);
+  if (cheap) picked.push(cheap);
+
   const free = pickRandomFromPool(freePool) || makeFreeAgent(category, 0);
-  return [expensive, mid, free].filter(Boolean);
+  return [expensive, mid, cheap, free].filter(Boolean);
 }
 
 function renderCandidateSelection(slot, budget, bannerText, candidates, onPick) {
@@ -973,7 +966,7 @@ function renderCandidateSelection(slot, budget, bannerText, candidates, onPick) 
     if (cand === freeAgentFallback) tierKey = "budgetFit";
     else if (cand.value === 0) tierKey = "free";
     else if (cand.rating >= 80) tierKey = "star";
-    else if (participants.length >= 4 && cand.rating < 76) tierKey = "cheap";
+    else if (cand.rating < 76) tierKey = "cheap";
     const tierLabel = t("tier." + tierKey);
     card.innerHTML = `
       <div class="tier-tag">${tierLabel}</div>
@@ -2053,13 +2046,16 @@ function applyDraftPick(participant, targetOwnerClubId) {
   ds.turnCounter++;
   if (entry) {
     const owner = draftParticipant(entry.ownerClubId);
-    owner.squad[slot] = makeVacantSlot();
+    // Havuzdaki oyuncu artık "sahipsiz" (asıl sahibi başka birini seçmiş) olabilir — o zaman
+    // asıl sahibin mevkisi ZATEN başka bir oyuncuyla dolu demektir, onu boşaltmamalıyız.
+    if (!owner.squad[slot].vacant && owner.squad[slot].name === entry.player.name) {
+      owner.squad[slot] = makeVacantSlot();
+    }
     entry.status = "taken";
     entry.takenByClubId = participant.clubId;
-    // Seçim yapan katılımcının kendi oyuncusu artık yerini kaybetti: havuzdan da çekilir,
-    // böylece bir oyuncu asla iki kadroda görünmez ve havuz muhasebesi tek kurala iner.
-    const own = ds.pool.find(e => e.ownerClubId === participant.clubId && e.status === "open");
-    if (own) own.status = "withdrawn";
+    // Seçim yapan katılımcının eski oyuncusu havuzdan ÇEKİLMEZ — kendisi hariç herkes için
+    // seçilebilir kalır. Önceki davranış (kendi eski oyuncusunu havuzdan hemen düşürmek) havuzu
+    // gereksiz hızlı tüketip sıradaki katılımcıların bazen hiç seçenek bulamamasına yol açıyordu.
     participant.squad[slot] = { ...cloneSquadPlayer(entry.player), origin: "draft", vacant: false };
     ds.log.push({ k: "log.draftPicked", v: {
       club: participant.name, from: owner.name, name: entry.player.name, rating: entry.player.rating

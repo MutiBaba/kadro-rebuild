@@ -18,11 +18,11 @@ const LIGUE1_DATA = {
   "clubs": [
     {
       "id": "angers",
-      "name": "Angers",
+      "name": "Angerz",
       "logo": null,
       "xi": {
         "gk": {
-          "name": "Anthony Lopes",
+          "name": "Anthoni Lopez",
           "value": 900000,
           "nationality": "Portekiz",
           "photo": null,
@@ -30,7 +30,7 @@ const LIGUE1_DATA = {
           "age": 35
         },
         "rb": {
-          "name": "Lilian Raolisoa",
+          "name": "Liliann Raollisoa",
           "value": 4000000,
           "nationality": "Fransa",
           "photo": null,
@@ -38,7 +38,7 @@ const LIGUE1_DATA = {
           "age": 26
         },
         "cb1": {
-          "name": "Ousmane Camara",
+          "name": "Ousmanne Camarah",
           "value": 8000000,
           "nationality": "Mali",
           "photo": null,
@@ -46,7 +46,7 @@ const LIGUE1_DATA = {
           "age": 23
         },
         "cb2": {
-          "name": "Jordan Lefort",
+          "name": "Jordann Leffort",
           "value": 1000000,
           "nationality": "Fransa",
           "photo": null,
@@ -54,7 +54,7 @@ const LIGUE1_DATA = {
           "age": 33
         },
         "lb": {
-          "name": "Jacques Ekomié",
+          "name": "Jakques Ekomie",
           "value": 9000000,
           "nationality": "Gabon",
           "photo": null,
@@ -62,7 +62,7 @@ const LIGUE1_DATA = {
           "age": 22
         },
         "dm1": {
-          "name": "Marius Courcoul",
+          "name": "Mariuss Courkoul",
           "value": 2500000,
           "nationality": "Fransa",
           "photo": null,
@@ -70,7 +70,7 @@ const LIGUE1_DATA = {
           "age": 19
         },
         "dm2": {
-          "name": "Yassin Belkhdim",
+          "name": "Yassinn Belchdim",
           "value": 7000000,
           "nationality": "Fas",
           "photo": null,
@@ -78,7 +78,7 @@ const LIGUE1_DATA = {
           "age": 24
         },
         "rw": {
-          "name": "Harouna Djibirin",
+          "name": "Harounah Djibirinn",
           "value": 1500000,
           "nationality": "Kamerun",
           "photo": null,
@@ -86,7 +86,7 @@ const LIGUE1_DATA = {
           "age": 19
         },
         "cam": {
-          "name": "Louis Mouton",
+          "name": "Louiss Moutton",
           "value": 4000000,
           "nationality": "Fransa",
           "photo": null,
@@ -94,7 +94,7 @@ const LIGUE1_DATA = {
           "age": 24
         },
         "lw": {
-          "name": "Amine Sbaï",
+          "name": "Ammine Sbai",
           "value": 4000000,
           "nationality": "Fas",
           "photo": null,
@@ -102,7 +102,7 @@ const LIGUE1_DATA = {
           "age": 25
         },
         "st": {
-          "name": "Prosper Peter",
+          "name": "Prosperr Peterr",
           "value": 15000000,
           "nationality": "Fransa",
           "photo": null,
@@ -113,11 +113,11 @@ const LIGUE1_DATA = {
     },
     {
       "id": "auxerre",
-      "name": "Auxerre",
+      "name": "Auxere",
       "logo": null,
       "xi": {
         "gk": {
-          "name": "Paul Nardi",
+          "name": "Paul Nardy",
           "value": 1200000,
           "nationality": "Fransa",
           "photo": null,
@@ -125,7 +125,7 @@ const LIGUE1_DATA = {
           "age": 32
         },
         "rb": {
-          "name": "Marvin Senaya",
+          "name": "Marvinn Senayah",
           "value": 3000000,
           "nationality": "Gana",
           "photo": null,
@@ -133,7 +133,7 @@ const LIGUE1_DATA = {
           "age": 25
         },
         "cb1": {
-          "name": "Clément Akpa",
+          "name": "Clement Akpah",
           "value": 9000000,
           "nationality": "Fildişi Sahili",
           "photo": null,
@@ -141,7 +141,7 @@ const LIGUE1_DATA = {
           "age": 24
         },
         "cb2": {
-          "name": "Sinaly Diomandé",
+          "name": "Sinali Diomande",
           "value": 6000000,
           "nationality": "Fildişi Sahili",
           "photo": null,
@@ -149,7 +149,7 @@ const LIGUE1_DATA = {
           "age": 25
         },
         "lb": {
-          "name": "Fredrik Oppegård",
+          "name": "Fredric Oppegard",
           "value": 1500000,
           "nationality": "Norveç",
           "photo": null,
@@ -157,7 +157,7 @@ const LIGUE1_DATA = {
           "age": 24
         },
         "dm1": {
-          "name": "Elisha Owusu",
+          "name": "Elishah Owusuh",
           "value": 4000000,
           "nationality": "Gana",
           "photo": null,
@@ -165,7 +165,7 @@ const LIGUE1_DATA = {
           "age": 28
         },
         "dm2": {
-          "name": "Arthur Piedfort",
+          "name": "Arthurr Piedfort",
           "value": 4000000,
           "nationality": "Fransa",
           "photo": null,
@@ -173,7 +173,7 @@ const LIGUE1_DATA = {
           "age": 21
         },
         "rw": {
-          "name": "Kévin Danois",
+          "name": "Kevin Dannois",
           "value": 20000000,
           "nationality": "Fransa",
           "photo": null,
@@ -181,7 +181,7 @@ const LIGUE1_DATA = {
           "age": 22
         },
         "cam": {
-          "name": "Romain Faivre",
+          "name": "Romainn Faivre",
           "value": 4000000,
           "nationality": "Fransa",
           "photo": null,
@@ -189,7 +189,7 @@ const LIGUE1_DATA = {
           "age": 28
         },
         "lw": {
-          "name": "Danny Namaso",
+          "name": "Dany Namasoh",
           "value": 6000000,
           "nationality": "Kamerun",
           "photo": null,
@@ -197,7 +197,7 @@ const LIGUE1_DATA = {
           "age": 25
         },
         "st": {
-          "name": "Rémy Labeau Lascary",
+          "name": "Remy Labeau Laskary",
           "value": 4000000,
           "nationality": "Fransa",
           "photo": null,
@@ -208,11 +208,11 @@ const LIGUE1_DATA = {
     },
     {
       "id": "brest",
-      "name": "Brest",
+      "name": "Bresst",
       "logo": null,
       "xi": {
         "gk": {
-          "name": "Grégoire Coudert",
+          "name": "Gregoire Couddert",
           "value": 4000000,
           "nationality": "Fransa",
           "photo": null,
@@ -220,7 +220,7 @@ const LIGUE1_DATA = {
           "age": 27
         },
         "rb": {
-          "name": "Kenny Lala",
+          "name": "Kenni Lalah",
           "value": 1500000,
           "nationality": "Fransa",
           "photo": null,
@@ -228,7 +228,7 @@ const LIGUE1_DATA = {
           "age": 34
         },
         "cb1": {
-          "name": "Brendan Chardonnet",
+          "name": "Brendann Chardonnett",
           "value": 4000000,
           "nationality": "Fransa",
           "photo": null,
@@ -236,7 +236,7 @@ const LIGUE1_DATA = {
           "age": 31
         },
         "cb2": {
-          "name": "Raphaël Le Guen",
+          "name": "Raphael Le Guen",
           "value": 800000,
           "nationality": "Fransa",
           "photo": null,
@@ -244,7 +244,7 @@ const LIGUE1_DATA = {
           "age": 19
         },
         "lb": {
-          "name": "Bradley Locko",
+          "name": "Bradlie Loko",
           "value": 6000000,
           "nationality": "Fransa",
           "photo": null,
@@ -252,7 +252,7 @@ const LIGUE1_DATA = {
           "age": 24
         },
         "dm1": {
-          "name": "Joris Chotard",
+          "name": "Joriss Chottard",
           "value": 7000000,
           "nationality": "Fransa",
           "photo": null,
@@ -260,7 +260,7 @@ const LIGUE1_DATA = {
           "age": 24
         },
         "dm2": {
-          "name": "Hugo Magnetti",
+          "name": "Hugoh Magnetty",
           "value": 6000000,
           "nationality": "Fransa",
           "photo": null,
@@ -268,7 +268,7 @@ const LIGUE1_DATA = {
           "age": 28
         },
         "rw": {
-          "name": "Romain Del Castillo",
+          "name": "Romainn Del Castilo",
           "value": 7000000,
           "nationality": "Fransa",
           "photo": null,
@@ -276,7 +276,7 @@ const LIGUE1_DATA = {
           "age": 30
         },
         "cam": {
-          "name": "Kamory Doumbia",
+          "name": "Kammory Doumbia",
           "value": 9000000,
           "nationality": "Mali",
           "photo": null,
@@ -284,7 +284,7 @@ const LIGUE1_DATA = {
           "age": 23
         },
         "lw": {
-          "name": "Pathé Mboup",
+          "name": "Pathe Mboup",
           "value": 2500000,
           "nationality": "Senegal",
           "photo": null,
@@ -292,7 +292,7 @@ const LIGUE1_DATA = {
           "age": 22
         },
         "st": {
-          "name": "Ludovic Ajorque",
+          "name": "Ludovik Ajorque",
           "value": 3000000,
           "nationality": "Fransa",
           "photo": null,
@@ -303,11 +303,11 @@ const LIGUE1_DATA = {
     },
     {
       "id": "le-havre",
-      "name": "Le Havre",
+      "name": "Le Havere",
       "logo": null,
       "xi": {
         "gk": {
-          "name": "Mory Diaw",
+          "name": "Mori Diaw",
           "value": 900000,
           "nationality": "Senegal",
           "photo": null,
@@ -315,7 +315,7 @@ const LIGUE1_DATA = {
           "age": 33
         },
         "rb": {
-          "name": "Timothée Pembélé",
+          "name": "Timothee Pembele",
           "value": 1800000,
           "nationality": "Fransa",
           "photo": null,
@@ -323,7 +323,7 @@ const LIGUE1_DATA = {
           "age": 23
         },
         "cb1": {
-          "name": "Ayumu Seko",
+          "name": "Ayumuh Sekoh",
           "value": 5000000,
           "nationality": "Japonya",
           "photo": null,
@@ -331,7 +331,7 @@ const LIGUE1_DATA = {
           "age": 26
         },
         "cb2": {
-          "name": "Stephan Zagadou",
+          "name": "Stefan Zaggadou",
           "value": 4000000,
           "nationality": "Fransa",
           "photo": null,
@@ -339,7 +339,7 @@ const LIGUE1_DATA = {
           "age": 26
         },
         "lb": {
-          "name": "Yanis Zouaoui",
+          "name": "Yaniss Zouaouy",
           "value": 2500000,
           "nationality": "Fransa",
           "photo": null,
@@ -347,7 +347,7 @@ const LIGUE1_DATA = {
           "age": 28
         },
         "dm1": {
-          "name": "Lucas Gourna-Douath",
+          "name": "Lukas Gourna-Douath",
           "value": 6000000,
           "nationality": "Fransa",
           "photo": null,
@@ -355,7 +355,7 @@ const LIGUE1_DATA = {
           "age": 22
         },
         "dm2": {
-          "name": "Rassoul Ndiaye",
+          "name": "Rassoull Ndiaye",
           "value": 8000000,
           "nationality": "Senegal",
           "photo": null,
@@ -363,7 +363,7 @@ const LIGUE1_DATA = {
           "age": 24
         },
         "rw": {
-          "name": "Godson Kyeremeh",
+          "name": "Godsonn Kyerremeh",
           "value": 500000,
           "nationality": "Fransa",
           "photo": null,
@@ -371,7 +371,7 @@ const LIGUE1_DATA = {
           "age": 26
         },
         "cam": {
-          "name": "Simon Ebonog",
+          "name": "Simonn Ebbonog",
           "value": 4500000,
           "nationality": "Fransa",
           "photo": null,
@@ -379,7 +379,7 @@ const LIGUE1_DATA = {
           "age": 21
         },
         "lw": {
-          "name": "Felix Mambimbi",
+          "name": "Fellix Mambimby",
           "value": 500000,
           "nationality": "İsviçre",
           "photo": null,
@@ -387,7 +387,7 @@ const LIGUE1_DATA = {
           "age": 25
         },
         "st": {
-          "name": "Mbwana Samatta",
+          "name": "Mbwanah Samata",
           "value": 700000,
           "nationality": "Tanzanya",
           "photo": null,
@@ -398,11 +398,11 @@ const LIGUE1_DATA = {
     },
     {
       "id": "lens",
-      "name": "Lens",
+      "name": "Lenz",
       "logo": null,
       "xi": {
         "gk": {
-          "name": "Robin Risser",
+          "name": "Robinn Risserr",
           "value": 8000000,
           "nationality": "Fransa",
           "photo": null,
@@ -410,7 +410,7 @@ const LIGUE1_DATA = {
           "age": 21
         },
         "rb": {
-          "name": "Saud Abdulhamid",
+          "name": "Saud Abdulhammid",
           "value": 9000000,
           "nationality": "Suudi Arabistan",
           "photo": null,
@@ -418,7 +418,7 @@ const LIGUE1_DATA = {
           "age": 27
         },
         "cb1": {
-          "name": "Samson Baidoo",
+          "name": "Samsonn Baiddoo",
           "value": 14000000,
           "nationality": "Avusturya",
           "photo": null,
@@ -426,7 +426,7 @@ const LIGUE1_DATA = {
           "age": 22
         },
         "cb2": {
-          "name": "Ismaëlo Ganiou",
+          "name": "Ismaelo Ganniou",
           "value": 10000000,
           "nationality": "Fransa",
           "photo": null,
@@ -434,7 +434,7 @@ const LIGUE1_DATA = {
           "age": 21
         },
         "lb": {
-          "name": "Matthieu Udol",
+          "name": "Mathieu Uddol",
           "value": 8000000,
           "nationality": "Fransa",
           "photo": null,
@@ -442,7 +442,7 @@ const LIGUE1_DATA = {
           "age": 30
         },
         "dm1": {
-          "name": "Yacine Titraoui",
+          "name": "Yaccine Titraouy",
           "value": 7000000,
           "nationality": "Cezayir",
           "photo": null,
@@ -450,7 +450,7 @@ const LIGUE1_DATA = {
           "age": 23
         },
         "dm2": {
-          "name": "Adrien Thomasson",
+          "name": "Adrienn Thommasson",
           "value": 5000000,
           "nationality": "Fransa",
           "photo": null,
@@ -458,7 +458,7 @@ const LIGUE1_DATA = {
           "age": 31
         },
         "rw": {
-          "name": "Florian Thauvin",
+          "name": "Floriann Thauvinn",
           "value": 5000000,
           "nationality": "Fransa",
           "photo": null,
@@ -466,7 +466,7 @@ const LIGUE1_DATA = {
           "age": 33
         },
         "cam": {
-          "name": "Thorgan Hazard",
+          "name": "Thorgann Hazzard",
           "value": 2000000,
           "nationality": "Belçika",
           "photo": null,
@@ -474,7 +474,7 @@ const LIGUE1_DATA = {
           "age": 33
         },
         "lw": {
-          "name": "Abdallah Sima",
+          "name": "Abdalah Simah",
           "value": 5000000,
           "nationality": "Senegal",
           "photo": null,
@@ -482,7 +482,7 @@ const LIGUE1_DATA = {
           "age": 25
         },
         "st": {
-          "name": "Odsonne Édouard",
+          "name": "Odsone Edouard",
           "value": 12000000,
           "nationality": "Fransa",
           "photo": null,
@@ -493,11 +493,11 @@ const LIGUE1_DATA = {
     },
     {
       "id": "lille",
-      "name": "Lille",
+      "name": "Lile",
       "logo": null,
       "xi": {
         "gk": {
-          "name": "Berke Özer",
+          "name": "Berce Ozer",
           "value": 10000000,
           "nationality": "Türkiye",
           "photo": null,
@@ -505,7 +505,7 @@ const LIGUE1_DATA = {
           "age": 26
         },
         "rb": {
-          "name": "Tiago Santos",
+          "name": "Tiagoh Santoss",
           "value": 10000000,
           "nationality": "Portekiz",
           "photo": null,
@@ -513,7 +513,7 @@ const LIGUE1_DATA = {
           "age": 24
         },
         "cb1": {
-          "name": "Nathan Ngoy",
+          "name": "Nathann Ngoy",
           "value": 18000000,
           "nationality": "Belçika",
           "photo": null,
@@ -521,7 +521,7 @@ const LIGUE1_DATA = {
           "age": 23
         },
         "cb2": {
-          "name": "Alexsandro",
+          "name": "Alexsandroh",
           "value": 15000000,
           "nationality": "Brezilya",
           "photo": null,
@@ -529,7 +529,7 @@ const LIGUE1_DATA = {
           "age": 27
         },
         "lb": {
-          "name": "Romain Perraud",
+          "name": "Romainn Peraud",
           "value": 7000000,
           "nationality": "Fransa",
           "photo": null,
@@ -537,7 +537,7 @@ const LIGUE1_DATA = {
           "age": 28
         },
         "dm1": {
-          "name": "Ngal'ayel Mukau",
+          "name": "Ngal'ayell Mukkau",
           "value": 15000000,
           "nationality": "Belçika",
           "photo": null,
@@ -545,7 +545,7 @@ const LIGUE1_DATA = {
           "age": 21
         },
         "dm2": {
-          "name": "Nabil Bentaleb",
+          "name": "Nabill Bentalleb",
           "value": 4500000,
           "nationality": "Cezayir",
           "photo": null,
@@ -553,7 +553,7 @@ const LIGUE1_DATA = {
           "age": 31
         },
         "rw": {
-          "name": "Ethan Mbappé",
+          "name": "Ethann Mbappe",
           "value": 8000000,
           "nationality": "Fransa",
           "photo": null,
@@ -561,7 +561,7 @@ const LIGUE1_DATA = {
           "age": 19
         },
         "cam": {
-          "name": "Hákon Arnar Haraldsson",
+          "name": "Hakon Arnar Haraldssonn",
           "value": 25000000,
           "nationality": "İzlanda",
           "photo": null,
@@ -569,7 +569,7 @@ const LIGUE1_DATA = {
           "age": 23
         },
         "lw": {
-          "name": "Osame Sahraoui",
+          "name": "Ossame Sahraouy",
           "value": 9000000,
           "nationality": "Fas",
           "photo": null,
@@ -577,7 +577,7 @@ const LIGUE1_DATA = {
           "age": 25
         },
         "st": {
-          "name": "Matias Fernandez-Pardo",
+          "name": "Mattias Fernandez-Pardoh",
           "value": 22000000,
           "nationality": "Belçika",
           "photo": null,
@@ -588,11 +588,11 @@ const LIGUE1_DATA = {
     },
     {
       "id": "lorient",
-      "name": "Lorient",
+      "name": "Lorrient",
       "logo": null,
       "xi": {
         "gk": {
-          "name": "Yvon Mvogo",
+          "name": "Yvon Mvoggo",
           "value": 2500000,
           "nationality": "İsviçre",
           "photo": null,
@@ -600,7 +600,7 @@ const LIGUE1_DATA = {
           "age": 32
         },
         "rb": {
-          "name": "Alec Georgen",
+          "name": "Allec Georgenn",
           "value": 1500000,
           "nationality": "Fransa",
           "photo": null,
@@ -608,7 +608,7 @@ const LIGUE1_DATA = {
           "age": 27
         },
         "cb1": {
-          "name": "Montassar Talbi",
+          "name": "Montassarr Talby",
           "value": 8000000,
           "nationality": "Tunus",
           "photo": null,
@@ -616,7 +616,7 @@ const LIGUE1_DATA = {
           "age": 28
         },
         "cb2": {
-          "name": "Nathaniel Adjei",
+          "name": "Nathaniell Adjey",
           "value": 1500000,
           "nationality": "Gana",
           "photo": null,
@@ -624,7 +624,7 @@ const LIGUE1_DATA = {
           "age": 23
         },
         "lb": {
-          "name": "Arsène Kouassi",
+          "name": "Arsene Kouassy",
           "value": 8000000,
           "nationality": "Fildişi Sahili",
           "photo": null,
@@ -632,7 +632,7 @@ const LIGUE1_DATA = {
           "age": 22
         },
         "dm1": {
-          "name": "Arthur Avom",
+          "name": "Arthurr Avvom",
           "value": 9000000,
           "nationality": "Kamerun",
           "photo": null,
@@ -640,7 +640,7 @@ const LIGUE1_DATA = {
           "age": 21
         },
         "dm2": {
-          "name": "Noah Cadiou",
+          "name": "Noah Caddiou",
           "value": 3000000,
           "nationality": "Fransa",
           "photo": null,
@@ -648,7 +648,7 @@ const LIGUE1_DATA = {
           "age": 27
         },
         "rw": {
-          "name": "Théo Le Bris",
+          "name": "Theo Le Bris",
           "value": 5000000,
           "nationality": "Fransa",
           "photo": null,
@@ -656,7 +656,7 @@ const LIGUE1_DATA = {
           "age": 23
         },
         "cam": {
-          "name": "Jean-Victor Makengo",
+          "name": "Jean-Victorr Makengoh",
           "value": 6000000,
           "nationality": "Fransa",
           "photo": null,
@@ -664,7 +664,7 @@ const LIGUE1_DATA = {
           "age": 28
         },
         "lw": {
-          "name": "Jérémy Hatchi",
+          "name": "Jeremy Hatchy",
           "value": 700000,
           "nationality": "Fransa",
           "photo": null,
@@ -672,7 +672,7 @@ const LIGUE1_DATA = {
           "age": 21
         },
         "st": {
-          "name": "Mohamed Bamba",
+          "name": "Mohammed Bambah",
           "value": 2000000,
           "nationality": "Fildişi Sahili",
           "photo": null,
@@ -683,11 +683,11 @@ const LIGUE1_DATA = {
     },
     {
       "id": "lyon",
-      "name": "Lyon",
+      "name": "Lyonn",
       "logo": null,
       "xi": {
         "gk": {
-          "name": "Lucas Perri",
+          "name": "Lukas Peri",
           "value": 12000000,
           "nationality": "Brezilya",
           "photo": null,
@@ -695,7 +695,7 @@ const LIGUE1_DATA = {
           "age": 27
         },
         "rb": {
-          "name": "Ainsley Maitland-Niles",
+          "name": "Ainslie Maitland-Niless",
           "value": 10000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -703,7 +703,7 @@ const LIGUE1_DATA = {
           "age": 28
         },
         "cb1": {
-          "name": "Moussa Niakhaté",
+          "name": "Mousa Niakhate",
           "value": 15000000,
           "nationality": "Senegal",
           "photo": null,
@@ -711,7 +711,7 @@ const LIGUE1_DATA = {
           "age": 30
         },
         "cb2": {
-          "name": "Duje Ćaleta-Car",
+          "name": "Duje Caleta-Car",
           "value": 8000000,
           "nationality": "Hırvatistan",
           "photo": null,
@@ -719,7 +719,7 @@ const LIGUE1_DATA = {
           "age": 29
         },
         "lb": {
-          "name": "Nicolás Tagliafico",
+          "name": "Nicolas Tagliaficoh",
           "value": 8000000,
           "nationality": "Arjantin",
           "photo": null,
@@ -727,7 +727,7 @@ const LIGUE1_DATA = {
           "age": 33
         },
         "dm1": {
-          "name": "Tyler Morton",
+          "name": "Tylerr Mortonn",
           "value": 20000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -735,7 +735,7 @@ const LIGUE1_DATA = {
           "age": 23
         },
         "dm2": {
-          "name": "Mads Bidstrup",
+          "name": "Mads Bidstrupp",
           "value": 13000000,
           "nationality": "Danimarka",
           "photo": null,
@@ -743,7 +743,7 @@ const LIGUE1_DATA = {
           "age": 25
         },
         "rw": {
-          "name": "Ernest Nuamah",
+          "name": "Ernest Nuammah",
           "value": 10000000,
           "nationality": "Gana",
           "photo": null,
@@ -751,7 +751,7 @@ const LIGUE1_DATA = {
           "age": 22
         },
         "cam": {
-          "name": "Pavel Sulc",
+          "name": "Pavvel Sulk",
           "value": 18000000,
           "nationality": "Çekya",
           "photo": null,
@@ -759,7 +759,7 @@ const LIGUE1_DATA = {
           "age": 25
         },
         "lw": {
-          "name": "Malick Fofana",
+          "name": "Mallick Fofanah",
           "value": 28000000,
           "nationality": "Belçika",
           "photo": null,
@@ -767,7 +767,7 @@ const LIGUE1_DATA = {
           "age": 21
         },
         "st": {
-          "name": "Loïs Openda",
+          "name": "Lois Opendah",
           "value": 25000000,
           "nationality": "Belçika",
           "photo": null,
@@ -778,11 +778,11 @@ const LIGUE1_DATA = {
     },
     {
       "id": "marseille",
-      "name": "Marseille",
+      "name": "Marseile",
       "logo": null,
       "xi": {
         "gk": {
-          "name": "Gerónimo Rulli",
+          "name": "Geronimo Ruli",
           "value": 6000000,
           "nationality": "Arjantin",
           "photo": null,
@@ -790,7 +790,7 @@ const LIGUE1_DATA = {
           "age": 34
         },
         "rb": {
-          "name": "CJ Egan-Riley",
+          "name": "CJ Eggan-Riley",
           "value": 9000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -798,7 +798,7 @@ const LIGUE1_DATA = {
           "age": 23
         },
         "cb1": {
-          "name": "Leonardo Balerdi",
+          "name": "Leonardoh Ballerdi",
           "value": 18000000,
           "nationality": "Arjantin",
           "photo": null,
@@ -806,7 +806,7 @@ const LIGUE1_DATA = {
           "age": 27
         },
         "cb2": {
-          "name": "Facundo Medina",
+          "name": "Facundoh Medinah",
           "value": 18000000,
           "nationality": "Arjantin",
           "photo": null,
@@ -814,7 +814,7 @@ const LIGUE1_DATA = {
           "age": 27
         },
         "lb": {
-          "name": "Emerson",
+          "name": "Emersonn",
           "value": 9000000,
           "nationality": "İtalya",
           "photo": null,
@@ -822,7 +822,7 @@ const LIGUE1_DATA = {
           "age": 32
         },
         "dm1": {
-          "name": "Pierre-Emile Højbjerg",
+          "name": "Piere-Emile Hojbjerg",
           "value": 15000000,
           "nationality": "Danimarka",
           "photo": null,
@@ -830,7 +830,7 @@ const LIGUE1_DATA = {
           "age": 31
         },
         "dm2": {
-          "name": "Quinten Timber",
+          "name": "Quintenn Timberr",
           "value": 25000000,
           "nationality": "Hollanda",
           "photo": null,
@@ -838,7 +838,7 @@ const LIGUE1_DATA = {
           "age": 25
         },
         "rw": {
-          "name": "Timothy Weah",
+          "name": "Timmothy Weah",
           "value": 20000000,
           "nationality": "ABD",
           "photo": null,
@@ -846,7 +846,7 @@ const LIGUE1_DATA = {
           "age": 26
         },
         "cam": {
-          "name": "Angel Gomes",
+          "name": "Angell Gomez",
           "value": 10000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -854,7 +854,7 @@ const LIGUE1_DATA = {
           "age": 25
         },
         "lw": {
-          "name": "Igor Paixão",
+          "name": "Iggor Paixao",
           "value": 35000000,
           "nationality": "Brezilya",
           "photo": null,
@@ -862,7 +862,7 @@ const LIGUE1_DATA = {
           "age": 26
         },
         "st": {
-          "name": "Amine Gouiri",
+          "name": "Ammine Gouiry",
           "value": 28000000,
           "nationality": "Cezayir",
           "photo": null,
@@ -873,164 +873,164 @@ const LIGUE1_DATA = {
     },
     {
       "id": "metz",
-      "name": "Metz",
+      "name": "Mets",
       "logo": null,
       "xi": {
-        "gk": { "name": "Alexandre Oukidja", "value": 1000000, "nationality": "Cezayir", "photo": null, "rating": 73, "age": 35 },
-        "rb": { "name": "Boubacar Fofana", "value": 2000000, "nationality": "Fransa", "photo": null, "rating": 71, "age": 24 },
-        "cb1": { "name": "Rassoul Ndiaye", "value": 2000000, "nationality": "Fransa", "photo": null, "rating": 71, "age": 24 },
-        "cb2": { "name": "Mamadou Fofana", "value": 1500000, "nationality": "Fransa", "photo": null, "rating": 70, "age": 22 },
-        "lb": { "name": "Adrien Louveau", "value": 1200000, "nationality": "Fransa", "photo": null, "rating": 70, "age": 23 },
-        "dm1": { "name": "Ismaïla Sidibé", "value": 1500000, "nationality": "Mali", "photo": null, "rating": 72, "age": 27 },
-        "dm2": { "name": "Amine El Ouazzani", "value": 1500000, "nationality": "Fas", "photo": null, "rating": 71, "age": 22 },
-        "rw": { "name": "Gauthier Hein", "value": 3000000, "nationality": "Fransa", "photo": null, "rating": 73, "age": 28 },
-        "cam": { "name": "Papa Amadou Diallo", "value": 2000000, "nationality": "Senegal", "photo": null, "rating": 71, "age": 21 },
-        "lw": { "name": "Ablie Jallow", "value": 2500000, "nationality": "Gambiya", "photo": null, "rating": 72, "age": 27 },
-        "st": { "name": "Cheikh Tidiane Sabaly", "value": 3000000, "nationality": "Senegal", "photo": null, "rating": 73, "age": 27 }
+        "gk": { "name": "Allexandre Oukidjah", "value": 1000000, "nationality": "Cezayir", "photo": null, "rating": 73, "age": 35 },
+        "rb": { "name": "Boubacarr Fofanah", "value": 2000000, "nationality": "Fransa", "photo": null, "rating": 71, "age": 24 },
+        "cb1": { "name": "Rassoull Ndiaye", "value": 2000000, "nationality": "Fransa", "photo": null, "rating": 71, "age": 24 },
+        "cb2": { "name": "Mamaddou Fofanah", "value": 1500000, "nationality": "Fransa", "photo": null, "rating": 70, "age": 22 },
+        "lb": { "name": "Adrienn Louvveau", "value": 1200000, "nationality": "Fransa", "photo": null, "rating": 70, "age": 23 },
+        "dm1": { "name": "Ismaila Sidibe", "value": 1500000, "nationality": "Mali", "photo": null, "rating": 72, "age": 27 },
+        "dm2": { "name": "Ammine El Ouazzany", "value": 1500000, "nationality": "Fas", "photo": null, "rating": 71, "age": 22 },
+        "rw": { "name": "Gauthierr Hein", "value": 3000000, "nationality": "Fransa", "photo": null, "rating": 73, "age": 28 },
+        "cam": { "name": "Papah Amadou Dialo", "value": 2000000, "nationality": "Senegal", "photo": null, "rating": 71, "age": 21 },
+        "lw": { "name": "Abley Jalow", "value": 2500000, "nationality": "Gambiya", "photo": null, "rating": 72, "age": 27 },
+        "st": { "name": "Cheich Tidiane Sabbaly", "value": 3000000, "nationality": "Senegal", "photo": null, "rating": 73, "age": 27 }
       }
     },
     {
       "id": "monaco",
-      "name": "Monaco",
+      "name": "Monako",
       "logo": null,
       "xi": {
-        "gk": { "name": "Philipp Köhn", "value": 12000000, "nationality": "İsviçre", "photo": null, "rating": 78, "age": 27 },
-        "rb": { "name": "Vanderson", "value": 30000000, "nationality": "Brezilya", "photo": null, "rating": 79, "age": 23 },
-        "cb1": { "name": "Thilo Kehrer", "value": 10000000, "nationality": "Almanya", "photo": null, "rating": 77, "age": 29 },
-        "cb2": { "name": "Eric Dier", "value": 5000000, "nationality": "İngiltere", "photo": null, "rating": 76, "age": 31 },
-        "lb": { "name": "Caio Henrique", "value": 20000000, "nationality": "Brezilya", "photo": null, "rating": 79, "age": 28 },
-        "dm1": { "name": "Denis Zakaria", "value": 15000000, "nationality": "İsviçre", "photo": null, "rating": 79, "age": 29 },
-        "dm2": { "name": "Lamine Camara", "value": 35000000, "nationality": "Senegal", "photo": null, "rating": 80, "age": 21 },
-        "rw": { "name": "Takumi Minamino", "value": 8000000, "nationality": "Japonya", "photo": null, "rating": 77, "age": 30 },
-        "cam": { "name": "Aleksandr Golovin", "value": 20000000, "nationality": "Rusya", "photo": null, "rating": 81, "age": 29 },
-        "lw": { "name": "George Ilenikhena", "value": 15000000, "nationality": "Fransa", "photo": null, "rating": 74, "age": 19 },
-        "st": { "name": "Folarin Balogun", "value": 30000000, "nationality": "ABD", "photo": null, "rating": 80, "age": 24 }
+        "gk": { "name": "Philip Kohn", "value": 12000000, "nationality": "İsviçre", "photo": null, "rating": 78, "age": 27 },
+        "rb": { "name": "Vandersonn", "value": 30000000, "nationality": "Brezilya", "photo": null, "rating": 79, "age": 23 },
+        "cb1": { "name": "Thiloh Kehrerr", "value": 10000000, "nationality": "Almanya", "photo": null, "rating": 77, "age": 29 },
+        "cb2": { "name": "Erric Dier", "value": 5000000, "nationality": "İngiltere", "photo": null, "rating": 76, "age": 31 },
+        "lb": { "name": "Caio Henriqueh", "value": 20000000, "nationality": "Brezilya", "photo": null, "rating": 79, "age": 28 },
+        "dm1": { "name": "Deniss Zakkaria", "value": 15000000, "nationality": "İsviçre", "photo": null, "rating": 79, "age": 29 },
+        "dm2": { "name": "Lammine Camarah", "value": 35000000, "nationality": "Senegal", "photo": null, "rating": 80, "age": 21 },
+        "rw": { "name": "Takkumi Minaminoh", "value": 8000000, "nationality": "Japonya", "photo": null, "rating": 77, "age": 30 },
+        "cam": { "name": "Alleksandr Gollovin", "value": 20000000, "nationality": "Rusya", "photo": null, "rating": 81, "age": 29 },
+        "lw": { "name": "George Ilenichena", "value": 15000000, "nationality": "Fransa", "photo": null, "rating": 74, "age": 19 },
+        "st": { "name": "Folarinn Balogunn", "value": 30000000, "nationality": "ABD", "photo": null, "rating": 80, "age": 24 }
       }
     },
     {
       "id": "nantes",
-      "name": "Nantes",
+      "name": "Nantez",
       "logo": null,
       "xi": {
-        "gk": { "name": "Alban Lafont", "value": 8000000, "nationality": "Fransa", "photo": null, "rating": 78, "age": 26 },
-        "rb": { "name": "Fabien Centonze", "value": 3000000, "nationality": "Fransa", "photo": null, "rating": 73, "age": 28 },
-        "cb1": { "name": "Jean-Kevin Duverne", "value": 6000000, "nationality": "Fransa", "photo": null, "rating": 76, "age": 24 },
-        "cb2": { "name": "Chidozie Awaziem", "value": 4000000, "nationality": "Nijerya", "photo": null, "rating": 75, "age": 27 },
-        "lb": { "name": "Nicolas Cozza", "value": 6000000, "nationality": "Fransa", "photo": null, "rating": 75, "age": 25 },
-        "dm1": { "name": "Francis Coquelin", "value": 2000000, "nationality": "Fransa", "photo": null, "rating": 74, "age": 34 },
-        "dm2": { "name": "Johann Lepenant", "value": 12000000, "nationality": "Fransa", "photo": null, "rating": 76, "age": 22 },
-        "rw": { "name": "Moses Simon", "value": 6000000, "nationality": "Nijerya", "photo": null, "rating": 77, "age": 30 },
-        "cam": { "name": "Hong Hyun-seok", "value": 8000000, "nationality": "Güney Kore", "photo": null, "rating": 76, "age": 24 },
-        "lw": { "name": "Matthis Abline", "value": 12000000, "nationality": "Fransa", "photo": null, "rating": 76, "age": 22 },
-        "st": { "name": "Mostafa Mohamed", "value": 8000000, "nationality": "Mısır", "photo": null, "rating": 75, "age": 27 }
+        "gk": { "name": "Albann Laffont", "value": 8000000, "nationality": "Fransa", "photo": null, "rating": 78, "age": 26 },
+        "rb": { "name": "Fabienn Centonze", "value": 3000000, "nationality": "Fransa", "photo": null, "rating": 73, "age": 28 },
+        "cb1": { "name": "Jean-Kevinn Duvverne", "value": 6000000, "nationality": "Fransa", "photo": null, "rating": 76, "age": 24 },
+        "cb2": { "name": "Chiddozie Awazziem", "value": 4000000, "nationality": "Nijerya", "photo": null, "rating": 75, "age": 27 },
+        "lb": { "name": "Nicolass Coza", "value": 6000000, "nationality": "Fransa", "photo": null, "rating": 75, "age": 25 },
+        "dm1": { "name": "Franciss Coquelinn", "value": 2000000, "nationality": "Fransa", "photo": null, "rating": 74, "age": 34 },
+        "dm2": { "name": "Johan Leppenant", "value": 12000000, "nationality": "Fransa", "photo": null, "rating": 76, "age": 22 },
+        "rw": { "name": "Mosez Simonn", "value": 6000000, "nationality": "Nijerya", "photo": null, "rating": 77, "age": 30 },
+        "cam": { "name": "Hong Hyun-seoc", "value": 8000000, "nationality": "Güney Kore", "photo": null, "rating": 76, "age": 24 },
+        "lw": { "name": "Matthiss Ablinne", "value": 12000000, "nationality": "Fransa", "photo": null, "rating": 76, "age": 22 },
+        "st": { "name": "Mostafah Mohammed", "value": 8000000, "nationality": "Mısır", "photo": null, "rating": 75, "age": 27 }
       }
     },
     {
       "id": "nice",
-      "name": "Nice",
+      "name": "Nyce",
       "logo": null,
       "xi": {
-        "gk": { "name": "Yehvann Diouf", "value": 10000000, "nationality": "Fransa", "photo": null, "rating": 78, "age": 24 },
-        "rb": { "name": "Jonathan Clauss", "value": 6000000, "nationality": "Fransa", "photo": null, "rating": 78, "age": 32 },
-        "cb1": { "name": "Moïse Bombito", "value": 12000000, "nationality": "Kanada", "photo": null, "rating": 78, "age": 24 },
-        "cb2": { "name": "Dante", "value": 1500000, "nationality": "Brezilya", "photo": null, "rating": 74, "age": 41 },
-        "lb": { "name": "Melvin Bard", "value": 10000000, "nationality": "Fransa", "photo": null, "rating": 77, "age": 24 },
-        "dm1": { "name": "Hicham Boudaoui", "value": 10000000, "nationality": "Cezayir", "photo": null, "rating": 78, "age": 25 },
-        "dm2": { "name": "Salis Abdul Samed", "value": 8000000, "nationality": "Gana", "photo": null, "rating": 77, "age": 25 },
-        "rw": { "name": "Mohamed-Ali Cho", "value": 15000000, "nationality": "Fransa", "photo": null, "rating": 78, "age": 21 },
-        "cam": { "name": "Sofiane Diop", "value": 12000000, "nationality": "Fransa", "photo": null, "rating": 78, "age": 24 },
-        "lw": { "name": "Tiago Gouveia", "value": 6000000, "nationality": "Portekiz", "photo": null, "rating": 76, "age": 24 },
-        "st": { "name": "Sepe Elye Wahi", "value": 20000000, "nationality": "Fransa", "photo": null, "rating": 78, "age": 23 }
+        "gk": { "name": "Yehvan Diouf", "value": 10000000, "nationality": "Fransa", "photo": null, "rating": 78, "age": 24 },
+        "rb": { "name": "Jonathann Claus", "value": 6000000, "nationality": "Fransa", "photo": null, "rating": 78, "age": 32 },
+        "cb1": { "name": "Moise Bombitoh", "value": 12000000, "nationality": "Kanada", "photo": null, "rating": 78, "age": 24 },
+        "cb2": { "name": "Danteh", "value": 1500000, "nationality": "Brezilya", "photo": null, "rating": 74, "age": 41 },
+        "lb": { "name": "Melvinn Bard", "value": 10000000, "nationality": "Fransa", "photo": null, "rating": 77, "age": 24 },
+        "dm1": { "name": "Hicham Boudaouy", "value": 10000000, "nationality": "Cezayir", "photo": null, "rating": 78, "age": 25 },
+        "dm2": { "name": "Saliss Abdul Sammed", "value": 8000000, "nationality": "Gana", "photo": null, "rating": 77, "age": 25 },
+        "rw": { "name": "Mohammed-Ali Cho", "value": 15000000, "nationality": "Fransa", "photo": null, "rating": 78, "age": 21 },
+        "cam": { "name": "Soffiane Diop", "value": 12000000, "nationality": "Fransa", "photo": null, "rating": 78, "age": 24 },
+        "lw": { "name": "Tiagoh Gouvveia", "value": 6000000, "nationality": "Portekiz", "photo": null, "rating": 76, "age": 24 },
+        "st": { "name": "Seppe Elye Wahy", "value": 20000000, "nationality": "Fransa", "photo": null, "rating": 78, "age": 23 }
       }
     },
     {
       "id": "paris-fc",
-      "name": "Paris FC",
+      "name": "Parys FC",
       "logo": null,
       "xi": {
-        "gk": { "name": "Obed Nkambadio", "value": 1500000, "nationality": "Kongo DC", "photo": null, "rating": 70, "age": 24 },
-        "rb": { "name": "Julien Le Cardinal", "value": 1000000, "nationality": "Fransa", "photo": null, "rating": 69, "age": 30 },
-        "cb1": { "name": "Sadibou Sané", "value": 1500000, "nationality": "Fransa", "photo": null, "rating": 70, "age": 23 },
-        "cb2": { "name": "Marius Broh", "value": 1500000, "nationality": "Fransa", "photo": null, "rating": 69, "age": 22 },
-        "lb": { "name": "Quentin Braat", "value": 1000000, "nationality": "Fransa", "photo": null, "rating": 68, "age": 22 },
-        "dm1": { "name": "Otávio", "value": 2000000, "nationality": "Brezilya", "photo": null, "rating": 71, "age": 25 },
-        "dm2": { "name": "Ylies Habib", "value": 1000000, "nationality": "Fransa", "photo": null, "rating": 68, "age": 20 },
-        "rw": { "name": "Ilan Kebbal", "value": 3000000, "nationality": "Cezayir", "photo": null, "rating": 72, "age": 27 },
-        "cam": { "name": "Stef Peeters", "value": 2000000, "nationality": "Belçika", "photo": null, "rating": 70, "age": 26 },
-        "lw": { "name": "Yassine Kechta", "value": 1500000, "nationality": "Fransa", "photo": null, "rating": 68, "age": 21 },
-        "st": { "name": "Andy Delort", "value": 2000000, "nationality": "Fransa", "photo": null, "rating": 73, "age": 34 }
+        "gk": { "name": "Obbed Ncambadio", "value": 1500000, "nationality": "Kongo DC", "photo": null, "rating": 70, "age": 24 },
+        "rb": { "name": "Julienn Le Cardinall", "value": 1000000, "nationality": "Fransa", "photo": null, "rating": 69, "age": 30 },
+        "cb1": { "name": "Saddibou Sane", "value": 1500000, "nationality": "Fransa", "photo": null, "rating": 70, "age": 23 },
+        "cb2": { "name": "Mariuss Broh", "value": 1500000, "nationality": "Fransa", "photo": null, "rating": 69, "age": 22 },
+        "lb": { "name": "Quentinn Braatt", "value": 1000000, "nationality": "Fransa", "photo": null, "rating": 68, "age": 22 },
+        "dm1": { "name": "Otavio", "value": 2000000, "nationality": "Brezilya", "photo": null, "rating": 71, "age": 25 },
+        "dm2": { "name": "Yliez Habbib", "value": 1000000, "nationality": "Fransa", "photo": null, "rating": 68, "age": 20 },
+        "rw": { "name": "Illan Kebball", "value": 3000000, "nationality": "Cezayir", "photo": null, "rating": 72, "age": 27 },
+        "cam": { "name": "Stef Peetters", "value": 2000000, "nationality": "Belçika", "photo": null, "rating": 70, "age": 26 },
+        "lw": { "name": "Yasine Kechtah", "value": 1500000, "nationality": "Fransa", "photo": null, "rating": 68, "age": 21 },
+        "st": { "name": "Andi Dellort", "value": 2000000, "nationality": "Fransa", "photo": null, "rating": 73, "age": 34 }
       }
     },
     {
       "id": "paris-saint-germain",
-      "name": "Paris Saint-Germain",
+      "name": "Paris Saint-Germaine",
       "logo": null,
       "xi": {
-        "gk": { "name": "Lucas Chevalier", "value": 28000000, "nationality": "Fransa", "photo": null, "rating": 84, "age": 24 },
-        "rb": { "name": "Achraf Hakimi", "value": 55000000, "nationality": "Fas", "photo": null, "rating": 88, "age": 27 },
-        "cb1": { "name": "Marquinhos", "value": 15000000, "nationality": "Brezilya", "photo": null, "rating": 83, "age": 32 },
-        "cb2": { "name": "Willian Pacho", "value": 45000000, "nationality": "Ekvador", "photo": null, "rating": 84, "age": 24 },
-        "lb": { "name": "Nuno Mendes", "value": 65000000, "nationality": "Portekiz", "photo": null, "rating": 87, "age": 24 },
-        "dm1": { "name": "Vitinha", "value": 90000000, "nationality": "Portekiz", "photo": null, "rating": 88, "age": 26 },
-        "dm2": { "name": "João Neves", "value": 90000000, "nationality": "Portekiz", "photo": null, "rating": 86, "age": 21 },
-        "rw": { "name": "Khvicha Kvaratskhelia", "value": 70000000, "nationality": "Gürcistan", "photo": null, "rating": 88, "age": 25 },
-        "cam": { "name": "Maghnes Akliouche", "value": 45000000, "nationality": "Fransa", "photo": null, "rating": 83, "age": 24 },
-        "lw": { "name": "Désiré Doué", "value": 90000000, "nationality": "Fransa", "photo": null, "rating": 87, "age": 21 },
-        "st": { "name": "Ousmane Dembélé", "value": 50000000, "nationality": "Fransa", "photo": null, "rating": 90, "age": 29 }
+        "gk": { "name": "Lukas Chevvalier", "value": 28000000, "nationality": "Fransa", "photo": null, "rating": 84, "age": 24 },
+        "rb": { "name": "Achraf Hakkimi", "value": 55000000, "nationality": "Fas", "photo": null, "rating": 88, "age": 27 },
+        "cb1": { "name": "Marquinhoss", "value": 15000000, "nationality": "Brezilya", "photo": null, "rating": 83, "age": 32 },
+        "cb2": { "name": "Williann Pachoh", "value": 45000000, "nationality": "Ekvador", "photo": null, "rating": 84, "age": 24 },
+        "lb": { "name": "Nunoh Mendez", "value": 65000000, "nationality": "Portekiz", "photo": null, "rating": 87, "age": 24 },
+        "dm1": { "name": "Vitinhah", "value": 90000000, "nationality": "Portekiz", "photo": null, "rating": 88, "age": 26 },
+        "dm2": { "name": "Joao Nevez", "value": 90000000, "nationality": "Portekiz", "photo": null, "rating": 86, "age": 21 },
+        "rw": { "name": "Khvichah Kvarratskhelia", "value": 70000000, "nationality": "Gürcistan", "photo": null, "rating": 88, "age": 25 },
+        "cam": { "name": "Maghnez Acliouche", "value": 45000000, "nationality": "Fransa", "photo": null, "rating": 83, "age": 24 },
+        "lw": { "name": "Desire Doue", "value": 90000000, "nationality": "Fransa", "photo": null, "rating": 87, "age": 21 },
+        "st": { "name": "Ousmanne Dembele", "value": 50000000, "nationality": "Fransa", "photo": null, "rating": 90, "age": 29 }
       }
     },
     {
       "id": "rennes",
-      "name": "Rennes",
+      "name": "Rennez",
       "logo": null,
       "xi": {
-        "gk": { "name": "Brice Samba", "value": 8000000, "nationality": "Fransa", "photo": null, "rating": 79, "age": 31 },
-        "rb": { "name": "Alidu Seidu", "value": 8000000, "nationality": "Gana", "photo": null, "rating": 76, "age": 25 },
-        "cb1": { "name": "Lilian Brassier", "value": 12000000, "nationality": "Fransa", "photo": null, "rating": 77, "age": 25 },
-        "cb2": { "name": "Anthony Rouault", "value": 8000000, "nationality": "Fransa", "photo": null, "rating": 75, "age": 23 },
-        "lb": { "name": "Quentin Merlin", "value": 20000000, "nationality": "Fransa", "photo": null, "rating": 78, "age": 23 },
-        "dm1": { "name": "Valentin Rongier", "value": 6000000, "nationality": "Fransa", "photo": null, "rating": 77, "age": 30 },
-        "dm2": { "name": "Glen Kamara", "value": 5000000, "nationality": "Finlandiya", "photo": null, "rating": 76, "age": 29 },
-        "rw": { "name": "Musa Al-Taamari", "value": 8000000, "nationality": "Ürdün", "photo": null, "rating": 77, "age": 27 },
-        "cam": { "name": "Ludovic Blas", "value": 12000000, "nationality": "Fransa", "photo": null, "rating": 78, "age": 27 },
-        "lw": { "name": "Breel Embolo", "value": 10000000, "nationality": "İsviçre", "photo": null, "rating": 78, "age": 28 },
-        "st": { "name": "Esteban Lepaul", "value": 20000000, "nationality": "Fransa", "photo": null, "rating": 80, "age": 25 }
+        "gk": { "name": "Bricce Sambah", "value": 8000000, "nationality": "Fransa", "photo": null, "rating": 79, "age": 31 },
+        "rb": { "name": "Aliduh Seiddu", "value": 8000000, "nationality": "Gana", "photo": null, "rating": 76, "age": 25 },
+        "cb1": { "name": "Liliann Brassierr", "value": 12000000, "nationality": "Fransa", "photo": null, "rating": 77, "age": 25 },
+        "cb2": { "name": "Anthoni Rouault", "value": 8000000, "nationality": "Fransa", "photo": null, "rating": 75, "age": 23 },
+        "lb": { "name": "Quentinn Merlinn", "value": 20000000, "nationality": "Fransa", "photo": null, "rating": 78, "age": 23 },
+        "dm1": { "name": "Valentinn Rongierr", "value": 6000000, "nationality": "Fransa", "photo": null, "rating": 77, "age": 30 },
+        "dm2": { "name": "Glen Kamarah", "value": 5000000, "nationality": "Finlandiya", "photo": null, "rating": 76, "age": 29 },
+        "rw": { "name": "Musah Al-Taammari", "value": 8000000, "nationality": "Ürdün", "photo": null, "rating": 77, "age": 27 },
+        "cam": { "name": "Ludovik Blas", "value": 12000000, "nationality": "Fransa", "photo": null, "rating": 78, "age": 27 },
+        "lw": { "name": "Breell Emboloh", "value": 10000000, "nationality": "İsviçre", "photo": null, "rating": 78, "age": 28 },
+        "st": { "name": "Estebann Lepaull", "value": 20000000, "nationality": "Fransa", "photo": null, "rating": 80, "age": 25 }
       }
     },
     {
       "id": "strasbourg",
-      "name": "Strasbourg",
+      "name": "Strasbourgh",
       "logo": null,
       "xi": {
-        "gk": { "name": "Milosz Piekutowski", "value": 3000000, "nationality": "Polonya", "photo": null, "rating": 71, "age": 20 },
-        "rb": { "name": "Guela Doué", "value": 15000000, "nationality": "Fildişi Sahili", "photo": null, "rating": 76, "age": 23 },
-        "cb1": { "name": "Saïdou Sow", "value": 12000000, "nationality": "Gine", "photo": null, "rating": 75, "age": 24 },
-        "cb2": { "name": "Abakar Sylla", "value": 10000000, "nationality": "Fildişi Sahili", "photo": null, "rating": 74, "age": 23 },
-        "lb": { "name": "Ben Chilwell", "value": 12000000, "nationality": "İngiltere", "photo": null, "rating": 77, "age": 29 },
-        "dm1": { "name": "Mathis Amougou", "value": 15000000, "nationality": "Fransa", "photo": null, "rating": 73, "age": 20 },
-        "dm2": { "name": "Sebastian Nanasi", "value": 12000000, "nationality": "İsveç", "photo": null, "rating": 75, "age": 24 },
-        "rw": { "name": "Julio Enciso", "value": 15000000, "nationality": "Paraguay", "photo": null, "rating": 76, "age": 22 },
-        "cam": { "name": "Giovanni Reyna", "value": 12000000, "nationality": "ABD", "photo": null, "rating": 76, "age": 23 },
-        "lw": { "name": "Diego Moreira", "value": 12000000, "nationality": "Belçika", "photo": null, "rating": 75, "age": 22 },
-        "st": { "name": "Joaquín Panichelli", "value": 15000000, "nationality": "Arjantin", "photo": null, "rating": 77, "age": 23 }
+        "gk": { "name": "Millosz Piekutowsky", "value": 3000000, "nationality": "Polonya", "photo": null, "rating": 71, "age": 20 },
+        "rb": { "name": "Guella Doue", "value": 15000000, "nationality": "Fildişi Sahili", "photo": null, "rating": 76, "age": 23 },
+        "cb1": { "name": "Saidou Sow", "value": 12000000, "nationality": "Gine", "photo": null, "rating": 75, "age": 24 },
+        "cb2": { "name": "Abbakar Syla", "value": 10000000, "nationality": "Fildişi Sahili", "photo": null, "rating": 74, "age": 23 },
+        "lb": { "name": "Ben Chilwel", "value": 12000000, "nationality": "İngiltere", "photo": null, "rating": 77, "age": 29 },
+        "dm1": { "name": "Mathiss Ammougou", "value": 15000000, "nationality": "Fransa", "photo": null, "rating": 73, "age": 20 },
+        "dm2": { "name": "Sebbastian Nanassi", "value": 12000000, "nationality": "İsveç", "photo": null, "rating": 75, "age": 24 },
+        "rw": { "name": "Jullio Encisoh", "value": 15000000, "nationality": "Paraguay", "photo": null, "rating": 76, "age": 22 },
+        "cam": { "name": "Giovanny Reynah", "value": 12000000, "nationality": "ABD", "photo": null, "rating": 76, "age": 23 },
+        "lw": { "name": "Dieggo Moreirah", "value": 12000000, "nationality": "Belçika", "photo": null, "rating": 75, "age": 22 },
+        "st": { "name": "Joaquin Panicheli", "value": 15000000, "nationality": "Arjantin", "photo": null, "rating": 77, "age": 23 }
       }
     },
     {
       "id": "toulouse",
-      "name": "Toulouse",
+      "name": "Touluse",
       "logo": null,
       "xi": {
-        "gk": { "name": "Guillaume Restes", "value": 8000000, "nationality": "Fransa", "photo": null, "rating": 74, "age": 21 },
-        "rb": { "name": "Djibril Sidibé", "value": 1500000, "nationality": "Fransa", "photo": null, "rating": 72, "age": 33 },
-        "cb1": { "name": "Charlie Cresswell", "value": 8000000, "nationality": "İngiltere", "photo": null, "rating": 74, "age": 23 },
-        "cb2": { "name": "Rasmus Nicolaisen", "value": 8000000, "nationality": "Danimarka", "photo": null, "rating": 75, "age": 27 },
-        "lb": { "name": "Moussa Diarra", "value": 6000000, "nationality": "Fransa", "photo": null, "rating": 73, "age": 22 },
-        "dm1": { "name": "Cristian Cásseres Jr.", "value": 6000000, "nationality": "Venezuela", "photo": null, "rating": 74, "age": 25 },
-        "dm2": { "name": "Aron Dønnum", "value": 8000000, "nationality": "Norveç", "photo": null, "rating": 75, "age": 24 },
-        "rw": { "name": "Yann Gboho", "value": 5000000, "nationality": "Fransa", "photo": null, "rating": 74, "age": 25 },
-        "cam": { "name": "Santiago Hidalgo", "value": 5000000, "nationality": "Meksika", "photo": null, "rating": 73, "age": 23 },
-        "lw": { "name": "Emersonn", "value": 15000000, "nationality": "Brezilya", "photo": null, "rating": 75, "age": 19 },
-        "st": { "name": "Frank Magri", "value": 6000000, "nationality": "Fransa", "photo": null, "rating": 74, "age": 22 }
+        "gk": { "name": "Guilaume Restez", "value": 8000000, "nationality": "Fransa", "photo": null, "rating": 74, "age": 21 },
+        "rb": { "name": "Djibrill Sidibe", "value": 1500000, "nationality": "Fransa", "photo": null, "rating": 72, "age": 33 },
+        "cb1": { "name": "Charley Creswell", "value": 8000000, "nationality": "İngiltere", "photo": null, "rating": 74, "age": 23 },
+        "cb2": { "name": "Rasmuss Niccolaisen", "value": 8000000, "nationality": "Danimarka", "photo": null, "rating": 75, "age": 27 },
+        "lb": { "name": "Mousa Diara", "value": 6000000, "nationality": "Fransa", "photo": null, "rating": 73, "age": 22 },
+        "dm1": { "name": "Cristiann Casseres Jr.", "value": 6000000, "nationality": "Venezuela", "photo": null, "rating": 74, "age": 25 },
+        "dm2": { "name": "Arron Donnum", "value": 8000000, "nationality": "Norveç", "photo": null, "rating": 75, "age": 24 },
+        "rw": { "name": "Yan Gbohoh", "value": 5000000, "nationality": "Fransa", "photo": null, "rating": 74, "age": 25 },
+        "cam": { "name": "Santiagoh Hidalgoh", "value": 5000000, "nationality": "Meksika", "photo": null, "rating": 73, "age": 23 },
+        "lw": { "name": "Emerson", "value": 15000000, "nationality": "Brezilya", "photo": null, "rating": 75, "age": 19 },
+        "st": { "name": "Franc Magry", "value": 6000000, "nationality": "Fransa", "photo": null, "rating": 74, "age": 22 }
       }
     }
   ]

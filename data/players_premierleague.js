@@ -18,11 +18,11 @@ const PREMIER_LEAGUE_DATA = {
   "clubs": [
     {
       "id": "arsenal",
-      "name": "Arsenal",
+      "name": "Arsenol",
       "logo": null,
       "xi": {
         "gk": {
-          "name": "David Raya",
+          "name": "Davvid Rayah",
           "value": 40000000,
           "nationality": "İspanya",
           "photo": null,
@@ -30,7 +30,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 30
         },
         "rb": {
-          "name": "Ben White",
+          "name": "Ben Whitte",
           "value": 45000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -38,7 +38,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 28
         },
         "cb1": {
-          "name": "William Saliba",
+          "name": "Wiliam Salliba",
           "value": 80000000,
           "nationality": "Fransa",
           "photo": null,
@@ -46,7 +46,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 25
         },
         "cb2": {
-          "name": "Gabriel Magalhaes",
+          "name": "Gabriell Magalhaess",
           "value": 65000000,
           "nationality": "Brezilya",
           "photo": null,
@@ -54,7 +54,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 28
         },
         "lb": {
-          "name": "Riccardo Calafiori",
+          "name": "Rikcardo Callafiori",
           "value": 45000000,
           "nationality": "İtalya",
           "photo": null,
@@ -62,7 +62,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 24
         },
         "dm1": {
-          "name": "Declan Rice",
+          "name": "Deklan Ricce",
           "value": 110000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -70,7 +70,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 27
         },
         "dm2": {
-          "name": "Martin Zubimendi",
+          "name": "Martinn Zubbimendi",
           "value": 60000000,
           "nationality": "İspanya",
           "photo": null,
@@ -78,7 +78,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 26
         },
         "rw": {
-          "name": "Bukayo Saka",
+          "name": "Bucayo Sakah",
           "value": 140000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -86,7 +86,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 24
         },
         "cam": {
-          "name": "Martin Odegaard",
+          "name": "Martinn Oddegaard",
           "value": 90000000,
           "nationality": "Norveç",
           "photo": null,
@@ -94,7 +94,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 27
         },
         "lw": {
-          "name": "Gabriel Martinelli",
+          "name": "Gabriell Martineli",
           "value": 55000000,
           "nationality": "Brezilya",
           "photo": null,
@@ -102,7 +102,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 25
         },
         "st": {
-          "name": "Viktor Gyokeres",
+          "name": "Victor Gyokeress",
           "value": 75000000,
           "nationality": "İsveç",
           "photo": null,
@@ -113,11 +113,11 @@ const PREMIER_LEAGUE_DATA = {
     },
     {
       "id": "aston-villa",
-      "name": "Aston Villa",
+      "name": "Aston Vylla",
       "logo": null,
       "xi": {
         "gk": {
-          "name": "Emiliano Martinez",
+          "name": "Emilianoh Martines",
           "value": 20000000,
           "nationality": "Arjantin",
           "photo": null,
@@ -125,7 +125,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 33
         },
         "rb": {
-          "name": "Matty Cash",
+          "name": "Maty Cash",
           "value": 30000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -133,7 +133,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 28
         },
         "cb1": {
-          "name": "Ezri Konsa",
+          "name": "Ezry Konsah",
           "value": 25000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -141,7 +141,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 28
         },
         "cb2": {
-          "name": "Pau Torres",
+          "name": "Pau Torrez",
           "value": 25000000,
           "nationality": "İspanya",
           "photo": null,
@@ -149,7 +149,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 28
         },
         "lb": {
-          "name": "Lucas Digne",
+          "name": "Lukas Digne",
           "value": 8000000,
           "nationality": "Fransa",
           "photo": null,
@@ -157,7 +157,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 32
         },
         "dm1": {
-          "name": "Boubacar Kamara",
+          "name": "Boubacarr Kamarah",
           "value": 35000000,
           "nationality": "Fransa",
           "photo": null,
@@ -165,7 +165,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 26
         },
         "dm2": {
-          "name": "Amadou Onana",
+          "name": "Ammadou Onanah",
           "value": 40000000,
           "nationality": "Belçika",
           "photo": null,
@@ -173,7 +173,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 24
         },
         "rw": {
-          "name": "Leon Bailey",
+          "name": "Leon Bailie",
           "value": 20000000,
           "nationality": "Jamaika",
           "photo": null,
@@ -181,7 +181,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 28
         },
         "cam": {
-          "name": "Morgan Rogers",
+          "name": "Morgann Roggers",
           "value": 55000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -189,7 +189,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 23
         },
         "lw": {
-          "name": "Donyell Malen",
+          "name": "Donyel Mallen",
           "value": 30000000,
           "nationality": "Hollanda",
           "photo": null,
@@ -197,7 +197,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 26
         },
         "st": {
-          "name": "Ollie Watkins",
+          "name": "Olley Watcins",
           "value": 50000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -208,11 +208,11 @@ const PREMIER_LEAGUE_DATA = {
     },
     {
       "id": "bournemouth",
-      "name": "Bournemouth",
+      "name": "Bornemouth",
       "logo": null,
       "xi": {
         "gk": {
-          "name": "Djordje Petrovic",
+          "name": "Djordje Petrovvic",
           "value": 15000000,
           "nationality": "Sırbistan",
           "photo": null,
@@ -220,7 +220,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 25
         },
         "rb": {
-          "name": "Max Aarons",
+          "name": "Max Aarrons",
           "value": 8000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -228,7 +228,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 25
         },
         "cb1": {
-          "name": "Marcos Senesi",
+          "name": "Marcoss Sennesi",
           "value": 25000000,
           "nationality": "Arjantin",
           "photo": null,
@@ -236,7 +236,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 27
         },
         "cb2": {
-          "name": "James Hill",
+          "name": "Jammes Hil",
           "value": 15000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -244,7 +244,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 23
         },
         "lb": {
-          "name": "Adrien Truffert",
+          "name": "Adrienn Trufert",
           "value": 15000000,
           "nationality": "Fransa",
           "photo": null,
@@ -252,7 +252,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 23
         },
         "dm1": {
-          "name": "Ryan Christie",
+          "name": "Ryan Christey",
           "value": 10000000,
           "nationality": "İskoçya",
           "photo": null,
@@ -260,7 +260,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 30
         },
         "dm2": {
-          "name": "Alex Scott",
+          "name": "Allex Skott",
           "value": 25000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -268,7 +268,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 21
         },
         "rw": {
-          "name": "David Brooks",
+          "name": "Davvid Broocs",
           "value": 10000000,
           "nationality": "Galler",
           "photo": null,
@@ -276,7 +276,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 28
         },
         "cam": {
-          "name": "Marcus Tavernier",
+          "name": "Marcuss Tavernierr",
           "value": 20000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -284,7 +284,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 26
         },
         "lw": {
-          "name": "Antoine Semenyo",
+          "name": "Antoinne Semenyoh",
           "value": 45000000,
           "nationality": "Gana",
           "photo": null,
@@ -292,7 +292,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 25
         },
         "st": {
-          "name": "Evanilson",
+          "name": "Evanilsonn",
           "value": 35000000,
           "nationality": "Brezilya",
           "photo": null,
@@ -303,11 +303,11 @@ const PREMIER_LEAGUE_DATA = {
     },
     {
       "id": "brentford",
-      "name": "Brentford",
+      "name": "Brentforde",
       "logo": null,
       "xi": {
         "gk": {
-          "name": "Caoimhin Kelleher",
+          "name": "Caoimhinn Kelleherr",
           "value": 20000000,
           "nationality": "İrlanda",
           "photo": null,
@@ -315,7 +315,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 26
         },
         "rb": {
-          "name": "Mads Roerslev",
+          "name": "Mads Roerslevv",
           "value": 10000000,
           "nationality": "Danimarka",
           "photo": null,
@@ -323,7 +323,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 25
         },
         "cb1": {
-          "name": "Nathan Collins",
+          "name": "Nathann Colins",
           "value": 30000000,
           "nationality": "İrlanda",
           "photo": null,
@@ -331,7 +331,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 24
         },
         "cb2": {
-          "name": "Sepp van den Berg",
+          "name": "Sep van den Berg",
           "value": 20000000,
           "nationality": "Hollanda",
           "photo": null,
@@ -339,7 +339,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 23
         },
         "lb": {
-          "name": "Rico Henry",
+          "name": "Riko Henri",
           "value": 8000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -347,7 +347,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 27
         },
         "dm1": {
-          "name": "Vitaly Janelt",
+          "name": "Vitali Jannelt",
           "value": 15000000,
           "nationality": "Almanya",
           "photo": null,
@@ -355,7 +355,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 27
         },
         "dm2": {
-          "name": "Christian Norgaard",
+          "name": "Christiann Norgaard",
           "value": 10000000,
           "nationality": "Danimarka",
           "photo": null,
@@ -363,7 +363,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 31
         },
         "rw": {
-          "name": "Kevin Schade",
+          "name": "Kevinn Schadde",
           "value": 35000000,
           "nationality": "Almanya",
           "photo": null,
@@ -371,7 +371,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 23
         },
         "cam": {
-          "name": "Mikkel Damsgaard",
+          "name": "Mikkell Damsgaard",
           "value": 20000000,
           "nationality": "Danimarka",
           "photo": null,
@@ -379,7 +379,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 25
         },
         "lw": {
-          "name": "Keane Lewis-Potter",
+          "name": "Keanne Lewis-Potterr",
           "value": 20000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -387,7 +387,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 24
         },
         "st": {
-          "name": "Igor Thiago",
+          "name": "Iggor Thiagoh",
           "value": 30000000,
           "nationality": "Brezilya",
           "photo": null,
@@ -398,11 +398,11 @@ const PREMIER_LEAGUE_DATA = {
     },
     {
       "id": "brighton-and-hove-albion",
-      "name": "Brighton & Hove Albion",
+      "name": "Brighton & Hove Albeon",
       "logo": null,
       "xi": {
         "gk": {
-          "name": "Bart Verbruggen",
+          "name": "Bart Verbruggenn",
           "value": 25000000,
           "nationality": "Hollanda",
           "photo": null,
@@ -410,7 +410,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 23
         },
         "rb": {
-          "name": "Joel Veltman",
+          "name": "Joel Veltmann",
           "value": 5000000,
           "nationality": "Hollanda",
           "photo": null,
@@ -418,7 +418,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 34
         },
         "cb1": {
-          "name": "Jan Paul van Hecke",
+          "name": "Jan Paul van Hekke",
           "value": 25000000,
           "nationality": "Hollanda",
           "photo": null,
@@ -426,7 +426,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 25
         },
         "cb2": {
-          "name": "Adam Webster",
+          "name": "Addam Websterr",
           "value": 8000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -434,7 +434,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 30
         },
         "lb": {
-          "name": "Pervis Estupinan",
+          "name": "Perviss Estupinann",
           "value": 25000000,
           "nationality": "Ekvador",
           "photo": null,
@@ -442,7 +442,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 27
         },
         "dm1": {
-          "name": "Carlos Baleba",
+          "name": "Carloss Balebah",
           "value": 50000000,
           "nationality": "Kamerun",
           "photo": null,
@@ -450,7 +450,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 21
         },
         "dm2": {
-          "name": "Mats Wieffer",
+          "name": "Mats Wiefferr",
           "value": 25000000,
           "nationality": "Hollanda",
           "photo": null,
@@ -458,7 +458,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 25
         },
         "rw": {
-          "name": "Yankuba Minteh",
+          "name": "Yankubba Minteh",
           "value": 35000000,
           "nationality": "Gambiya",
           "photo": null,
@@ -466,7 +466,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 21
         },
         "cam": {
-          "name": "Georginio Rutter",
+          "name": "Georginnio Rutterr",
           "value": 35000000,
           "nationality": "Almanya",
           "photo": null,
@@ -474,7 +474,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 23
         },
         "lw": {
-          "name": "Kaoru Mitoma",
+          "name": "Kaoruh Mitomah",
           "value": 40000000,
           "nationality": "Japonya",
           "photo": null,
@@ -482,7 +482,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 28
         },
         "st": {
-          "name": "Danny Welbeck",
+          "name": "Dany Welbek",
           "value": 4000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -493,11 +493,11 @@ const PREMIER_LEAGUE_DATA = {
     },
     {
       "id": "burnley",
-      "name": "Burnley",
+      "name": "Burnly",
       "logo": null,
       "xi": {
         "gk": {
-          "name": "Vitezslav Jaros",
+          "name": "Vittezslav Jaross",
           "value": 8000000,
           "nationality": "Çekya",
           "photo": null,
@@ -505,7 +505,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 24
         },
         "rb": {
-          "name": "Connor Roberts",
+          "name": "Connorr Robberts",
           "value": 4000000,
           "nationality": "Galler",
           "photo": null,
@@ -513,7 +513,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 30
         },
         "cb1": {
-          "name": "Maxime Esteve",
+          "name": "Maximme Estevve",
           "value": 10000000,
           "nationality": "Fransa",
           "photo": null,
@@ -521,7 +521,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 23
         },
         "cb2": {
-          "name": "Bashir Humphreys",
+          "name": "Bashirr Humfreys",
           "value": 6000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -529,7 +529,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 21
         },
         "lb": {
-          "name": "Hjalmar Ekdal",
+          "name": "Hjalmarr Ekdall",
           "value": 5000000,
           "nationality": "İsveç",
           "photo": null,
@@ -537,7 +537,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 26
         },
         "dm1": {
-          "name": "Josh Cullen",
+          "name": "Josh Cullenn",
           "value": 8000000,
           "nationality": "İrlanda",
           "photo": null,
@@ -545,7 +545,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 29
         },
         "dm2": {
-          "name": "Florentino Luis",
+          "name": "Florrentino Luis",
           "value": 10000000,
           "nationality": "Portekiz",
           "photo": null,
@@ -553,7 +553,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 25
         },
         "rw": {
-          "name": "Jaidon Anthony",
+          "name": "Jaidonn Anthoni",
           "value": 10000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -561,7 +561,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 25
         },
         "cam": {
-          "name": "Zian Flemming",
+          "name": "Zian Fleming",
           "value": 10000000,
           "nationality": "Hollanda",
           "photo": null,
@@ -569,7 +569,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 27
         },
         "lw": {
-          "name": "Loum Tchaouna",
+          "name": "Loum Tchaounah",
           "value": 12000000,
           "nationality": "Fransa",
           "photo": null,
@@ -577,7 +577,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 22
         },
         "st": {
-          "name": "Lyle Foster",
+          "name": "Lyle Fosterr",
           "value": 15000000,
           "nationality": "Güney Afrika",
           "photo": null,
@@ -588,11 +588,11 @@ const PREMIER_LEAGUE_DATA = {
     },
     {
       "id": "chelsea",
-      "name": "Chelsea",
+      "name": "Chelseah",
       "logo": null,
       "xi": {
         "gk": {
-          "name": "Robert Sanchez",
+          "name": "Robbert Sanchezz",
           "value": 25000000,
           "nationality": "İspanya",
           "photo": null,
@@ -600,7 +600,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 27
         },
         "rb": {
-          "name": "Malo Gusto",
+          "name": "Maloh Gustoh",
           "value": 35000000,
           "nationality": "Fransa",
           "photo": null,
@@ -608,7 +608,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 22
         },
         "cb1": {
-          "name": "Levi Colwill",
+          "name": "Levvi Colwil",
           "value": 50000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -616,7 +616,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 22
         },
         "cb2": {
-          "name": "Wesley Fofana",
+          "name": "Weslie Fofanah",
           "value": 30000000,
           "nationality": "Fransa",
           "photo": null,
@@ -624,7 +624,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 24
         },
         "lb": {
-          "name": "Marc Cucurella",
+          "name": "Mark Cucurela",
           "value": 45000000,
           "nationality": "İspanya",
           "photo": null,
@@ -632,7 +632,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 27
         },
         "dm1": {
-          "name": "Moises Caicedo",
+          "name": "Moisess Caicedoh",
           "value": 80000000,
           "nationality": "Ekvador",
           "photo": null,
@@ -640,7 +640,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 23
         },
         "dm2": {
-          "name": "Enzo Fernandez",
+          "name": "Enzoh Fernandes",
           "value": 70000000,
           "nationality": "Arjantin",
           "photo": null,
@@ -648,7 +648,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 24
         },
         "rw": {
-          "name": "Pedro Neto",
+          "name": "Pedroh Netto",
           "value": 55000000,
           "nationality": "Portekiz",
           "photo": null,
@@ -656,7 +656,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 25
         },
         "cam": {
-          "name": "Cole Palmer",
+          "name": "Colle Palmerr",
           "value": 120000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -664,7 +664,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 23
         },
         "lw": {
-          "name": "Estevao Willian",
+          "name": "Estevvao Williann",
           "value": 55000000,
           "nationality": "Brezilya",
           "photo": null,
@@ -672,7 +672,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 19
         },
         "st": {
-          "name": "Liam Delap",
+          "name": "Liam Dellap",
           "value": 35000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -683,11 +683,11 @@ const PREMIER_LEAGUE_DATA = {
     },
     {
       "id": "crystal-palace",
-      "name": "Crystal Palace",
+      "name": "Crystal Palase",
       "logo": null,
       "xi": {
         "gk": {
-          "name": "Dean Henderson",
+          "name": "Dean Hendersonn",
           "value": 15000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -695,7 +695,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 28
         },
         "rb": {
-          "name": "Daniel Munoz",
+          "name": "Daniell Munozz",
           "value": 30000000,
           "nationality": "Kolombiya",
           "photo": null,
@@ -703,7 +703,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 29
         },
         "cb1": {
-          "name": "Marc Guehi",
+          "name": "Mark Guehy",
           "value": 45000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -711,7 +711,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 25
         },
         "cb2": {
-          "name": "Chris Richards",
+          "name": "Chriss Richards",
           "value": 20000000,
           "nationality": "ABD",
           "photo": null,
@@ -719,7 +719,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 25
         },
         "lb": {
-          "name": "Tyrick Mitchell",
+          "name": "Tyrik Mitchel",
           "value": 25000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -727,7 +727,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 26
         },
         "dm1": {
-          "name": "Adam Wharton",
+          "name": "Addam Whartonn",
           "value": 45000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -735,7 +735,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 21
         },
         "dm2": {
-          "name": "Cheick Doucoure",
+          "name": "Cheik Douccoure",
           "value": 15000000,
           "nationality": "Mali",
           "photo": null,
@@ -743,7 +743,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 26
         },
         "rw": {
-          "name": "Ismaila Sarr",
+          "name": "Ismailla Sar",
           "value": 35000000,
           "nationality": "Senegal",
           "photo": null,
@@ -751,7 +751,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 27
         },
         "cam": {
-          "name": "Justin Devenny",
+          "name": "Justinn Devenni",
           "value": 8000000,
           "nationality": "Kuzey İrlanda",
           "photo": null,
@@ -759,7 +759,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 21
         },
         "lw": {
-          "name": "Yeremy Pino",
+          "name": "Yerremy Pinno",
           "value": 20000000,
           "nationality": "İspanya",
           "photo": null,
@@ -767,7 +767,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 23
         },
         "st": {
-          "name": "Jean-Philippe Mateta",
+          "name": "Jean-Filippe Matetah",
           "value": 30000000,
           "nationality": "Fransa",
           "photo": null,
@@ -778,11 +778,11 @@ const PREMIER_LEAGUE_DATA = {
     },
     {
       "id": "everton",
-      "name": "Everton",
+      "name": "Evertone",
       "logo": null,
       "xi": {
         "gk": {
-          "name": "Jordan Pickford",
+          "name": "Jordann Pikkford",
           "value": 25000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -790,7 +790,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 32
         },
         "rb": {
-          "name": "Nathan Patterson",
+          "name": "Nathann Pattersonn",
           "value": 10000000,
           "nationality": "İskoçya",
           "photo": null,
@@ -798,7 +798,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 24
         },
         "cb1": {
-          "name": "James Tarkowski",
+          "name": "Jammes Tarcowski",
           "value": 12000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -806,7 +806,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 33
         },
         "cb2": {
-          "name": "Jarrad Branthwaite",
+          "name": "Jarad Branthwaitte",
           "value": 45000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -814,7 +814,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 23
         },
         "lb": {
-          "name": "Vitaliy Mykolenko",
+          "name": "Vittaliy Mycolenko",
           "value": 20000000,
           "nationality": "Ukrayna",
           "photo": null,
@@ -822,7 +822,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 26
         },
         "dm1": {
-          "name": "Idrissa Gueye",
+          "name": "Idrisa Gueye",
           "value": 3000000,
           "nationality": "Senegal",
           "photo": null,
@@ -830,7 +830,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 36
         },
         "dm2": {
-          "name": "Abdoulaye Doucoure",
+          "name": "Abdoullaye Douccoure",
           "value": 8000000,
           "nationality": "Fransa",
           "photo": null,
@@ -838,7 +838,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 32
         },
         "rw": {
-          "name": "Iliman Ndiaye",
+          "name": "Ilimann Ndiaye",
           "value": 35000000,
           "nationality": "Senegal",
           "photo": null,
@@ -846,7 +846,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 25
         },
         "cam": {
-          "name": "Jack Grealish",
+          "name": "Jakk Greallish",
           "value": 40000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -854,7 +854,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 30
         },
         "lw": {
-          "name": "Dwight McNeil",
+          "name": "Dwight McNeill",
           "value": 20000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -862,7 +862,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 26
         },
         "st": {
-          "name": "Thierno Barry",
+          "name": "Thiernoh Barri",
           "value": 25000000,
           "nationality": "Fransa",
           "photo": null,
@@ -873,11 +873,11 @@ const PREMIER_LEAGUE_DATA = {
     },
     {
       "id": "fulham",
-      "name": "Fulham",
+      "name": "Fullham",
       "logo": null,
       "xi": {
         "gk": {
-          "name": "Bernd Leno",
+          "name": "Bernd Lenoh",
           "value": 6000000,
           "nationality": "Almanya",
           "photo": null,
@@ -885,7 +885,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 34
         },
         "rb": {
-          "name": "Kenny Tete",
+          "name": "Kenni Tete",
           "value": 8000000,
           "nationality": "Hollanda",
           "photo": null,
@@ -893,7 +893,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 30
         },
         "cb1": {
-          "name": "Calvin Bassey",
+          "name": "Calvinn Bassie",
           "value": 25000000,
           "nationality": "Nijerya",
           "photo": null,
@@ -901,7 +901,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 25
         },
         "cb2": {
-          "name": "Joachim Andersen",
+          "name": "Joachim Andersenn",
           "value": 25000000,
           "nationality": "Danimarka",
           "photo": null,
@@ -909,7 +909,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 29
         },
         "lb": {
-          "name": "Antonee Robinson",
+          "name": "Antonnee Robinsonn",
           "value": 25000000,
           "nationality": "ABD",
           "photo": null,
@@ -917,7 +917,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 28
         },
         "dm1": {
-          "name": "Sasa Lukic",
+          "name": "Sasah Lucic",
           "value": 10000000,
           "nationality": "Sırbistan",
           "photo": null,
@@ -925,7 +925,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 29
         },
         "dm2": {
-          "name": "Harrison Reed",
+          "name": "Harrisonn Reed",
           "value": 6000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -933,7 +933,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 30
         },
         "rw": {
-          "name": "Alex Iwobi",
+          "name": "Allex Iwoby",
           "value": 30000000,
           "nationality": "Nijerya",
           "photo": null,
@@ -941,7 +941,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 29
         },
         "cam": {
-          "name": "Emile Smith Rowe",
+          "name": "Emmile Smith Rowe",
           "value": 15000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -949,7 +949,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 25
         },
         "lw": {
-          "name": "Adama Traore",
+          "name": "Addama Traorre",
           "value": 8000000,
           "nationality": "İspanya",
           "photo": null,
@@ -957,7 +957,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 29
         },
         "st": {
-          "name": "Rodrigo Muniz",
+          "name": "Rodrigoh Munizz",
           "value": 25000000,
           "nationality": "Brezilya",
           "photo": null,
@@ -968,11 +968,11 @@ const PREMIER_LEAGUE_DATA = {
     },
     {
       "id": "leeds-united",
-      "name": "Leeds United",
+      "name": "Leedz United",
       "logo": null,
       "xi": {
         "gk": {
-          "name": "Lucas Perri",
+          "name": "Lukas Peri",
           "value": 15000000,
           "nationality": "Brezilya",
           "photo": null,
@@ -980,7 +980,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 27
         },
         "rb": {
-          "name": "Jayden Bogle",
+          "name": "Jaydenn Bogle",
           "value": 15000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -988,7 +988,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 25
         },
         "cb1": {
-          "name": "Pascal Struijk",
+          "name": "Paskal Struijc",
           "value": 20000000,
           "nationality": "Hollanda",
           "photo": null,
@@ -996,7 +996,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 26
         },
         "cb2": {
-          "name": "Joe Rodon",
+          "name": "Joe Rodonn",
           "value": 14000000,
           "nationality": "Galler",
           "photo": null,
@@ -1004,7 +1004,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 27
         },
         "lb": {
-          "name": "Gabriel Gudmundsson",
+          "name": "Gabriell Gudmundssonn",
           "value": 8000000,
           "nationality": "İsveç",
           "photo": null,
@@ -1012,7 +1012,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 26
         },
         "dm1": {
-          "name": "Ethan Ampadu",
+          "name": "Ethann Ampaduh",
           "value": 18000000,
           "nationality": "Galler",
           "photo": null,
@@ -1020,7 +1020,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 25
         },
         "dm2": {
-          "name": "Anton Stach",
+          "name": "Antonn Stach",
           "value": 22000000,
           "nationality": "Almanya",
           "photo": null,
@@ -1028,7 +1028,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 27
         },
         "rw": {
-          "name": "Daniel James",
+          "name": "Daniell Jammes",
           "value": 12000000,
           "nationality": "Galler",
           "photo": null,
@@ -1036,7 +1036,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 27
         },
         "cam": {
-          "name": "Brenden Aaronson",
+          "name": "Brendenn Aaronsonn",
           "value": 14000000,
           "nationality": "ABD",
           "photo": null,
@@ -1044,7 +1044,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 25
         },
         "lw": {
-          "name": "Largie Ramazani",
+          "name": "Largey Rammazani",
           "value": 12000000,
           "nationality": "Belçika",
           "photo": null,
@@ -1052,7 +1052,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 24
         },
         "st": {
-          "name": "Joel Piroe",
+          "name": "Joel Pirroe",
           "value": 18000000,
           "nationality": "Hollanda",
           "photo": null,
@@ -1063,11 +1063,11 @@ const PREMIER_LEAGUE_DATA = {
     },
     {
       "id": "liverpool",
-      "name": "Liverpool",
+      "name": "Liverpul",
       "logo": null,
       "xi": {
         "gk": {
-          "name": "Alisson Becker",
+          "name": "Alissonn Beker",
           "value": 22000000,
           "nationality": "Brezilya",
           "photo": null,
@@ -1075,7 +1075,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 33
         },
         "rb": {
-          "name": "Jeremie Frimpong",
+          "name": "Jeremey Frimpong",
           "value": 40000000,
           "nationality": "Hollanda",
           "photo": null,
@@ -1083,7 +1083,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 24
         },
         "cb1": {
-          "name": "Virgil van Dijk",
+          "name": "Virgill van Dijc",
           "value": 30000000,
           "nationality": "Hollanda",
           "photo": null,
@@ -1091,7 +1091,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 34
         },
         "cb2": {
-          "name": "Ibrahima Konate",
+          "name": "Ibrahimah Konnate",
           "value": 45000000,
           "nationality": "Fransa",
           "photo": null,
@@ -1099,7 +1099,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 26
         },
         "lb": {
-          "name": "Milos Kerkez",
+          "name": "Miloss Kerkes",
           "value": 45000000,
           "nationality": "Macaristan",
           "photo": null,
@@ -1107,7 +1107,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 21
         },
         "dm1": {
-          "name": "Ryan Gravenberch",
+          "name": "Ryan Gravvenberch",
           "value": 65000000,
           "nationality": "Hollanda",
           "photo": null,
@@ -1115,7 +1115,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 23
         },
         "dm2": {
-          "name": "Alexis Mac Allister",
+          "name": "Alexiss Mac Allisterr",
           "value": 65000000,
           "nationality": "Arjantin",
           "photo": null,
@@ -1123,7 +1123,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 26
         },
         "rw": {
-          "name": "Mohamed Salah",
+          "name": "Mohammed Sallah",
           "value": 40000000,
           "nationality": "Mısır",
           "photo": null,
@@ -1131,7 +1131,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 33
         },
         "cam": {
-          "name": "Florian Wirtz",
+          "name": "Floriann Wirtz",
           "value": 130000000,
           "nationality": "Almanya",
           "photo": null,
@@ -1139,7 +1139,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 22
         },
         "lw": {
-          "name": "Cody Gakpo",
+          "name": "Codi Gacpo",
           "value": 55000000,
           "nationality": "Hollanda",
           "photo": null,
@@ -1147,7 +1147,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 26
         },
         "st": {
-          "name": "Alexander Isak",
+          "name": "Alexanderr Issak",
           "value": 120000000,
           "nationality": "İsveç",
           "photo": null,
@@ -1158,11 +1158,11 @@ const PREMIER_LEAGUE_DATA = {
     },
     {
       "id": "manchester-city",
-      "name": "Manchester City",
+      "name": "Manchestor City",
       "logo": null,
       "xi": {
         "gk": {
-          "name": "Gianluigi Donnarumma",
+          "name": "Gianluigy Donarumma",
           "value": 30000000,
           "nationality": "İtalya",
           "photo": null,
@@ -1170,7 +1170,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 26
         },
         "rb": {
-          "name": "Rico Lewis",
+          "name": "Riko Lewiss",
           "value": 35000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -1178,7 +1178,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 21
         },
         "cb1": {
-          "name": "Ruben Dias",
+          "name": "Rubenn Dias",
           "value": 60000000,
           "nationality": "Portekiz",
           "photo": null,
@@ -1186,7 +1186,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 28
         },
         "cb2": {
-          "name": "Josko Gvardiol",
+          "name": "Josco Gvardioll",
           "value": 75000000,
           "nationality": "Hırvatistan",
           "photo": null,
@@ -1194,7 +1194,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 24
         },
         "lb": {
-          "name": "Nico O'Reilly",
+          "name": "Nicoh O'Reilli",
           "value": 30000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -1202,7 +1202,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 20
         },
         "dm1": {
-          "name": "Rodri",
+          "name": "Rodry",
           "value": 110000000,
           "nationality": "İspanya",
           "photo": null,
@@ -1210,7 +1210,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 29
         },
         "dm2": {
-          "name": "Nico Gonzalez",
+          "name": "Nicoh Gonzallez",
           "value": 45000000,
           "nationality": "İspanya",
           "photo": null,
@@ -1218,7 +1218,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 23
         },
         "rw": {
-          "name": "Jeremy Doku",
+          "name": "Jerremy Dokku",
           "value": 70000000,
           "nationality": "Belçika",
           "photo": null,
@@ -1226,7 +1226,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 23
         },
         "cam": {
-          "name": "Phil Foden",
+          "name": "Phil Fodenn",
           "value": 90000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -1234,7 +1234,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 25
         },
         "lw": {
-          "name": "Rayan Cherki",
+          "name": "Rayann Cherky",
           "value": 40000000,
           "nationality": "Fransa",
           "photo": null,
@@ -1242,7 +1242,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 22
         },
         "st": {
-          "name": "Erling Haaland",
+          "name": "Erling Haalland",
           "value": 180000000,
           "nationality": "Norveç",
           "photo": null,
@@ -1253,11 +1253,11 @@ const PREMIER_LEAGUE_DATA = {
     },
     {
       "id": "manchester-united",
-      "name": "Manchester United",
+      "name": "Manchestor United",
       "logo": null,
       "xi": {
         "gk": {
-          "name": "Andre Onana",
+          "name": "Andre Onanah-13",
           "value": 20000000,
           "nationality": "Kamerun",
           "photo": null,
@@ -1265,7 +1265,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 29
         },
         "rb": {
-          "name": "Diogo Dalot",
+          "name": "Diogoh Dalott",
           "value": 30000000,
           "nationality": "Portekiz",
           "photo": null,
@@ -1273,7 +1273,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 26
         },
         "cb1": {
-          "name": "Leny Yoro",
+          "name": "Leni Yorro",
           "value": 45000000,
           "nationality": "Fransa",
           "photo": null,
@@ -1281,7 +1281,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 20
         },
         "cb2": {
-          "name": "Matthijs de Ligt",
+          "name": "Mathijs de Ligt",
           "value": 35000000,
           "nationality": "Hollanda",
           "photo": null,
@@ -1289,7 +1289,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 26
         },
         "lb": {
-          "name": "Patrick Dorgu",
+          "name": "Patrik Dorguh",
           "value": 25000000,
           "nationality": "Danimarka",
           "photo": null,
@@ -1297,7 +1297,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 20
         },
         "dm1": {
-          "name": "Manuel Ugarte",
+          "name": "Mannuel Uggarte",
           "value": 35000000,
           "nationality": "Uruguay",
           "photo": null,
@@ -1305,7 +1305,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 24
         },
         "dm2": {
-          "name": "Casemiro",
+          "name": "Casemiroh",
           "value": 15000000,
           "nationality": "Brezilya",
           "photo": null,
@@ -1313,7 +1313,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 33
         },
         "rw": {
-          "name": "Bryan Mbeumo",
+          "name": "Bryann Mbeummo",
           "value": 65000000,
           "nationality": "Kamerun",
           "photo": null,
@@ -1321,7 +1321,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 26
         },
         "cam": {
-          "name": "Bruno Fernandes",
+          "name": "Brunno Fernandez",
           "value": 55000000,
           "nationality": "Portekiz",
           "photo": null,
@@ -1329,7 +1329,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 31
         },
         "lw": {
-          "name": "Matheus Cunha",
+          "name": "Matheuss Cunhah",
           "value": 60000000,
           "nationality": "Brezilya",
           "photo": null,
@@ -1337,7 +1337,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 26
         },
         "st": {
-          "name": "Benjamin Sesko",
+          "name": "Benjaminn Seskoh",
           "value": 70000000,
           "nationality": "Slovenya",
           "photo": null,
@@ -1348,11 +1348,11 @@ const PREMIER_LEAGUE_DATA = {
     },
     {
       "id": "newcastle-united",
-      "name": "Newcastle United",
+      "name": "Newcastel United",
       "logo": null,
       "xi": {
         "gk": {
-          "name": "Nick Pope",
+          "name": "Nik Pope",
           "value": 15000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -1360,7 +1360,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 33
         },
         "rb": {
-          "name": "Kieran Trippier",
+          "name": "Kierann Trippierr",
           "value": 8000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -1368,7 +1368,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 35
         },
         "cb1": {
-          "name": "Fabian Schar",
+          "name": "Fabbian Scharr",
           "value": 12000000,
           "nationality": "İsviçre",
           "photo": null,
@@ -1376,7 +1376,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 33
         },
         "cb2": {
-          "name": "Sven Botman",
+          "name": "Sven Botmann",
           "value": 35000000,
           "nationality": "Hollanda",
           "photo": null,
@@ -1384,7 +1384,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 25
         },
         "lb": {
-          "name": "Dan Burn",
+          "name": "Dan Burnn",
           "value": 12000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -1392,7 +1392,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 33
         },
         "dm1": {
-          "name": "Bruno Guimaraes",
+          "name": "Brunno Guimaraess",
           "value": 80000000,
           "nationality": "Brezilya",
           "photo": null,
@@ -1400,7 +1400,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 27
         },
         "dm2": {
-          "name": "Sandro Tonali",
+          "name": "Sandroh Tonaly",
           "value": 55000000,
           "nationality": "İtalya",
           "photo": null,
@@ -1408,7 +1408,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 25
         },
         "rw": {
-          "name": "Jacob Murphy",
+          "name": "Jaccob Murphi",
           "value": 20000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -1416,7 +1416,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 30
         },
         "cam": {
-          "name": "Harvey Barnes",
+          "name": "Harvie Barnez",
           "value": 22000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -1424,7 +1424,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 27
         },
         "lw": {
-          "name": "Anthony Gordon",
+          "name": "Anthoni Gordonn",
           "value": 65000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -1432,7 +1432,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 24
         },
         "st": {
-          "name": "Nick Woltemade",
+          "name": "Nik Woltemmade",
           "value": 70000000,
           "nationality": "Almanya",
           "photo": null,
@@ -1443,11 +1443,11 @@ const PREMIER_LEAGUE_DATA = {
     },
     {
       "id": "nottingham-forest",
-      "name": "Nottingham Forest",
+      "name": "Nottingham Forrest",
       "logo": null,
       "xi": {
         "gk": {
-          "name": "Matz Sels",
+          "name": "Matz Selss",
           "value": 20000000,
           "nationality": "Belçika",
           "photo": null,
@@ -1455,7 +1455,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 33
         },
         "rb": {
-          "name": "Neco Williams",
+          "name": "Neko Wiliams",
           "value": 20000000,
           "nationality": "Galler",
           "photo": null,
@@ -1463,7 +1463,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 24
         },
         "cb1": {
-          "name": "Murillo",
+          "name": "Murilo",
           "value": 45000000,
           "nationality": "Brezilya",
           "photo": null,
@@ -1471,7 +1471,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 23
         },
         "cb2": {
-          "name": "Willy Boly",
+          "name": "Wily Boli",
           "value": 5000000,
           "nationality": "Fildişi Sahili",
           "photo": null,
@@ -1479,7 +1479,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 34
         },
         "lb": {
-          "name": "Ola Aina",
+          "name": "Ola Ainah",
           "value": 18000000,
           "nationality": "Nijerya",
           "photo": null,
@@ -1487,7 +1487,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 28
         },
         "dm1": {
-          "name": "Douglas Luiz",
+          "name": "Douglass Luiz",
           "value": 25000000,
           "nationality": "Brezilya",
           "photo": null,
@@ -1495,7 +1495,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 27
         },
         "dm2": {
-          "name": "Ibrahim Sangare",
+          "name": "Ibrahim Sangarre",
           "value": 20000000,
           "nationality": "Fildişi Sahili",
           "photo": null,
@@ -1503,7 +1503,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 27
         },
         "rw": {
-          "name": "Callum Hudson-Odoi",
+          "name": "Calum Hudson-Oddoi",
           "value": 15000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -1511,7 +1511,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 24
         },
         "cam": {
-          "name": "Morgan Gibbs-White",
+          "name": "Morgann Gibs-White",
           "value": 60000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -1519,7 +1519,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 25
         },
         "lw": {
-          "name": "Dan Ndoye",
+          "name": "Dan Ndoyeh",
           "value": 30000000,
           "nationality": "İsviçre",
           "photo": null,
@@ -1527,7 +1527,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 24
         },
         "st": {
-          "name": "Chris Wood",
+          "name": "Chriss Wood",
           "value": 12000000,
           "nationality": "Yeni Zelanda",
           "photo": null,
@@ -1538,11 +1538,11 @@ const PREMIER_LEAGUE_DATA = {
     },
     {
       "id": "sunderland",
-      "name": "Sunderland",
+      "name": "Sunderlend",
       "logo": null,
       "xi": {
         "gk": {
-          "name": "Anthony Patterson",
+          "name": "Anthoni Pattersonn",
           "value": 8000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -1550,7 +1550,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 25
         },
         "rb": {
-          "name": "Trai Hume",
+          "name": "Tray Humme",
           "value": 12000000,
           "nationality": "Kuzey İrlanda",
           "photo": null,
@@ -1558,7 +1558,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 23
         },
         "cb1": {
-          "name": "Dan Ballard",
+          "name": "Dan Balard",
           "value": 12000000,
           "nationality": "Kuzey İrlanda",
           "photo": null,
@@ -1566,7 +1566,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 26
         },
         "cb2": {
-          "name": "Luke O'Nien",
+          "name": "Lukke O'Nienn",
           "value": 5000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -1574,7 +1574,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 30
         },
         "lb": {
-          "name": "Dennis Cirkin",
+          "name": "Denniss Circin",
           "value": 8000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -1582,7 +1582,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 23
         },
         "dm1": {
-          "name": "Dan Neil",
+          "name": "Dan Neill",
           "value": 12000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -1590,7 +1590,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 24
         },
         "dm2": {
-          "name": "Chris Rigg",
+          "name": "Chriss Rig",
           "value": 20000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -1598,7 +1598,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 18
         },
         "rw": {
-          "name": "Patrick Roberts",
+          "name": "Patrik Robberts",
           "value": 6000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -1606,7 +1606,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 29
         },
         "cam": {
-          "name": "Enzo Le Fee",
+          "name": "Enzoh Le Fee",
           "value": 15000000,
           "nationality": "Fransa",
           "photo": null,
@@ -1614,7 +1614,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 25
         },
         "lw": {
-          "name": "Eliezer Mayenda",
+          "name": "Eliezerr Mayendah",
           "value": 15000000,
           "nationality": "Fransa",
           "photo": null,
@@ -1622,7 +1622,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 21
         },
         "st": {
-          "name": "Wilson Isidor",
+          "name": "Wilsonn Isidorr",
           "value": 15000000,
           "nationality": "Fransa",
           "photo": null,
@@ -1633,11 +1633,11 @@ const PREMIER_LEAGUE_DATA = {
     },
     {
       "id": "tottenham-hotspur",
-      "name": "Tottenham Hotspur",
+      "name": "Tottenham Hotspurs",
       "logo": null,
       "xi": {
         "gk": {
-          "name": "Guglielmo Vicario",
+          "name": "Guglielmoh Viccario",
           "value": 30000000,
           "nationality": "İtalya",
           "photo": null,
@@ -1645,7 +1645,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 29
         },
         "rb": {
-          "name": "Pedro Porro",
+          "name": "Pedroh Poro",
           "value": 45000000,
           "nationality": "İspanya",
           "photo": null,
@@ -1653,7 +1653,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 26
         },
         "cb1": {
-          "name": "Cristian Romero",
+          "name": "Cristiann Romeroh",
           "value": 50000000,
           "nationality": "Arjantin",
           "photo": null,
@@ -1661,7 +1661,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 27
         },
         "cb2": {
-          "name": "Micky van de Ven",
+          "name": "Miky van de Ven",
           "value": 55000000,
           "nationality": "Hollanda",
           "photo": null,
@@ -1669,7 +1669,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 24
         },
         "lb": {
-          "name": "Destiny Udogie",
+          "name": "Destini Uddogie",
           "value": 40000000,
           "nationality": "İtalya",
           "photo": null,
@@ -1677,7 +1677,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 23
         },
         "dm1": {
-          "name": "Rodrigo Bentancur",
+          "name": "Rodrigoh Bentancurr",
           "value": 30000000,
           "nationality": "Uruguay",
           "photo": null,
@@ -1685,7 +1685,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 28
         },
         "dm2": {
-          "name": "Yves Bissouma",
+          "name": "Yves Bisouma",
           "value": 25000000,
           "nationality": "Mali",
           "photo": null,
@@ -1693,7 +1693,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 29
         },
         "rw": {
-          "name": "Mohammed Kudus",
+          "name": "Mohamed Kuduss",
           "value": 55000000,
           "nationality": "Gana",
           "photo": null,
@@ -1701,7 +1701,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 25
         },
         "cam": {
-          "name": "James Maddison",
+          "name": "Jammes Maddisonn",
           "value": 40000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -1709,7 +1709,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 29
         },
         "lw": {
-          "name": "Xavi Simons",
+          "name": "Xavvi Simmons",
           "value": 60000000,
           "nationality": "Hollanda",
           "photo": null,
@@ -1717,7 +1717,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 22
         },
         "st": {
-          "name": "Dominic Solanke",
+          "name": "Domminic Sollanke",
           "value": 35000000,
           "nationality": "İngiltere",
           "photo": null,
@@ -1728,11 +1728,11 @@ const PREMIER_LEAGUE_DATA = {
     },
     {
       "id": "west-ham-united",
-      "name": "West Ham United",
+      "name": "West Hamm United",
       "logo": null,
       "xi": {
         "gk": {
-          "name": "Alphonse Areola",
+          "name": "Alfonse Areolah",
           "value": 8000000,
           "nationality": "Fransa",
           "photo": null,
@@ -1740,7 +1740,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 33
         },
         "rb": {
-          "name": "Vladimir Coufal",
+          "name": "Vladimirr Coufall",
           "value": 5000000,
           "nationality": "Çekya",
           "photo": null,
@@ -1748,7 +1748,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 33
         },
         "cb1": {
-          "name": "Konstantinos Mavropanos",
+          "name": "Konstantinoss Mavropanoss",
           "value": 20000000,
           "nationality": "Yunanistan",
           "photo": null,
@@ -1756,7 +1756,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 28
         },
         "cb2": {
-          "name": "Jean-Clair Todibo",
+          "name": "Jean-Clairr Todiboh",
           "value": 35000000,
           "nationality": "Fransa",
           "photo": null,
@@ -1764,7 +1764,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 26
         },
         "lb": {
-          "name": "Emerson Palmieri",
+          "name": "Emersonn Palmierri",
           "value": 7000000,
           "nationality": "İtalya",
           "photo": null,
@@ -1772,7 +1772,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 31
         },
         "dm1": {
-          "name": "Guido Rodriguez",
+          "name": "Guidoh Rodrigues",
           "value": 8000000,
           "nationality": "Arjantin",
           "photo": null,
@@ -1780,7 +1780,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 32
         },
         "dm2": {
-          "name": "Tomas Soucek",
+          "name": "Tommas Souccek",
           "value": 18000000,
           "nationality": "Çekya",
           "photo": null,
@@ -1788,7 +1788,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 30
         },
         "rw": {
-          "name": "Crysencio Summerville",
+          "name": "Crysencio Sumerville",
           "value": 25000000,
           "nationality": "Hollanda",
           "photo": null,
@@ -1796,7 +1796,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 24
         },
         "cam": {
-          "name": "Lucas Paqueta",
+          "name": "Lukas Paquetta",
           "value": 55000000,
           "nationality": "Brezilya",
           "photo": null,
@@ -1804,7 +1804,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 28
         },
         "lw": {
-          "name": "El Hadji Malick Diouf",
+          "name": "El Hadji Malik Diouf",
           "value": 20000000,
           "nationality": "Senegal",
           "photo": null,
@@ -1812,7 +1812,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 20
         },
         "st": {
-          "name": "Niclas Fullkrug",
+          "name": "Niclass Fullcrug",
           "value": 15000000,
           "nationality": "Almanya",
           "photo": null,
@@ -1823,11 +1823,11 @@ const PREMIER_LEAGUE_DATA = {
     },
     {
       "id": "wolverhampton-wanderers",
-      "name": "Wolverhampton Wanderers",
+      "name": "Wolverhamton Wanderers",
       "logo": null,
       "xi": {
         "gk": {
-          "name": "Jose Sa",
+          "name": "Josse Sa",
           "value": 8000000,
           "nationality": "Portekiz",
           "photo": null,
@@ -1835,7 +1835,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 32
         },
         "rb": {
-          "name": "Matt Doherty",
+          "name": "Mat Doherti",
           "value": 3000000,
           "nationality": "İrlanda",
           "photo": null,
@@ -1843,7 +1843,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 33
         },
         "cb1": {
-          "name": "Emmanuel Agbadou",
+          "name": "Emmanuell Agbaddou",
           "value": 12000000,
           "nationality": "Fildişi Sahili",
           "photo": null,
@@ -1851,7 +1851,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 26
         },
         "cb2": {
-          "name": "Yerson Mosquera",
+          "name": "Yersonn Mosquerah",
           "value": 15000000,
           "nationality": "Kolombiya",
           "photo": null,
@@ -1859,7 +1859,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 24
         },
         "lb": {
-          "name": "Ki-Jana Hoever",
+          "name": "Ki-Janah Hoeverr",
           "value": 6000000,
           "nationality": "Hollanda",
           "photo": null,
@@ -1867,7 +1867,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 26
         },
         "dm1": {
-          "name": "Joao Gomes",
+          "name": "Joao Gomez",
           "value": 35000000,
           "nationality": "Brezilya",
           "photo": null,
@@ -1875,7 +1875,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 24
         },
         "dm2": {
-          "name": "Andre",
+          "name": "Andreh",
           "value": 25000000,
           "nationality": "Brezilya",
           "photo": null,
@@ -1883,7 +1883,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 24
         },
         "rw": {
-          "name": "Jean-Ricner Bellegarde",
+          "name": "Jean-Ricnerr Belleggarde",
           "value": 10000000,
           "nationality": "Fransa",
           "photo": null,
@@ -1891,7 +1891,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 27
         },
         "cam": {
-          "name": "Fer Lopez",
+          "name": "Fer Loppez",
           "value": 18000000,
           "nationality": "İspanya",
           "photo": null,
@@ -1899,7 +1899,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 20
         },
         "lw": {
-          "name": "Hwang Hee-chan",
+          "name": "Hwang Hee-chann",
           "value": 25000000,
           "nationality": "Güney Kore",
           "photo": null,
@@ -1907,7 +1907,7 @@ const PREMIER_LEAGUE_DATA = {
           "age": 29
         },
         "st": {
-          "name": "Jorgen Strand Larsen",
+          "name": "Jorgenn Strand Larsenn",
           "value": 30000000,
           "nationality": "Norveç",
           "photo": null,

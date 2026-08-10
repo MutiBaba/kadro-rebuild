@@ -85,8 +85,8 @@ const PARTICIPANT_DEFS = [
   { clubId: "galatasaray", isBot: true }
 ];
 const BIG_CLUBS = [
-  "Real Madrid", "Manchester City", "Bayern Münih", "Paris Saint-Germain", "Liverpool",
-  "Barcelona", "Chelsea", "Juventus", "Arsenal", "Inter", "Manchester United", "Atletico Madrid"
+  "Real Madryd", "Manchestor City", "Bayern Munnih", "Paris Saint-Germaine", "Liverpul",
+  "Barcelonna", "Chelseah", "Juventuss", "Arsenol", "Intter", "Manchestor United", "Atletiko Madrid"
 ];
 let MAX_SEASONS = 5; // Botlara karşı modda 5'in katları halinde (max 30) seçilebilir.
 const LEAGUE_PRIZES = [60_000_000, 40_000_000, 20_000_000];
@@ -346,10 +346,53 @@ function hashStr(s) {
   for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
   return Math.abs(h);
 }
+// Gerçek kulüp armaları marka/telif riski taşıdığı için KULLANILMIYOR. Bunun yerine
+// tamamen soyut, "arma havasında" bir SVG rozet üretiyoruz: kalkan ya da madalyon
+// silueti + heraldik esintili basit bir desen (şerit/pale/chevron/bölünmüş alan) +
+// jenerik bir sembol (yıldız, top, elmas) + kulübün baş harfleri. Tüm varyasyonlar
+// clubId hash'inden deterministik ama keyfi biçimde seçilir; hiçbir gerçek kulübün
+// arma şekli/sembolü/renk düzeni taklit edilmez. Dış istek yok, ikon kütüphanesi yok.
 function clubBadgeHTML(clubId, name, sizeClass) {
-  const hue = hashStr(clubId) % 360;
+  const h = hashStr(clubId);
+  const hue = h % 360;
   const initials = name.replace(/[^\p{L}\s]/gu, "").split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0]).join("").toUpperCase();
-  return `<span class="club-badge ${sizeClass}" style="background: hsl(${hue}, 55%, 32%); color: hsl(${hue}, 70%, 88%);">${initials}</span>`;
+
+  const dark = `hsl(${hue}, 52%, 24%)`;
+  const mid = `hsl(${hue}, 48%, 38%)`;
+  const rim = `hsl(${hue}, 60%, 86%)`;
+  const motifCol = `hsl(${(hue + 40) % 360}, 75%, 70%)`;
+
+  // Aynı kulüp sayfada birden fazla kez çizilebildiği için clip id'si hash tabanlı;
+  // tekrar eden id'ler aynı şekli gösterdiğinden görsel olarak sorun çıkarmaz.
+  const cid = `cb${h.toString(36)}`;
+  const isRound = ((h >> 3) & 1) === 1;
+  const shape = isRound
+    ? `<circle cx="20" cy="22" r="18.5"/>`
+    : `<path d="M20 3 L36.5 8.5 V22 C36.5 31.5 28.8 38.6 20 41.5 C11.2 38.6 3.5 31.5 3.5 22 V8.5 Z"/>`;
+
+  // --- Desen (kalkanın içine kırpılır) ---
+  const pat = (h >> 7) % 4;
+  let pattern = "";
+  if (pat === 0) pattern = `<rect x="0" y="0" width="40" height="13" fill="${mid}"/>`;
+  else if (pat === 1) pattern = `<rect x="7" y="0" width="5.5" height="44" fill="${mid}"/><rect x="27.5" y="0" width="5.5" height="44" fill="${mid}"/>`;
+  else if (pat === 2) pattern = `<path d="M0 32 L20 19 L40 32 V44 H0 Z" fill="${mid}"/>`;
+  else pattern = `<path d="M20 0 L40 0 V44 H20 Z" fill="${mid}"/>`;
+
+  // --- Sembol (jenerik heraldik set: yıldız / top / elmas / yok) ---
+  const mot = (h >> 13) % 4;
+  let motif = "";
+  if (mot === 0) motif = `<path d="M20 5.5 L21.7 9.4 L25.9 9.8 L22.7 12.6 L23.7 16.7 L20 14.5 L16.3 16.7 L17.3 12.6 L14.1 9.8 L18.3 9.4 Z" fill="${motifCol}"/>`;
+  else if (mot === 1) motif = `<circle cx="20" cy="10.5" r="4.6" fill="${motifCol}"/><circle cx="20" cy="10.5" r="1.7" fill="${dark}"/>`;
+  else if (mot === 2) motif = `<path d="M20 5.4 L24.6 10.5 L20 15.6 L15.4 10.5 Z" fill="${motifCol}"/>`;
+
+  const size = isRound ? `0 0 40 44` : `0 0 40 44`;
+  return `<span class="club-badge ${sizeClass}" role="img" aria-label="${name}">` +
+    `<svg class="club-crest" viewBox="${size}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">` +
+    `<defs><clipPath id="${cid}">${shape}</clipPath></defs>` +
+    `<g clip-path="url(#${cid})"><rect x="0" y="0" width="40" height="44" fill="${dark}"/>${pattern}${motif}</g>` +
+    `<g fill="none" stroke="${rim}" stroke-width="2.4">${shape}</g>` +
+    `<text x="20" y="${mot === 3 ? 28 : 32}" text-anchor="middle" font-size="${mot === 3 ? 17 : 14}" font-weight="800" fill="${rim}" font-family="Segoe UI, system-ui, sans-serif">${initials}</text>` +
+    `</svg></span>`;
 }
 
 // Lig seçici — sadece botlara karşı kurulum ekranında. Kulüp logolarımız olmadığı için

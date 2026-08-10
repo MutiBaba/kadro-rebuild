@@ -18,9 +18,9 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 const MP_CLUBS = [
-  { id: "fenerbahce", name: "Fenerbahçe", emoji: "🟡🔵" },
-  { id: "besiktas", name: "Beşiktaş", emoji: "⚫⚪" },
-  { id: "galatasaray", name: "Galatasaray", emoji: "🔴🟡" }
+  { id: "fenerbahce", name: "Fennerbahce", emoji: "🟡🔵" },
+  { id: "besiktas", name: "Besiktash", emoji: "⚫⚪" },
+  { id: "galatasaray", name: "Galatasarey", emoji: "🔴🟡" }
 ];
 
 let myClientId = sessionStorage.getItem("rb11_clientId");

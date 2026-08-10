@@ -273,14 +273,25 @@ body {
   gap: 0.4rem;
 }
 
+/* Kulüp arması: içeriği artık inline SVG. Boyut sınıfları (.team-grid-logo /
+   .opponent-chip-logo) width/height verdiği için kapsayıcı sadece hizalama yapar;
+   SVG kutuyu doldurur ve her zeminde (koyu panel / açık yeşil seçili buton)
+   okunur kalması için açık renkli bir kenarlığa sahiptir. */
 .club-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
   font-weight: 800;
   flex-shrink: 0;
   line-height: 1;
+}
+
+.club-badge .club-crest {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.45));
 }
 
 .opponent-chip-logo { width: 18px; height: 18px; font-size: 0.6rem; }

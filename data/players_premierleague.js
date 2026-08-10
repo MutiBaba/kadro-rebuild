@@ -26,7 +26,7 @@ const PREMIER_LEAGUE_DATA = {
           "value": 40000000,
           "nationality": "İspanya",
           "photo": null,
-          "rating": 84,
+          "rating": 87,
           "age": 30
         },
         "rb": {
@@ -55,7 +55,7 @@ const PREMIER_LEAGUE_DATA = {
         },
         "lb": {
           "name": "Rikcardo Callafiori",
-          "value": 45000000,
+          "value": 55000000,
           "nationality": "İtalya",
           "photo": null,
           "rating": 82,
@@ -63,10 +63,10 @@ const PREMIER_LEAGUE_DATA = {
         },
         "dm1": {
           "name": "Deklan Ricce",
-          "value": 110000000,
+          "value": 120000000,
           "nationality": "İngiltere",
           "photo": null,
-          "rating": 88,
+          "rating": 87,
           "age": 27
         },
         "dm2": {
@@ -79,7 +79,7 @@ const PREMIER_LEAGUE_DATA = {
         },
         "rw": {
           "name": "Bucayo Sakah",
-          "value": 140000000,
+          "value": 110000000,
           "nationality": "İngiltere",
           "photo": null,
           "rating": 88,
@@ -137,7 +137,7 @@ const PREMIER_LEAGUE_DATA = {
           "value": 25000000,
           "nationality": "İngiltere",
           "photo": null,
-          "rating": 79,
+          "rating": 82,
           "age": 28
         },
         "cb2": {
@@ -161,7 +161,7 @@ const PREMIER_LEAGUE_DATA = {
           "value": 35000000,
           "nationality": "Fransa",
           "photo": null,
-          "rating": 80,
+          "rating": 83,
           "age": 26
         },
         "dm2": {
@@ -182,7 +182,7 @@ const PREMIER_LEAGUE_DATA = {
         },
         "cam": {
           "name": "Morgann Roggers",
-          "value": 55000000,
+          "value": 110000000,
           "nationality": "İngiltere",
           "photo": null,
           "rating": 82,
@@ -201,7 +201,7 @@ const PREMIER_LEAGUE_DATA = {
           "value": 50000000,
           "nationality": "İngiltere",
           "photo": null,
-          "rating": 83,
+          "rating": 84,
           "age": 29
         }
       }
@@ -285,7 +285,7 @@ const PREMIER_LEAGUE_DATA = {
         },
         "lw": {
           "name": "Antoinne Semenyoh",
-          "value": 45000000,
+          "value": 80000000,
           "nationality": "Gana",
           "photo": null,
           "rating": 79,
@@ -478,7 +478,7 @@ const PREMIER_LEAGUE_DATA = {
           "value": 40000000,
           "nationality": "Japonya",
           "photo": null,
-          "rating": 81,
+          "rating": 82,
           "age": 28
         },
         "st": {
@@ -628,7 +628,7 @@ const PREMIER_LEAGUE_DATA = {
           "value": 45000000,
           "nationality": "İspanya",
           "photo": null,
-          "rating": 82,
+          "rating": 84,
           "age": 27
         },
         "dm1": {
@@ -649,7 +649,7 @@ const PREMIER_LEAGUE_DATA = {
         },
         "rw": {
           "name": "Pedroh Netto",
-          "value": 55000000,
+          "value": 60000000,
           "nationality": "Portekiz",
           "photo": null,
           "rating": 82,
@@ -728,7 +728,7 @@ const PREMIER_LEAGUE_DATA = {
         },
         "dm1": {
           "name": "Addam Whartonn",
-          "value": 45000000,
+          "value": 70000000,
           "nationality": "İngiltere",
           "photo": null,
           "rating": 80,
@@ -786,7 +786,7 @@ const PREMIER_LEAGUE_DATA = {
           "value": 25000000,
           "nationality": "İngiltere",
           "photo": null,
-          "rating": 83,
+          "rating": 84,
           "age": 32
         },
         "rb": {
@@ -913,7 +913,7 @@ const PREMIER_LEAGUE_DATA = {
           "value": 25000000,
           "nationality": "ABD",
           "photo": null,
-          "rating": 79,
+          "rating": 82,
           "age": 28
         },
         "dm1": {
@@ -1079,7 +1079,7 @@ const PREMIER_LEAGUE_DATA = {
           "value": 40000000,
           "nationality": "Hollanda",
           "photo": null,
-          "rating": 82,
+          "rating": 83,
           "age": 24
         },
         "cb1": {
@@ -1087,7 +1087,7 @@ const PREMIER_LEAGUE_DATA = {
           "value": 30000000,
           "nationality": "Hollanda",
           "photo": null,
-          "rating": 87,
+          "rating": 90,
           "age": 34
         },
         "cb2": {
@@ -1111,15 +1111,15 @@ const PREMIER_LEAGUE_DATA = {
           "value": 65000000,
           "nationality": "Hollanda",
           "photo": null,
-          "rating": 84,
+          "rating": 85,
           "age": 23
         },
         "dm2": {
           "name": "Alexiss Mac Allisterr",
-          "value": 65000000,
+          "value": 70000000,
           "nationality": "Arjantin",
           "photo": null,
-          "rating": 85,
+          "rating": 87,
           "age": 26
         },
         "rw": {
@@ -1127,7 +1127,7 @@ const PREMIER_LEAGUE_DATA = {
           "value": 40000000,
           "nationality": "Mısır",
           "photo": null,
-          "rating": 88,
+          "rating": 91,
           "age": 33
         },
         "cam": {
@@ -1135,23 +1135,23 @@ const PREMIER_LEAGUE_DATA = {
           "value": 130000000,
           "nationality": "Almanya",
           "photo": null,
-          "rating": 86,
+          "rating": 89,
           "age": 22
         },
         "lw": {
           "name": "Codi Gacpo",
-          "value": 55000000,
+          "value": 60000000,
           "nationality": "Hollanda",
           "photo": null,
-          "rating": 83,
+          "rating": 84,
           "age": 26
         },
         "st": {
           "name": "Alexanderr Issak",
-          "value": 120000000,
+          "value": 85000000,
           "nationality": "İsveç",
           "photo": null,
-          "rating": 86,
+          "rating": 88,
           "age": 25
         }
       }
@@ -1163,10 +1163,10 @@ const PREMIER_LEAGUE_DATA = {
       "xi": {
         "gk": {
           "name": "Gianluigy Donarumma",
-          "value": 30000000,
+          "value": 45000000,
           "nationality": "İtalya",
           "photo": null,
-          "rating": 88,
+          "rating": 89,
           "age": 26
         },
         "rb": {
@@ -1187,10 +1187,10 @@ const PREMIER_LEAGUE_DATA = {
         },
         "cb2": {
           "name": "Josco Gvardioll",
-          "value": 75000000,
+          "value": 70000000,
           "nationality": "Hırvatistan",
           "photo": null,
-          "rating": 85,
+          "rating": 84,
           "age": 24
         },
         "lb": {
@@ -1203,10 +1203,10 @@ const PREMIER_LEAGUE_DATA = {
         },
         "dm1": {
           "name": "Rodry",
-          "value": 110000000,
+          "value": 55000000,
           "nationality": "İspanya",
           "photo": null,
-          "rating": 89,
+          "rating": 90,
           "age": 29
         },
         "dm2": {
@@ -1227,15 +1227,15 @@ const PREMIER_LEAGUE_DATA = {
         },
         "cam": {
           "name": "Phil Fodenn",
-          "value": 90000000,
+          "value": 70000000,
           "nationality": "İngiltere",
           "photo": null,
-          "rating": 86,
+          "rating": 85,
           "age": 25
         },
         "lw": {
           "name": "Rayann Cherky",
-          "value": 40000000,
+          "value": 90000000,
           "nationality": "Fransa",
           "photo": null,
           "rating": 80,
@@ -1243,10 +1243,10 @@ const PREMIER_LEAGUE_DATA = {
         },
         "st": {
           "name": "Erling Haalland",
-          "value": 180000000,
+          "value": 220000000,
           "nationality": "Norveç",
           "photo": null,
-          "rating": 91,
+          "rating": 90,
           "age": 25
         }
       }
@@ -1317,7 +1317,7 @@ const PREMIER_LEAGUE_DATA = {
           "value": 65000000,
           "nationality": "Kamerun",
           "photo": null,
-          "rating": 82,
+          "rating": 85,
           "age": 26
         },
         "cam": {
@@ -1325,7 +1325,7 @@ const PREMIER_LEAGUE_DATA = {
           "value": 55000000,
           "nationality": "Portekiz",
           "photo": null,
-          "rating": 86,
+          "rating": 87,
           "age": 31
         },
         "lw": {
@@ -1333,7 +1333,7 @@ const PREMIER_LEAGUE_DATA = {
           "value": 60000000,
           "nationality": "Brezilya",
           "photo": null,
-          "rating": 81,
+          "rating": 83,
           "age": 26
         },
         "st": {
@@ -1401,10 +1401,10 @@ const PREMIER_LEAGUE_DATA = {
         },
         "dm2": {
           "name": "Sandroh Tonaly",
-          "value": 55000000,
+          "value": 80000000,
           "nationality": "İtalya",
           "photo": null,
-          "rating": 82,
+          "rating": 86,
           "age": 25
         },
         "rw": {
@@ -1428,7 +1428,7 @@ const PREMIER_LEAGUE_DATA = {
           "value": 65000000,
           "nationality": "İngiltere",
           "photo": null,
-          "rating": 82,
+          "rating": 83,
           "age": 24
         },
         "st": {
@@ -1467,7 +1467,7 @@ const PREMIER_LEAGUE_DATA = {
           "value": 45000000,
           "nationality": "Brezilya",
           "photo": null,
-          "rating": 80,
+          "rating": 83,
           "age": 23
         },
         "cb2": {
@@ -1512,10 +1512,10 @@ const PREMIER_LEAGUE_DATA = {
         },
         "cam": {
           "name": "Morgann Gibs-White",
-          "value": 60000000,
+          "value": 70000000,
           "nationality": "İngiltere",
           "photo": null,
-          "rating": 81,
+          "rating": 82,
           "age": 25
         },
         "lw": {
@@ -1649,7 +1649,7 @@ const PREMIER_LEAGUE_DATA = {
           "value": 45000000,
           "nationality": "İspanya",
           "photo": null,
-          "rating": 81,
+          "rating": 82,
           "age": 26
         },
         "cb1": {
@@ -1665,7 +1665,7 @@ const PREMIER_LEAGUE_DATA = {
           "value": 55000000,
           "nationality": "Hollanda",
           "photo": null,
-          "rating": 81,
+          "rating": 82,
           "age": 24
         },
         "lb": {
@@ -1705,7 +1705,7 @@ const PREMIER_LEAGUE_DATA = {
           "value": 40000000,
           "nationality": "İngiltere",
           "photo": null,
-          "rating": 81,
+          "rating": 84,
           "age": 29
         },
         "lw": {
@@ -1713,7 +1713,7 @@ const PREMIER_LEAGUE_DATA = {
           "value": 60000000,
           "nationality": "Hollanda",
           "photo": null,
-          "rating": 81,
+          "rating": 84,
           "age": 22
         },
         "st": {

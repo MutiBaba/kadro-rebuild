@@ -35,12 +35,13 @@ let isPublicRoom = false;
 // Açık lobi listesinden katılma isteği uçuştayken ikinci bir tıklamayı engeller.
 let lobbyJoinInFlight = false;
 let myTeamClubId = null;
-let myName = "Oyuncu";
+let myName = t("mp.defaultName");
 let lobbyPlayersRef = null;
 let lobbyStatusListenerOff = null;
 let gameStateListenerOff = null;
 let actionsListenerOff = null;
 let lastAppliedAt = 0;
+let lastLobbyRender = null; // dil değişince aynı lobi görünümünü yeniden çizmek için
 let mpTransferSnapshot = null; // { messages, botsAccepted, botsTotal } — host yayınlar, uzak istemci okur
 
 const MP = {
@@ -101,11 +102,7 @@ function applyRemoteState(data) {
   // açılmadığı için pendingOffers her katılımcıda boş kalır ve misafirde undefined gelirdi.
   for (const p of participants) p.pendingOffers = p.pendingOffers || [];
   human = participants.find(p => p.clubId === myTeamClubId) || participants[0];
-  const draftTitleTeamsEl = document.getElementById("draftTitleTeams");
-  if (draftTitleTeamsEl) {
-    const opponentLabel = participants.filter(p => p !== human).map(p => p.name).join(" & ");
-    draftTitleTeamsEl.textContent = `${human.name} vs ${opponentLabel}`;
-  }
+  renderMatchupTitle();
   slotIndex = data.slotIndex;
   currentSeason = data.currentSeason;
   usedWorldNames = new Set(data.usedWorldNames || []);
@@ -307,28 +304,29 @@ function randomRoomCode() {
 }
 
 function renderLobbyChoice() {
+  lastLobbyRender = renderLobbyChoice;
   lobbyContent.innerHTML = `
-    <h1>Arkadaşlarla <span class="accent">Oyna</span></h1>
-    <p class="subtitle">Herkese açık bir lobi kur ve listeden gelenleri bekle, özel bir lobi kurup kodunu sadece arkadaşlarına gönder, ya da açık lobi listesinden birine katıl.</p>
+    <h1>${t("mp.lobbyTitle")}</h1>
+    <p class="subtitle">${t("mp.lobbyIntro")}</p>
     <div class="setup-row">
-      <label>Adın</label>
-      <input type="text" id="lobbyNameInput" class="lobby-input" placeholder="Adını yaz" maxlength="16" value="${myName}">
+      <label>${t("mp.yourName")}</label>
+      <input type="text" id="lobbyNameInput" class="lobby-input" placeholder="${t("mp.yourNamePlaceholder")}" maxlength="16" value="${myName}">
     </div>
-    <button id="lobbyPublicCreateBtn" class="primary-btn">🌍 Lobi Kur</button>
-    <button id="lobbyCreateBtn" class="primary-btn secondary-btn-style">🔒 Özel Lobi Kur</button>
-    <button id="lobbyBrowseBtn" class="primary-btn secondary-btn-style">📋 Lobiye Katıl</button>
+    <button id="lobbyPublicCreateBtn" class="primary-btn">${t("mp.createPublic")}</button>
+    <button id="lobbyCreateBtn" class="primary-btn secondary-btn-style">${t("mp.createPrivate")}</button>
+    <button id="lobbyBrowseBtn" class="primary-btn secondary-btn-style">${t("mp.browse")}</button>
     <div class="setup-row">
-      <label>Kod ile katıl (özel lobi)</label>
-      <input type="text" id="lobbyCodeInput" class="lobby-input" placeholder="ör. AB3XZ" maxlength="5" style="text-transform:uppercase">
+      <label>${t("mp.joinByCodeLabel")}</label>
+      <input type="text" id="lobbyCodeInput" class="lobby-input" placeholder="${t("mp.codePlaceholder")}" maxlength="5" style="text-transform:uppercase">
     </div>
-    <button id="lobbyJoinBtn" class="primary-btn secondary-btn-style">🔑 Kodla Katıl</button>
+    <button id="lobbyJoinBtn" class="primary-btn secondary-btn-style">${t("mp.joinByCode")}</button>
     <p class="hint" id="lobbyErrorHint"></p>
   `;
   document.getElementById("lobbyPublicCreateBtn").addEventListener("click", () => renderLobbyCreateConfig(true));
   document.getElementById("lobbyCreateBtn").addEventListener("click", () => renderLobbyCreateConfig(false));
   document.getElementById("lobbyBrowseBtn").addEventListener("click", renderPublicLobbyList);
   document.getElementById("lobbyJoinBtn").addEventListener("click", () => {
-    myName = document.getElementById("lobbyNameInput").value.trim() || "Oyuncu";
+    myName = document.getElementById("lobbyNameInput").value.trim() || t("mp.defaultName");
     const code = document.getElementById("lobbyCodeInput").value.trim().toUpperCase();
     if (!code) return;
     joinRoom(code);
@@ -339,17 +337,18 @@ function renderLobbyChoice() {
 // kalır). Sadece açık, başlamamış ve dolmamış odalar listelenir; özel lobiler bu dizine hiç
 // yazılmadığı için burada asla görünmez.
 function renderPublicLobbyList() {
-  myName = document.getElementById("lobbyNameInput")?.value.trim() || myName || "Oyuncu";
+  lastLobbyRender = renderPublicLobbyList;
+  myName = document.getElementById("lobbyNameInput")?.value.trim() || myName || t("mp.defaultName");
   lobbyContent.innerHTML = `
-    <h1>Açık <span class="accent">Lobiler</span></h1>
-    <p class="subtitle">Listeden bir lobiye kodsuz katılabilirsin.</p>
-    <div class="lobby-player-list" id="publicRoomList"><p class="hint">Yükleniyor…</p></div>
-    <button id="publicRefreshBtn" class="primary-btn secondary-btn-style">🔄 Yenile</button>
+    <h1>${t("mp.publicListTitle")}</h1>
+    <p class="subtitle">${t("mp.publicListIntro")}</p>
+    <div class="lobby-player-list" id="publicRoomList"><p class="hint">${t("mp.loading")}</p></div>
+    <button id="publicRefreshBtn" class="primary-btn secondary-btn-style">${t("mp.refresh")}</button>
     <div class="setup-row">
-      <label>Kod ile katıl (özel lobi)</label>
-      <input type="text" id="lobbyCodeInput" class="lobby-input" placeholder="ör. AB3XZ" maxlength="5" style="text-transform:uppercase">
+      <label>${t("mp.joinByCodeLabel")}</label>
+      <input type="text" id="lobbyCodeInput" class="lobby-input" placeholder="${t("mp.codePlaceholder")}" maxlength="5" style="text-transform:uppercase">
     </div>
-    <button id="lobbyJoinBtn" class="primary-btn secondary-btn-style">🔑 Kodla Katıl</button>
+    <button id="lobbyJoinBtn" class="primary-btn secondary-btn-style">${t("mp.joinByCode")}</button>
     <p class="hint" id="lobbyErrorHint"></p>
   `;
   document.getElementById("publicRefreshBtn").addEventListener("click", loadPublicRooms);
@@ -370,12 +369,12 @@ function loadPublicRooms() {
       .filter(r => (r.status || "lobby") === "lobby" && (r.players || 1) < (r.maxPlayers || 2))
       .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
     if (rooms.length === 0) {
-      listEl.innerHTML = `<p class="hint">Şu anda açık lobi yok. Kendin bir tane kurabilirsin.</p>`;
+      listEl.innerHTML = `<p class="hint">${t("mp.noPublicRooms")}</p>`;
       return;
     }
     listEl.innerHTML = rooms.map(r => `<div class="lobby-player-row public-room-row">
-      <span>👑 ${r.hostName} — <b>${r.players || 1}/${r.maxPlayers}</b> kişi${r.takenTeams ? ` · ${r.takenTeams}` : ""}</span>
-      <button class="option-btn public-room-join" data-code="${r.code}">Katıl</button>
+      <span>${t("mp.roomRow", { host: r.hostName, n: r.players || 1, max: r.maxPlayers })}${r.takenTeams ? ` · ${r.takenTeams}` : ""}</span>
+      <button class="option-btn public-room-join" data-code="${r.code}">${t("mp.join")}</button>
     </div>`).join("");
     listEl.querySelectorAll(".public-room-join").forEach(btn => {
       btn.addEventListener("click", () => {
@@ -394,34 +393,35 @@ function publicRoomIndexRef(code) {
 }
 
 function renderLobbyCreateConfig(isPublic) {
-  myName = document.getElementById("lobbyNameInput")?.value.trim() || myName || "Oyuncu";
+  lastLobbyRender = () => renderLobbyCreateConfig(isPublic);
+  myName = document.getElementById("lobbyNameInput")?.value.trim() || myName || t("mp.defaultName");
   lobbyContent.innerHTML = `
-    <h1>${isPublic ? "Açık" : "Özel"} Lobi <span class="accent">Kur</span></h1>
-    <p class="subtitle">${isPublic ? "Bu lobi herkese açık listede görünür, isteyen kodsuz katılabilir." : "Bu lobi listede görünmez; sadece kodunu verdiğin kişiler katılabilir."}</p>
+    <h1>${isPublic ? t("mp.createTitlePublic") : t("mp.createTitlePrivate")}</h1>
+    <p class="subtitle">${isPublic ? t("mp.createIntroPublic") : t("mp.createIntroPrivate")}</p>
     <div class="setup-row">
-      <label>Kaç kişi oynayacak?</label>
+      <label>${t("mp.sizeLabel")}</label>
       <div class="option-group" id="lobbySizeGroup">
-        <button class="option-btn active" data-size="2">2 Kişi</button>
-        <button class="option-btn" data-size="3">3 Kişi</button>
+        <button class="option-btn active" data-size="2">${t("mp.size2")}</button>
+        <button class="option-btn" data-size="3">${t("mp.size3")}</button>
       </div>
-      <p class="hint">2 kişilikte seçilmeyen 3. takımı bot yönetir. 3 kişilikte tüm takımlar gerçek oyunculara ait olmalı.</p>
+      <p class="hint">${t("mp.sizeHint")}</p>
     </div>
     <div class="setup-row">
-      <label>Oyun Modu</label>
+      <label>${t("mp.modeLabel")}</label>
       <div class="option-group" id="lobbyModeGroup">
-        <button class="option-btn active" data-mode="rebuild">🔁 Kadro Rebuild (€120M)</button>
-        <button class="option-btn" data-mode="empty">🌱 Sıfırdan Kadro (€250M)</button>
+        <button class="option-btn active" data-mode="rebuild">${t("mp.modeRebuild")}</button>
+        <button class="option-btn" data-mode="empty">${t("mp.modeEmpty")}</button>
       </div>
     </div>
     <div class="setup-row">
-      <label>Draft Modu</label>
+      <label>${t("mp.draftLabel")}</label>
       <div class="option-group" id="lobbyDraftGroup">
-        <button class="option-btn active" data-draft="off">Kapalı</button>
-        <button class="option-btn" data-draft="on">🎯 Draft Modu Açık</button>
+        <button class="option-btn active" data-draft="off">${t("setup.draftOff")}</button>
+        <button class="option-btn" data-draft="on">${t("setup.draftOn")}</button>
       </div>
-      <p class="hint">Her sezon sonunda 3 mevki draft'a çıkar; herkesin o mevkideki oyuncusu ortak havuza girer ve ters lig sırasıyla herkes bedelsiz bir rakip oyuncusu seçer. Ardından boşalan her mevkiye 5 adaydan birini imzalar, kadrondan istediğin bir oyuncuyu satıp yerine yine 5 adaydan birini alırsın.</p>
+      <p class="hint">${t("mp.draftHint")}</p>
     </div>
-    <button id="lobbyCreateConfirmBtn" class="primary-btn">Lobiyi Oluştur</button>
+    <button id="lobbyCreateConfirmBtn" class="primary-btn">${t("mp.createConfirm")}</button>
   `;
   let size = 2;
   let emptyStart = false;
@@ -497,10 +497,10 @@ function joinRoom(code) {
       // Listeden gelen katılım başarısızsa liste yeniden yüklenip güncel hale gelsin.
       if (document.getElementById("publicRoomList")) loadPublicRooms();
     };
-    if (!data) { fail("Bu kodda bir lobi bulunamadı."); return; }
-    if (data.status !== "lobby") { fail("Bu lobi zaten başlamış."); return; }
+    if (!data) { fail(t("mp.errNotFound")); return; }
+    if (data.status !== "lobby") { fail(t("mp.errStarted")); return; }
     const playerCount = Object.keys(data.players || {}).length;
-    if (playerCount >= data.maxPlayers) { fail("Lobi dolu."); return; }
+    if (playerCount >= data.maxPlayers) { fail(t("mp.errFull")); return; }
     roomCode = code;
     isHostFlag = data.hostId === myClientId;
     isPublicRoom = !!data.public;
@@ -525,6 +525,7 @@ function listenToLobby() {
 }
 
 function renderLobbyRoom(data) {
+  lastLobbyRender = () => renderLobbyRoom(data);
   const players = Object.entries(data.players || {}).map(([clientId, p]) => ({ clientId, ...p }));
   const takenTeams = new Set(players.map(p => p.team).filter(Boolean));
   const me = players.find(p => p.clientId === myClientId);
@@ -534,15 +535,15 @@ function renderLobbyRoom(data) {
     const disabled = takenBy && takenBy.clientId !== myClientId;
     const mine = takenBy && takenBy.clientId === myClientId;
     return `<button class="option-btn team-pick-btn${mine ? " active" : ""}" data-club="${club.id}" ${disabled ? "disabled" : ""}>
-      ${club.emoji} ${club.name}${takenBy ? ` — ${takenBy.name}${mine ? " (sen)" : ""}` : ""}
+      ${club.emoji} ${club.name}${takenBy ? ` — ${takenBy.name}${mine ? t("common.youLower") : ""}` : ""}
     </button>`;
   }).join("");
 
   const playerRows = players.map(p => {
     const club = MP_CLUBS.find(c => c.id === p.team);
     return `<div class="lobby-player-row">
-      <span>${p.clientId === data.hostId ? "👑 " : ""}${p.name}${p.clientId === myClientId ? " (sen)" : ""}</span>
-      <span class="lobby-player-team">${club ? club.emoji + " " + club.name : "Takım seçmedi…"}</span>
+      <span>${p.clientId === data.hostId ? "👑 " : ""}${p.name}${p.clientId === myClientId ? t("common.youLower") : ""}</span>
+      <span class="lobby-player-team">${club ? club.emoji + " " + club.name : t("mp.noTeamYet")}</span>
     </div>`;
   }).join("");
 
@@ -551,19 +552,26 @@ function renderLobbyRoom(data) {
   const canStart = isHostFlag && players.length === data.maxPlayers && readyCount === players.length && allDistinct;
 
   lobbyContent.innerHTML = `
-    <h1>Lobi <span class="accent">${roomCode}</span></h1>
-    <p class="subtitle">Bu kodu arkadaşlarına gönder: <b>${roomCode}</b> — (${players.length}/${data.maxPlayers} kişi) · ${data.emptyStart ? "🌱 Sıfırdan Kadro (€250M)" : "🔁 Kadro Rebuild (€120M)"}${data.draftMode ? " · 🎯 Draft Modu" : ""} · ${data.public ? "🌍 Açık Lobi" : "🔒 Özel Lobi"}</p>
+    <h1>${t("mp.roomTitle", { code: roomCode })}</h1>
+    <p class="subtitle">${t("mp.roomSubtitle", {
+      code: roomCode,
+      n: players.length,
+      max: data.maxPlayers,
+      mode: data.emptyStart ? t("mp.modeEmpty") : t("mp.modeRebuild"),
+      draft: data.draftMode ? t("mp.draftTag") : "",
+      visibility: data.public ? t("mp.publicTag") : t("mp.privateTag")
+    })}</p>
     <div class="setup-row">
-      <label>Takımını Seç</label>
+      <label>${t("mp.pickTeam")}</label>
       <div class="option-group lobby-team-group">${teamButtons}</div>
     </div>
     <div class="setup-row">
-      <label>Oyuncular</label>
+      <label>${t("mp.playersLabel")}</label>
       <div class="lobby-player-list">${playerRows}</div>
     </div>
     ${isHostFlag
-      ? `<button id="lobbyStartBtn" class="primary-btn" ${canStart ? "" : "disabled"}>${canStart ? "Oyunu Başlat" : "Herkes takım seçsin…"}</button>`
-      : `<p class="hint">Host'un oyunu başlatması bekleniyor…</p>`}
+      ? `<button id="lobbyStartBtn" class="primary-btn" ${canStart ? "" : "disabled"}>${canStart ? t("mp.startGame") : t("mp.waitAllPick")}</button>`
+      : `<p class="hint">${t("mp.waitHostStart")}</p>`}
   `;
 
   lobbyContent.querySelectorAll(".team-pick-btn").forEach(btn => {
@@ -621,6 +629,15 @@ function launchMultiplayerGame(data) {
     startRemoteGameListener();
     // İlk state gelene kadar basit bir bekleme ekranı göster
     rebuildScreen.classList.remove("hidden");
-    progressLine.textContent = "Oyun başlıyor…";
+    progressLine.textContent = t("mp.starting");
   }
 }
+
+/* ---------------- I18N ---------------- */
+// Lobi ekranları tamamen JS ile üretiliyor; dil değiştiğinde en son çizilen lobi görünümü
+// aynı verilerle yeniden çizilir (oyun ekranlarını game.js'teki rerenderForLanguage yeniler).
+onLangChange(() => {
+  if (lastLobbyRender && lobbyScreenEl && !lobbyScreenEl.classList.contains("hidden")) {
+    lastLobbyRender();
+  }
+});

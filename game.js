@@ -1,17 +1,18 @@
 const SLOTS = ["gk", "rb", "cb1", "cb2", "lb", "dm1", "dm2", "rw", "cam", "lw", "st"];
-const SLOT_LABELS = {
-  gk: "Kaleci", rb: "Sağ Bek", cb1: "Stoper", cb2: "Stoper", lb: "Sol Bek",
-  dm1: "Defansif Orta Saha", dm2: "Defansif Orta Saha", rw: "Sağ Kanat",
-  cam: "Ofansif Orta Saha (10)", lw: "Sol Kanat", st: "Forvet"
-};
-const SLOT_SHORT = {
-  gk: "KL", rb: "SĞB", cb1: "STP", cb2: "STP", lb: "SLB",
-  dm1: "DOS", dm2: "DOS", rw: "SĞK", cam: "10", lw: "SLK", st: "FRV"
-};
+// Slot anahtarları (gk, cb1, dm2 …) MANTIKSAL kimliklerdir ve asla çevrilmez; sadece
+// EKRANDA GÖSTERİLEN etiketleri i18n'den gelir. SLOT_LABELS/SLOT_SHORT birer Proxy'dir:
+// `SLOT_LABELS[slot]` her okunduğunda AKTİF dildeki etiketi döndürür, böylece dil
+// değiştiğinde eski bir kopya ekranda kalmaz.
 const SLOT_CATEGORY = {
   gk: "gk", rb: "rb", cb1: "cb", cb2: "cb", lb: "lb",
   dm1: "dm", dm2: "dm", rw: "rw", cam: "cam", lw: "lw", st: "st"
 };
+const SLOT_LABELS = new Proxy({}, {
+  get: (_, slot) => (SLOT_CATEGORY[slot] ? t("slot." + SLOT_CATEGORY[slot]) : "")
+});
+const SLOT_SHORT = new Proxy({}, {
+  get: (_, slot) => (SLOT_CATEGORY[slot] ? t("slotShort." + SLOT_CATEGORY[slot]) : "")
+});
 const PITCH_COORDS = {
   st:  { top: "8%",  left: "50%" },
   lw:  { top: "26%", left: "18%" },
@@ -74,7 +75,7 @@ function pickRandomFantasyName(takenNames) {
   const pool = FANTASY_CLUB_NAMES.filter(n => !takenNames.has(n));
   const name = pool.length > 0
     ? pool[Math.floor(Math.random() * pool.length)]
-    : `Rastgele Takım #${Math.floor(100 + Math.random() * 900)}`;
+    : t("player.randomTeam", { n: Math.floor(100 + Math.random() * 900) });
   takenNames.add(name);
   return name;
 }
@@ -253,19 +254,20 @@ const auctionBidders = document.getElementById("auctionBidders");
 const auctionCurrentBid = document.getElementById("auctionCurrentBid");
 const raiseBidBtn = document.getElementById("raiseBidBtn");
 const concedeBidBtn = document.getElementById("concedeBidBtn");
-const transferSeasonNum = document.getElementById("transferSeasonNum");
 const transferOffers = document.getElementById("transferOffers");
 const botTransferLog = document.getElementById("botTransferLog");
 const transferContinueRow = document.getElementById("transferContinueRow");
 const continueSeasonBtn = document.getElementById("continueSeasonBtn");
 const endCareerBtn = document.getElementById("endCareerBtn");
 const seasonTableScreen = document.getElementById("seasonTableScreen");
-const tableSeasonNum = document.getElementById("tableSeasonNum");
+const seasonTableTitle = document.getElementById("seasonTableTitle");
+const transferScreenTitle = document.getElementById("transferScreenTitle");
+const transferIntro = document.getElementById("transferIntro");
+const draftScreenTitle = document.getElementById("draftScreenTitle");
 const leagueTableBody = document.getElementById("leagueTableBody");
 const scorerList = document.getElementById("scorerList");
 const seasonTableContinueBtn = document.getElementById("seasonTableContinueBtn");
 const draftScreen = document.getElementById("draftScreen");
-const draftSeasonNum = document.getElementById("draftSeasonNum");
 const draftBudgetPill = document.getElementById("draftBudgetPill");
 const draftSlotsRow = document.getElementById("draftSlotsRow");
 const draftPickPanel = document.getElementById("draftPickPanel");
@@ -358,7 +360,7 @@ function renderLeaguePickGrid() {
     <button class="team-grid-btn league-grid-btn${l.id === activeLeagueId ? " active" : ""}" data-league="${l.id}">
       <span class="league-grid-flag">${l.flag}</span>
       <span>${l.name}</span>
-      <span class="team-grid-rating">${l.data.clubs.length} takım</span>
+      <span class="team-grid-rating">${t("common.teamsCount", { n: l.data.clubs.length })}</span>
     </button>
   `).join("");
   grid.querySelectorAll(".league-grid-btn").forEach(btn => {
@@ -379,11 +381,11 @@ function renderLeaguePickGrid() {
   const hint = document.getElementById("leaguePickHint");
   if (hint) {
     hint.textContent = isSuperLig()
-      ? "Süper Lig: gerçek kadrolar. Üç büyüklerden birini seçersen 3 takımlı klasik format."
-      : `${activeLeague().name}: kadro verileri şu an placeholder. Format her zaman 4 takımlı (sen + 3 bot).`;
+      ? t("setup.leagueHintSuperlig")
+      : t("setup.leagueHintOther", { league: activeLeague().name });
   }
   const teamLabel = document.getElementById("teamPickLabelHint");
-  if (teamLabel) teamLabel.textContent = `(${activeLeague().name}'deki ${leagueClubs().length} takımdan biri)`;
+  if (teamLabel) teamLabel.textContent = t("setup.teamLabelHint", { league: activeLeague().name, n: leagueClubs().length });
 }
 
 function renderTeamPickGrid() {
@@ -437,12 +439,12 @@ function renderOpponentPickGrid() {
     });
   });
   const label = document.getElementById("opponentPickLabel");
-  if (label) label.textContent = `Rakiplerini Seç (${botSetupOpponentIds.length}/${maxCount})`;
+  if (label) label.textContent = t("setup.opponentsLabelCount", { sel: botSetupOpponentIds.length, max: maxCount });
   const hint = document.getElementById("opponentPickHint");
   if (hint) {
     hint.textContent = botSetupOpponentIds.length < maxCount
-      ? `${maxCount - botSetupOpponentIds.length} rakip daha seç.`
-      : "Rakiplerin hazır — istersen birini kaldırıp başkasını seçebilirsin.";
+      ? t("setup.opponentsHintMore", { n: maxCount - botSetupOpponentIds.length })
+      : t("setup.opponentsHintReady");
   }
 }
 
@@ -458,18 +460,17 @@ function renderBotSetupText() {
     const otherNames = botSetupOpponentIds.map(id => findClub(id).name);
     const opponentText = complete
       ? (isFourTeam
-          ? `karşında <b>${otherNames[0]}</b>, <b>${otherNames[1]}</b> ve <b>${otherNames[2]}</b> botları var (4 takımlı format)`
-          : `karşında <b>${otherNames[0]}</b> ve <b>${otherNames[1]}</b> botları var`)
-      : `henüz ${maxCount - botSetupOpponentIds.length} rakip daha seçmen gerekiyor`;
-    subtitleEl.innerHTML = `
-      Sen ${club.name}'i yönetiyorsun, ${opponentText}.
-      Herkesin ${botSetupEmptyStart ? "250M€" : "120M€"} bütçesi var${botSetupEmptyStart ? " ve kadronu sıfırdan kuruyorsun" : " ve kendi gerçek 11'i var"}.
-      Mevki mevki oyuncunu <b>tut</b> ya da <b>sat</b> (satış kesindir, vazgeçemezsin) — sana ve botlara her turda
-      <b>${isFourTeam ? "aynı 4 alternatif" : "aynı 3 alternatif"}</b> sunulur. Aynı oyuncuyu birden fazla taraf isterse
-      <b>açık artırma</b> başlar; kaybedersen kalan adaylardan birini almak zorundasın. Amaç: EA FC ratingine göre
-      en güçlü 11'i kurmak. Her sezon sonunda büyük Avrupa kulüpleri her takımdan <b>3 oyuncuya</b>, yaşına ve
-      potansiyeline göre teklif gönderir. Kariyer <b>${botSetupSeasonCount} sezon</b> sürer.
-    `;
+          ? t("setup.subtitleOpp3", { a: otherNames[0], b: otherNames[1], c: otherNames[2] })
+          : t("setup.subtitleOpp2", { a: otherNames[0], b: otherNames[1] }))
+      : t("setup.subtitleOppIncomplete", { n: maxCount - botSetupOpponentIds.length });
+    subtitleEl.innerHTML = t("setup.subtitle", {
+      club: club.name,
+      opponents: opponentText,
+      budget: formatValue(botSetupEmptyStart ? EMPTY_START_BUDGET : START_BUDGET),
+      squadNote: botSetupEmptyStart ? t("setup.subtitleSquadEmpty") : t("setup.subtitleSquadReal"),
+      candidateCount: isFourTeam ? t("setup.candidates4") : t("setup.candidates3"),
+      seasons: botSetupSeasonCount
+    });
   }
   const budgetEl = document.getElementById("setupBudgetAmount");
   if (budgetEl) budgetEl.textContent = formatValue(botSetupEmptyStart ? EMPTY_START_BUDGET : START_BUDGET);
@@ -482,13 +483,16 @@ function renderBotSetupText() {
   }
   const modeHintEl = document.getElementById("botModeHint");
   if (modeHintEl) {
-    modeHintEl.textContent = botSetupEmptyStart
-      ? "Herkes boş bir kadroyla başlar, sezon 1'de tüm 11 mevkiyi sıfırdan doldurursun. Botlar da rastgele bir isimle aynı şartlarda yarışır."
-      : "Mevcut kadronla başlarsın, mevki mevki tut/sat kararı verirsin.";
+    modeHintEl.textContent = botSetupEmptyStart ? t("setup.modeHintEmpty") : t("setup.modeHintRebuild");
   }
+  document.querySelectorAll("#botSeasonCountGroup .option-btn").forEach(b => {
+    b.textContent = t("setup.seasons", { n: b.dataset.seasons });
+  });
   document.getElementById("teamNameRow")?.classList.toggle("hidden", !botSetupEmptyStart);
   startBtn.disabled = !complete;
-  startBtn.textContent = complete ? "Rebuild'e Başla" : `Önce ${maxCount - botSetupOpponentIds.length} rakip seç`;
+  startBtn.textContent = complete
+    ? t("setup.start")
+    : t("setup.startNeedMore", { n: maxCount - botSetupOpponentIds.length });
 }
 
 document.getElementById("botModePickGroup")?.addEventListener("click", (e) => {
@@ -591,14 +595,26 @@ function prospectiveBudget(participant, slot) {
   return participant.budget + (current.vacant ? 0 : current.value);
 }
 
-function logMessage(msg) {
-  carryLog.push(msg);
+// Günlük (log) satırları HAZIR METİN olarak değil, { k: anahtar, v: değişkenler } olarak
+// saklanır. Böylece dil değiştiğinde geçmiş satırlar da yeni dilde görünür ve çok oyunculuda
+// host'un yayınladığı log, her istemcide O İSTEMCİNİN dilinde render edilir.
+function logMessage(key, vars) {
+  carryLog.push({ k: key, v: vars || {} });
+}
+function renderLogEntry(e) {
+  if (typeof e === "string") return e; // eski/serbest metin satırları
+  const vars = { ...(e.v || {}) };
+  // Mevki etiketi log'a HAZIR METİN olarak değil, slot anahtarı (posSlot) olarak yazılır;
+  // böylece dil değiştiğinde geçmiş satırlardaki mevki adı da doğru dilde görünür.
+  if (vars.posSlot) vars.pos = SLOT_LABELS[vars.posSlot];
+  if (vars.slotKeys) vars.slots = String(vars.slotKeys).split(",").map(s => SLOT_LABELS[s]).join(", ");
+  return t(e.k, vars);
 }
 
 /* ---------------- SETUP ---------------- */
 
 function makeVacantSlot() {
-  return { name: "Boş Mevki", value: 0, rating: 0, age: 0, nationality: "—", club: "", origin: "vacant", vacant: true };
+  return { name: t("player.vacant"), value: 0, rating: 0, age: 0, nationality: "—", club: "", origin: "vacant", vacant: true };
 }
 
 function startRebuild(customDefs, myClubId, emptyStart, customTeamName, seasonCount, draftMode) {
@@ -665,15 +681,19 @@ function startRebuild(customDefs, myClubId, emptyStart, customTeamName, seasonCo
   draftScreen.classList.add("hidden");
   rebuildScreen.classList.remove("hidden");
 
-  const draftTitleTeamsEl = document.getElementById("draftTitleTeams");
-  if (draftTitleTeamsEl) {
-    const opponentLabel = participants.filter(p => p !== human).map(p => p.name).join(" & ");
-    draftTitleTeamsEl.textContent = `${human.name} vs ${opponentLabel}`;
-  }
+  renderMatchupTitle();
 
   renderPitch();
   renderBotStatus();
   startSlotRound();
+}
+
+// Üst başlıktaki "Sen vs Rakipler" etiketi (hem tek hem çok oyunculu akışta kullanılır).
+function renderMatchupTitle() {
+  const el = document.getElementById("draftTitleTeams");
+  if (!el || !human) return;
+  const opponentLabel = participants.filter(p => p !== human).map(p => p.name).join(" & ");
+  el.textContent = `${human.name} vs ${opponentLabel}`;
 }
 
 /* ---------------- ROUND FLOW ---------------- */
@@ -716,11 +736,11 @@ function renderWaitingForOthers() {
   chooseView.classList.add("hidden");
   auctionView.classList.add("hidden");
   renderRoundLog();
-  progressLine.textContent = `Sezon ${currentSeason} · Mevki ${slotIndex + 1} / ${SLOTS.length}`;
-  slotLabel.textContent = "Diğer oyuncular bekleniyor…";
+  progressLine.textContent = t("squad.progress", { season: currentSeason, i: slotIndex + 1, total: SLOTS.length });
+  slotLabel.textContent = t("decide.waitTitle");
   currentPlayerCard.innerHTML = `
-    <div class="cp-name">⏳ Kararını verdin</div>
-    <div class="cp-meta">Diğer oyuncuların ve botların bu mevki için kararını vermesi bekleniyor…</div>
+    <div class="cp-name">${t("decide.waitCardTitle")}</div>
+    <div class="cp-meta">${t("decide.waitCardBody")}</div>
   `;
   document.querySelector("#decideView .decision-buttons")?.classList.add("hidden");
   updateBudgetPill();
@@ -729,7 +749,7 @@ function renderWaitingForOthers() {
 }
 
 function updateBudgetPill() {
-  budgetPill.textContent = "Bütçe: " + formatValue(human.budget);
+  budgetPill.textContent = t("common.budget", { v: formatValue(human.budget) });
 }
 
 function renderRoundLog() {
@@ -739,7 +759,7 @@ function renderRoundLog() {
     return;
   }
   roundLogEl.classList.remove("hidden");
-  roundLogEl.innerHTML = carryLog.map(m => `<div>${m}</div>`).join("");
+  roundLogEl.innerHTML = carryLog.map(m => `<div>${renderLogEntry(m)}</div>`).join("");
   carryLog = [];
 }
 
@@ -753,13 +773,13 @@ function renderDecideView() {
 
   const slot = round.slot;
   const player = human.squad[slot];
-  progressLine.textContent = `Sezon ${currentSeason} · Mevki ${slotIndex + 1} / ${SLOTS.length}`;
+  progressLine.textContent = t("squad.progress", { season: currentSeason, i: slotIndex + 1, total: SLOTS.length });
   slotLabel.textContent = SLOT_LABELS[slot];
   currentPlayerCard.innerHTML = `
     <div class="rating-badge">${player.rating}</div>
     <div class="player-photo big">${pixelAvatarSVG(player.name)}</div>
     <div class="cp-name">${player.name}</div>
-    <div class="cp-meta">${player.age} yaş · ${player.nationality} · ${player.club}</div>
+    <div class="cp-meta">${t("common.age", { n: player.age })} · ${player.nationality} · ${player.club}</div>
     <div class="cp-value">${formatValue(player.value)}</div>
   `;
   updateBudgetPill();
@@ -803,7 +823,7 @@ function onSell() {
   const slot = round.slot;
   const player = human.squad[slot];
   const budget = prospectiveBudget(human, slot);
-  const banner = `${player.name} satılırsa (+${formatValue(player.value)}) bütçen ${formatValue(budget)} olur. Kimi hedefleyeceksin? (Satış kesindir, vazgeçemezsin)`;
+  const banner = t("decide.sellBanner", { name: player.name, gain: formatValue(player.value), budget: formatValue(budget) });
   localChoicePendingKey = currentRoundKey();
   renderCandidateSelection(slot, budget, banner, round.sharedCandidates, (cand) => {
     submitLocalDecision({ sold: true, target: cand });
@@ -814,9 +834,9 @@ function renderForcedFill() {
   const slot = round.slot;
   const budget = prospectiveBudget(human, slot);
   const banner = isEmptyStartMode && currentSeason === 1
-    ? `${SLOT_LABELS[slot]} mevkisi için kadronu sıfırdan kuruyorsun — birini transfer etmen gerekiyor. Bütçen: ${formatValue(budget)}`
-    : `${SLOT_LABELS[slot]} mevkin sezon başında boş kaldı (oyuncu transfer oldu) — birini transfer etmen gerekiyor. Bütçen: ${formatValue(budget)}`;
-  progressLine.textContent = `Sezon ${currentSeason} · Mevki ${slotIndex + 1} / ${SLOTS.length}`;
+    ? t("decide.forcedEmpty", { pos: SLOT_LABELS[slot], budget: formatValue(budget) })
+    : t("decide.forcedVacant", { pos: SLOT_LABELS[slot], budget: formatValue(budget) });
+  progressLine.textContent = t("squad.progress", { season: currentSeason, i: slotIndex + 1, total: SLOTS.length });
   updateBudgetPill();
   localChoicePendingKey = currentRoundKey();
   renderCandidateSelection(slot, budget, banner, round.sharedCandidates, (cand) => {
@@ -948,20 +968,21 @@ function renderCandidateSelection(slot, budget, bannerText, candidates, onPick) 
     const canAfford = cand.value <= budget;
     const card = document.createElement("div");
     card.className = "candidate-card" + (canAfford ? "" : " disabled");
-    let tierLabel = "";
-    if (cand === freeAgentFallback) tierLabel = "Bütçene Uygun";
-    else if (cand.value === 0) tierLabel = "Bedava Transfer";
-    else if (cand.rating >= 80) tierLabel = "Yıldız Transfer";
-    else if (participants.length >= 4 && cand.rating < 76) tierLabel = "Ucuz Transfer";
-    else tierLabel = "Orta Segment";
+    // tier KİMLİĞİ (free/star/cheap/mid) mantıksaldır; sadece etiketi çevrilir.
+    let tierKey = "mid";
+    if (cand === freeAgentFallback) tierKey = "budgetFit";
+    else if (cand.value === 0) tierKey = "free";
+    else if (cand.rating >= 80) tierKey = "star";
+    else if (participants.length >= 4 && cand.rating < 76) tierKey = "cheap";
+    const tierLabel = t("tier." + tierKey);
     card.innerHTML = `
-      ${tierLabel ? `<div class="tier-tag">${tierLabel}</div>` : ""}
+      <div class="tier-tag">${tierLabel}</div>
       <div class="rating-badge small">${cand.rating}</div>
       <div class="player-photo">${pixelAvatarSVG(cand.name)}</div>
       <div class="candidate-club">${cand.club}</div>
       <div class="candidate-name">${cand.name}</div>
-      <div class="candidate-meta">${cand.age} yaş · ${cand.nationality}</div>
-      <div class="candidate-value">${cand.value === 0 ? "Bedava" : formatValue(cand.value)}${cand.value > budget ? " ⚠️" : ""}</div>
+      <div class="candidate-meta">${t("common.age", { n: cand.age })} · ${cand.nationality}</div>
+      <div class="candidate-value">${cand.value === 0 ? t("common.free") : formatValue(cand.value)}${cand.value > budget ? " ⚠️" : ""}</div>
     `;
     if (canAfford) {
       card.addEventListener("click", () => onPick(cand));
@@ -979,8 +1000,8 @@ function renderCandidateSelection(slot, budget, bannerText, candidates, onPick) 
 function makeFreeAgent(category, maxValue) {
   const value = maxValue !== undefined ? Math.max(0, Math.min(1_500_000, maxValue)) : 1_500_000;
   return {
-    name: `Serbest Oyuncu #${Math.floor(1000 + Math.random() * 9000)}`,
-    club: "Serbest",
+    name: t("player.freeAgentName", { n: Math.floor(1000 + Math.random() * 9000) }),
+    club: t("player.freeAgentClub"),
     nationality: "—",
     value,
     rating: 64 + Math.floor(Math.random() * 8),
@@ -1145,9 +1166,11 @@ function renderAuctionLossPicker() {
     // Aşırı nadir durum: ilk sunulan 3 adayın hepsi diğerlerine gitti. Sana özel tek bir alternatif bulunur.
     const fallback = pickFallback(human, slot);
     candidates = fallback ? [fallback] : [];
-    banner = "Açık artırmayı kaybettin ve ilk sunulan adayların hepsi elden gitti — sana özel bulunan alternatifi transfer etmen gerekiyor:";
+    banner = t("auction.lostPickAll");
   } else {
-    banner = `Açık artırmayı kaybettin! Sana ilk sunulan 3 adaydan kalan ${candidates.length === 1 ? "tek adayı" : "2 adaydan birini"} transfer etmen gerekiyor:`;
+    banner = candidates.length === 1
+      ? t("auction.lostPickOne")
+      : t("auction.lostPickMany", { n: candidates.length });
   }
 
   renderCandidateSelection(slot, budget, banner, candidates, (cand) => {
@@ -1170,7 +1193,12 @@ function resolveConflict(group) {
     const winner = bidders[0];
     const runnerUp = bidders[1];
     const finalPrice = Math.max(candidate.value, Math.min(winner.maxWillingness, runnerUp.maxWillingness + BID_INCREMENT));
-    logMessage(`🔨 ${bidders.map(b => b.participant.name).join(" ile ")} arasında <b>${candidate.name}</b> için açık artırma oldu — <b>${winner.participant.name}</b> ${formatValue(finalPrice)} teklifle kazandı.`);
+    logMessage("log.auctionBots", {
+      bidders: bidders.map(b => b.participant.name).join(" – "),
+      name: candidate.name,
+      winner: winner.participant.name,
+      price: formatValue(finalPrice)
+    });
     finishGroup(winner.participant, finalPrice, candidate, groupParticipants);
     return;
   }
@@ -1200,14 +1228,14 @@ function renderAuctionView() {
   chooseView.classList.add("hidden");
   auctionView.classList.remove("hidden");
 
-  const opponents = auction.bidders.filter(b => b.participant !== human).map(b => b.participant.name).join(" ve ");
-  auctionDesc.textContent = `${opponents} da ${auction.candidate.name}'i istiyor! Kazanmak için teklifini yükselt.`;
+  const opponents = auction.bidders.filter(b => b.participant !== human).map(b => b.participant.name).join(" · ");
+  auctionDesc.textContent = t("auction.desc", { opponents, name: auction.candidate.name });
   auctionCandidate.innerHTML = `
     <div class="rating-badge small">${auction.candidate.rating}</div>
     <div class="player-photo">${pixelAvatarSVG(auction.candidate.name)}</div>
     <div class="candidate-club">${auction.candidate.club}</div>
     <div class="candidate-name">${auction.candidate.name}</div>
-    <div class="candidate-meta">${auction.candidate.age} yaş · ${auction.candidate.nationality}</div>
+    <div class="candidate-meta">${t("common.age", { n: auction.candidate.age })} · ${auction.candidate.nationality}</div>
   `;
   updateAuctionUI();
 }
@@ -1216,7 +1244,7 @@ function updateAuctionUI() {
   auctionCurrentBid.textContent = formatValue(auction.currentBid);
   auctionBidders.innerHTML = auction.bidders.map(b => {
     const isHuman = b.participant === human;
-    return `<div class="bidder-chip${isHuman ? " you" : ""}">${b.participant.name}${isHuman ? " (Sen)" : ""}</div>`;
+    return `<div class="bidder-chip${isHuman ? " you" : ""}">${b.participant.name}${isHuman ? t("common.you") : ""}</div>`;
   }).join("");
 
   const iAmBidding = auction.bidders.some(b => b.participant === human);
@@ -1224,7 +1252,7 @@ function updateAuctionUI() {
   if (!iAmBidding) {
     raiseBidBtn.disabled = true;
     concedeBidBtn.disabled = true;
-    raiseBidBtn.textContent = "👀 İzliyorsun…";
+    raiseBidBtn.textContent = t("auction.watching");
     if (budgetHintEl) budgetHintEl.textContent = "";
     return;
   }
@@ -1232,13 +1260,14 @@ function updateAuctionUI() {
   const availableBudget = prospectiveBudget(human, round.slot);
   const canRaise = (auction.currentBid + BID_INCREMENT) <= availableBudget;
   raiseBidBtn.disabled = !canRaise;
-  raiseBidBtn.textContent = canRaise ? `💰 Teklif Ver (+${formatValue(BID_INCREMENT)})` : "💸 Bütçen Yetmiyor";
+  raiseBidBtn.textContent = canRaise
+    ? t("auction.raise", { v: formatValue(BID_INCREMENT) })
+    : t("auction.noBudget");
   if (budgetHintEl) {
     const current = human.squad[round.slot];
-    const includesSale = !current.vacant;
-    budgetHintEl.textContent = includesSale
-      ? `Kullanılabilir bütçen: ${formatValue(availableBudget)} (${current.name} satılırsa kasana giren ${formatValue(current.value)} dahil)`
-      : `Kullanılabilir bütçen: ${formatValue(availableBudget)}`;
+    budgetHintEl.textContent = !current.vacant
+      ? t("auction.budgetHintWithSale", { budget: formatValue(availableBudget), name: current.name, value: formatValue(current.value) })
+      : t("auction.budgetHint", { budget: formatValue(availableBudget) });
   }
 }
 
@@ -1251,7 +1280,11 @@ function raiseBid(participant) {
 
   if (auction.bidders.length === 1) {
     const isMe = participant === human;
-    logMessage(`🏆 ${isMe ? "Sen" : participant.name} <b>${auction.candidate.name}</b> için açık artırmayı ${formatValue(auction.currentBid)} teklifle kazand${isMe ? "ın" : "ı"}!`);
+    logMessage(isMe ? "log.auctionWonYou" : "log.auctionWonOther", {
+      club: participant.name,
+      name: auction.candidate.name,
+      price: formatValue(auction.currentBid)
+    });
     finishGroup(participant, auction.currentBid, auction.candidate, auction.groupParticipants);
     return;
   }
@@ -1265,15 +1298,26 @@ function concedeBid(participant) {
   const groupParticipants = auction.groupParticipants;
   const isMe = participant === human;
 
+  const concedeKey = isMe ? "log.concedeYou" : "log.concedeOther";
   if (remaining.length === 1) {
-    logMessage(`${isMe ? "Açık artırmada pes ettin" : participant.name + " açık artırmada pes etti"} — <b>${remaining[0].participant.name}</b>, ${candidate.name}'i ${formatValue(auction.currentBid)} karşılığında aldı.`);
+    logMessage(concedeKey, {
+      club: participant.name,
+      winner: remaining[0].participant.name,
+      name: candidate.name,
+      price: formatValue(auction.currentBid)
+    });
     finishGroup(remaining[0].participant, auction.currentBid, candidate, groupParticipants);
   } else {
     const sorted = [...remaining].sort((a, b) => b.maxWillingness - a.maxWillingness);
     const winner = sorted[0];
     const runnerUp = sorted[1];
     const finalPrice = Math.max(auction.currentBid, Math.min(winner.maxWillingness, runnerUp.maxWillingness + BID_INCREMENT));
-    logMessage(`${isMe ? "Açık artırmada pes ettin" : participant.name + " açık artırmada pes etti"} — <b>${winner.participant.name}</b>, ${candidate.name}'i ${formatValue(finalPrice)} karşılığında aldı.`);
+    logMessage(concedeKey, {
+      club: participant.name,
+      winner: winner.participant.name,
+      name: candidate.name,
+      price: formatValue(finalPrice)
+    });
     finishGroup(winner.participant, finalPrice, candidate, groupParticipants);
   }
 }
@@ -1428,8 +1472,10 @@ function renderSeasonTableScreen(table, scorers) {
   rebuildScreen.classList.add("hidden");
   draftScreen.classList.add("hidden");
   seasonTableScreen.classList.remove("hidden");
-  tableSeasonNum.textContent = `${currentSeason} / ${MAX_SEASONS}`;
-  seasonTableContinueBtn.textContent = draftModeActive ? "🎯 Draft'a Geç" : "Transfer Tekliflerine Geç";
+  if (seasonTableTitle) {
+    seasonTableTitle.textContent = t("table.title", { n: t("table.season", { cur: currentSeason, max: MAX_SEASONS }) });
+  }
+  seasonTableContinueBtn.textContent = draftModeActive ? t("table.continueDraft") : t("table.continueTransfer");
 
   leagueTableBody.innerHTML = table.map(row => {
     const gd = row.gf - row.ga;
@@ -1449,8 +1495,8 @@ function renderSeasonTableScreen(table, scorers) {
       <span class="scorer-rank">${idx === 0 ? "🥇" : idx + 1}</span>
       <span class="scorer-avatar">${pixelAvatarSVG(s.player.name)}</span>
       <span class="scorer-name">${s.player.name}</span>
-      <span class="scorer-club">${s.p.name}${idx === 0 ? " · +€10,0M" : ""}</span>
-      <span class="scorer-goals">${s.goals} gol</span>
+      <span class="scorer-club">${s.p.name}${idx === 0 ? " · +" + formatValue(TOP_SCORER_PRIZE) : ""}</span>
+      <span class="scorer-goals">${t("common.goals", { n: s.goals })}</span>
     </div>
   `).join("");
 
@@ -1467,7 +1513,7 @@ function renderSeasonTableScreen(table, scorers) {
       waitHint.className = "hint";
       tableBodyEl?.appendChild(waitHint);
     }
-    waitHint.textContent = "Devam etmek için host'u bekle…";
+    waitHint.textContent = t("common.waitHost");
   } else {
     waitHint?.remove();
   }
@@ -1593,9 +1639,14 @@ function runTransferWindow() {
         botsAccepted++;
         p.budget += offer.offerValue;
         p.squad[offer.slot].vacant = true;
-        transferLogMessages.push(`📤 <b>${p.name}</b>: ${offer.player.name} (${offer.player.age} yaş), ${offer.buyerClub}'a ${formatValue(offer.offerValue)} karşılığında transfer oldu.`);
+        transferLogMessages.push({ k: "log.transferOut", v: {
+          club: p.name, name: offer.player.name, age: t("common.age", { n: offer.player.age }),
+          buyer: offer.buyerClub, price: formatValue(offer.offerValue)
+        } });
       } else {
-        transferLogMessages.push(`🚫 <b>${p.name}</b>: ${offer.buyerClub}'ın ${offer.player.name} için ${formatValue(offer.offerValue)} teklifini reddetti.`);
+        transferLogMessages.push({ k: "log.transferRejected", v: {
+          club: p.name, buyer: offer.buyerClub, name: offer.player.name, price: formatValue(offer.offerValue)
+        } });
       }
       offer.decided = true;
       offer.accepted = accept;
@@ -1619,9 +1670,13 @@ function resolveAcademyOffer(p, offer, transferLogMessages) {
   offer.accepted = accept;
   if (accept) {
     applyAcademySigning(p, offer);
-    transferLogMessages.push(`🌱 <b>${p.name}</b>: Altyapıdan ${offer.name} (${SLOT_LABELS[offer.slot]}) kadroya katıldı, gerçek reytingi ${offer.actualRating} çıktı.`);
+    transferLogMessages.push({ k: "log.academyJoined", v: {
+      club: p.name, name: offer.name, posSlot: offer.slot, rating: offer.actualRating
+    } });
   } else {
-    transferLogMessages.push(`🚫 <b>${p.name}</b>: Altyapıdan gelen ${offer.name} teklifini reddetti, ${current.name} kadroda kaldı.`);
+    transferLogMessages.push({ k: "log.academyRejected", v: {
+      club: p.name, name: offer.name, current: current.name
+    } });
   }
 }
 
@@ -1643,8 +1698,11 @@ function applyAcademySigning(p, offer) {
   };
 }
 
+let lastTransferRender = null; // dil değişince transfer ekranını yeniden çizebilmek için
+
 function renderTransferScreen(transferLogMessages, botsAccepted, botsTotal) {
   mpPhase = "transfer";
+  lastTransferRender = { messages: transferLogMessages, botsAccepted, botsTotal };
   // Her taze render (ilk giriş ya da host'tan gelen yeni bir yayın), guest'in "uçuştaki karar"
   // kilidini SADECE o karar gerçekten onaylanmışsa serbest bırakır — bkz. refreshGuestDecisionLock.
   refreshGuestDecisionLock();
@@ -1660,19 +1718,17 @@ function renderTransferScreen(transferLogMessages, botsAccepted, botsTotal) {
   draftScreen.classList.add("hidden");
   transferScreen.classList.remove("hidden");
 
-  transferSeasonNum.textContent = currentSeason;
-  botTransferLog.innerHTML = transferLogMessages.map(m => `<div>${m}</div>`).join("");
+  if (transferScreenTitle) transferScreenTitle.textContent = t("transfer.title", { n: currentSeason });
+  botTransferLog.innerHTML = transferLogMessages.map(m => `<div>${renderLogEntry(m)}</div>`).join("");
   transferContinueRow.classList.add("hidden");
 
   const botSummaryEl = document.getElementById("botTransferSummary");
   if (botSummaryEl) {
-    botSummaryEl.textContent = draftModeActive
-      ? `🤖 Botlar: ${botsAccepted}/${botsTotal} altyapı teklifini kabul etti`
-      : `🤖 Botlar: ${botsAccepted}/${botsTotal} teklifi kabul etti`;
+    botSummaryEl.textContent = t(draftModeActive ? "transfer.botSummaryDraft" : "transfer.botSummary",
+      { n: botsAccepted, total: botsTotal });
   }
-  const transferIntroEl = document.querySelector(".transfer-intro");
-  if (transferIntroEl && draftModeActive) {
-    transferIntroEl.textContent = "Draft tamamlandı. Bu sezon ayrıca bir transfer penceresi açılmıyor — aşağıdaki özeti inceleyip yeni sezona geçebilirsin.";
+  if (transferIntro) {
+    transferIntro.textContent = t(draftModeActive ? "transfer.introDraft" : "transfer.intro");
   }
 
   renderAcademyCard();
@@ -1687,16 +1743,16 @@ function renderTransferScreen(transferLogMessages, botsAccepted, botsTotal) {
         <div class="player-photo">${pixelAvatarSVG(offer.player.name)}</div>
       </div>
       <div class="offer-text">
-        <div class="offer-pos">${SLOT_LABELS[offer.slot]} · ${offer.player.age} yaş</div>
+        <div class="offer-pos">${SLOT_LABELS[offer.slot]} · ${t("common.age", { n: offer.player.age })}</div>
         <div class="offer-name">${offer.player.name}</div>
-        <div class="offer-current-value">Güncel Değeri: ${formatValue(offer.player.value)}</div>
-        <div class="offer-buyer">${offer.buyerClub} teklif veriyor</div>
+        <div class="offer-current-value">${t("transfer.currentValue", { v: formatValue(offer.player.value) })}</div>
+        <div class="offer-buyer">${t("transfer.buyer", { club: offer.buyerClub })}</div>
       </div>
       <div class="offer-actions">
         <div class="offer-value">${formatValue(offer.offerValue)}</div>
         <div class="offer-buttons">
-          <button class="accept-btn">✅ Kabul Et</button>
-          <button class="reject-btn">❌ Reddet</button>
+          <button class="accept-btn">${t("transfer.accept")}</button>
+          <button class="reject-btn">${t("transfer.reject")}</button>
         </div>
         <div class="offer-status"></div>
       </div>
@@ -1704,7 +1760,7 @@ function renderTransferScreen(transferLogMessages, botsAccepted, botsTotal) {
     if (offer.decided) {
       card.classList.add("decided");
       card.querySelectorAll("button").forEach(b => (b.disabled = true));
-      card.querySelector(".offer-status").textContent = offer.accepted ? "✅ Karar verildi (kabul)" : "❌ Karar verildi (ret)";
+      card.querySelector(".offer-status").textContent = offer.accepted ? t("transfer.decidedAccepted") : t("transfer.decidedRejected");
     } else if (guestDecisionInFlight) {
       // Başka bir teklifim/altyapı kararım hâlâ host onayı bekliyor — bu kart geçici olarak kilitli.
       card.querySelectorAll("button").forEach(b => (b.disabled = true));
@@ -1729,14 +1785,14 @@ function renderAcademyCard() {
   const card = document.createElement("div");
   card.className = "academy-card";
   card.innerHTML = `
-    <div class="academy-tag">🌱 Altyapıdan Bir Yetenek Çıktı</div>
+    <div class="academy-tag">${t("academy.tag")}</div>
     <div class="academy-name">${offer.name}</div>
-    <div class="academy-pos">${SLOT_LABELS[offer.slot]} · Şu an kadroda: ${current.name} (${current.rating})</div>
-    <div class="academy-range">Tahmini Reyting: ${offer.rangeLow}-${offer.rangeHigh}</div>
-    <div class="academy-desc">Kabul edersen ${current.name} ile yer değiştirir ve gerçek reytingi ortaya çıkar. Reddedersen ${current.name} kadroda kalır.</div>
+    <div class="academy-pos">${t("academy.pos", { pos: SLOT_LABELS[offer.slot], name: current.name, rating: current.rating })}</div>
+    <div class="academy-range">${t("academy.range", { low: offer.rangeLow, high: offer.rangeHigh })}</div>
+    <div class="academy-desc">${t("academy.desc", { name: current.name })}</div>
     <div class="academy-buttons">
-      <button class="keep-btn academy-accept-btn">✅ Kabul Et (Takas)</button>
-      <button class="sell-btn academy-reject-btn">❌ Reddet</button>
+      <button class="keep-btn academy-accept-btn">${t("academy.accept")}</button>
+      <button class="sell-btn academy-reject-btn">${t("academy.reject")}</button>
     </div>
     <div class="academy-status"></div>
   `;
@@ -1744,8 +1800,8 @@ function renderAcademyCard() {
     card.classList.add("decided");
     card.querySelectorAll("button").forEach(b => (b.disabled = true));
     card.querySelector(".academy-status").textContent = offer.accepted
-      ? `✅ Kadroya katıldı — gerçek reytingi ${offer.actualRating}, değeri ${formatValue(offer.value)}`
-      : "❌ Reddedildi, oyuncu kadroda kaldı";
+      ? t("academy.joined", { rating: offer.actualRating, value: formatValue(offer.value) })
+      : t("transfer.rejectedKept");
   } else if (guestDecisionInFlight) {
     card.querySelectorAll("button").forEach(b => (b.disabled = true));
   } else {
@@ -1801,15 +1857,15 @@ function handleAcademyOfferDecision(accept, card) {
     MP.sendAction("academyDecision", { clubId: human.clubId, accept });
     offer.decided = true;
     offer.accepted = accept;
-    lockOfferCard(card, accept ? "✅ Kabul edildi — host onaylayınca gerçek reyting görünecek" : "❌ Reddedildi, oyuncu kadroda kaldı");
+    lockOfferCard(card, accept ? t("academy.pendingHost") : t("transfer.rejectedKept"));
     freezeOtherTransferCards();
     updateTransferContinueVisibility();
     return;
   }
   resolveAcademyOfferDecision(human, accept);
   lockOfferCard(card, offer.accepted
-    ? `✅ Kadroya katıldı — gerçek reytingi ${offer.actualRating}, değeri ${formatValue(offer.value)}`
-    : "❌ Reddedildi, oyuncu kadroda kaldı");
+    ? t("academy.joined", { rating: offer.actualRating, value: formatValue(offer.value) })
+    : t("transfer.rejectedKept"));
   updateTransferContinueVisibility();
 }
 
@@ -1822,15 +1878,15 @@ function handleOfferDecision(idx, accept, card) {
     MP.sendAction("offerDecision", { clubId: human.clubId, idx, accept });
     offer.decided = true;
     offer.accepted = accept;
-    lockOfferCard(card, accept ? `✅ Satıldı (+${formatValue(offer.offerValue)})` : "❌ Reddedildi, oyuncu kadroda kaldı");
+    lockOfferCard(card, accept ? t("transfer.sold", { v: formatValue(offer.offerValue) }) : t("transfer.rejectedKept"));
     freezeOtherTransferCards();
     updateTransferContinueVisibility();
     return;
   }
   resolveOfferDecision(human, idx, accept);
   lockOfferCard(card, offer.accepted
-    ? `✅ Satıldı (+${formatValue(offer.offerValue)})`
-    : "❌ Reddedildi, oyuncu kadroda kaldı");
+    ? t("transfer.sold", { v: formatValue(offer.offerValue) })
+    : t("transfer.rejectedKept"));
   updateTransferContinueVisibility();
 }
 
@@ -1853,9 +1909,9 @@ function updateTransferContinueVisibility() {
   const showBoth = !mpActive() || mpIsHost();
   continueSeasonBtn.classList.toggle("hidden", isLastSeason || !showBoth);
   endCareerBtn.classList.toggle("hidden", !showBoth);
-  endCareerBtn.textContent = isLastSeason ? "🏆 Kariyer Özetini Gör" : "Kariyeri Burada Bitir";
+  endCareerBtn.textContent = isLastSeason ? t("transfer.seeSummary") : t("transfer.endCareer");
   if (!showBoth && !document.getElementById("mpHostWaitHint")) {
-    transferContinueRow.insertAdjacentHTML("beforeend", '<p class="hint" id="mpHostWaitHint">Devam etmek için host\'u bekle…</p>');
+    transferContinueRow.insertAdjacentHTML("beforeend", `<p class="hint" id="mpHostWaitHint">${t("common.waitHost")}</p>`);
   }
   if (showBoth) document.getElementById("mpHostWaitHint")?.remove();
 }
@@ -1937,7 +1993,7 @@ function startDraftPhase() {
     replaceCandidates: {},
     replacePicks: {},
     reservedNames: [],
-    log: [`🎯 Bu sezonun draft mevkileri: ${slots.map(s => SLOT_LABELS[s]).join(", ")}`],
+    log: [{ k: "log.draftSlots", v: { slotKeys: slots.join(",") } }],
     seq: 0
   };
   guestDraftInFlight = null;
@@ -1954,7 +2010,7 @@ function startDraftSlotRound() {
       .filter(p => !p.squad[slot].vacant)
       .map(p => ({ slot, ownerClubId: p.clubId, player: cloneSquadPlayer(p.squad[slot]), status: "open", takenByClubId: "" }));
     if (pool.length === 0) {
-      ds.log.push(`— ${SLOT_LABELS[slot]} mevkisinde havuza girecek oyuncu yok, atlanıyor.`);
+      ds.log.push({ k: "log.draftSlotEmpty", v: { posSlot: slot } });
       ds.slotIdx++;
       continue;
     }
@@ -1963,7 +2019,9 @@ function startDraftSlotRound() {
     ds.order = draftPickOrder();
     ds.turnIdx = 0;
     ds.seq++;
-    ds.log.push(`🎯 ${SLOT_LABELS[slot]} draftı başladı — havuzda ${pool.length} oyuncu. Seçim sırası: ${ds.order.map(id => draftParticipant(id).name).join(" → ")}`);
+    ds.log.push({ k: "log.draftSlotStart", v: {
+      posSlot: slot, n: pool.length, order: ds.order.map(id => draftParticipant(id).name).join(" → ")
+    } });
     draftStep();
     return;
   }
@@ -2003,9 +2061,11 @@ function applyDraftPick(participant, targetOwnerClubId) {
     const own = ds.pool.find(e => e.ownerClubId === participant.clubId && e.status === "open");
     if (own) own.status = "withdrawn";
     participant.squad[slot] = { ...cloneSquadPlayer(entry.player), origin: "draft", vacant: false };
-    ds.log.push(`🎯 <b>${participant.name}</b>, ${owner.name} takımından <b>${entry.player.name}</b> (${entry.player.rating}) oyuncusunu bedelsiz draftladı.`);
+    ds.log.push({ k: "log.draftPicked", v: {
+      club: participant.name, from: owner.name, name: entry.player.name, rating: entry.player.rating
+    } });
   } else {
-    ds.log.push(`🏳️ <b>${participant.name}</b> bu mevkide seçim yapmadı.`);
+    ds.log.push({ k: "log.draftPassed", v: { club: participant.name } });
   }
   ds.turnIdx++;
 }
@@ -2046,7 +2106,7 @@ function finishDraftSlotRound() {
   const ds = draftState;
   for (const entry of ds.pool) {
     if (entry.status === "open") {
-      ds.log.push(`— <b>${entry.player.name}</b> seçilmedi, ${draftParticipant(entry.ownerClubId).name} kadrosunda kaldı.`);
+      ds.log.push({ k: "log.draftUnpicked", v: { name: entry.player.name, club: draftParticipant(entry.ownerClubId).name } });
     }
   }
   ds.slotIdx++;
@@ -2062,20 +2122,17 @@ function draftVacancyKey(clubId, slot) {
 // Tam olarak 5 aday: 1 Bedava, 1 Ucuz, 1 Orta Segment, 2 Yıldız. Üretilen isimler geçici olarak
 // usedWorldNames'e yazılır ki aynı oyuncu aynı turda iki katılımcıya birden çıkmasın —
 // imzalanmayanlar aşama sonunda havuza geri bırakılır (bkz. reservedNames).
+// tier değerleri MANTIKSAL kimliklerdir (görsel/logic ayrımı); ekran etiketi t("tier."+tier).
 const DRAFT_REPLACEMENT_TIERS = [
-  { tier: "free", label: "Bedava Transfer" },
-  { tier: "cheap", label: "Ucuz Transfer" },
-  { tier: "mid", label: "Orta Segment" },
-  { tier: "star", label: "Yıldız Transfer" },
-  { tier: "star", label: "Yıldız Transfer" }
+  { tier: "free" }, { tier: "cheap" }, { tier: "mid" }, { tier: "star" }, { tier: "star" }
 ];
 
 function buildDraftReplacementCandidates(participant, slot) {
   const category = SLOT_CATEGORY[slot];
   const cands = [];
   const fresh = (pool) => pool.filter(p => !usedWorldNames.has(p.name));
-  const reserve = (cand, tier, label) => {
-    const entry = { ...cand, tier, tierLabel: label };
+  const reserve = (cand, tier) => {
+    const entry = { ...cand, tier };
     usedWorldNames.add(entry.name);
     draftState.reservedNames.push(entry.name);
     cands.push(entry);
@@ -2099,7 +2156,7 @@ function buildDraftReplacementCandidates(participant, slot) {
     }
     // makeFreeAgent rastgele isim üretir; teorik bir çakışmada bile aday listeleri ayrık kalsın.
     while (usedWorldNames.has(pick.name)) pick = makeFreeAgent(category, spec.tier === "free" ? 0 : undefined);
-    reserve(pick, spec.tier, spec.label);
+    reserve(pick, spec.tier);
   }
   return cands;
 }
@@ -2180,7 +2237,10 @@ function applyDraftReplacement(participant, slot, idx) {
   ds.replacePicks[key] = idx;
   ds.reservedNames = ds.reservedNames.filter(n => n !== cand.name);
   ds.seq++;
-  ds.log.push(`✍️ <b>${participant.name}</b>, boşalan ${SLOT_LABELS[slot]} mevkisine <b>${cand.name}</b> (${cand.rating}) oyuncusunu ${cand.value === 0 ? "bedava" : formatValue(cand.value)} transfer etti.`);
+  ds.log.push({ k: "log.draftSigned", v: {
+    club: participant.name, posSlot: slot, name: cand.name, rating: cand.rating,
+    price: cand.value === 0 ? t("common.free") : formatValue(cand.value)
+  } });
 }
 
 function submitDraftReplacement(slot, idx) {
@@ -2233,10 +2293,12 @@ function applyDraftSellDecision(participant, slot) {
     participant.budget += player.value;
     participant.squad[slot] = makeVacantSlot();
     ds.sellChoice[participant.clubId] = slot;
-    ds.log.push(`📤 <b>${participant.name}</b>, ${SLOT_LABELS[slot]} mevkisindeki <b>${player.name}</b> (${player.rating}) oyuncusunu ${formatValue(player.value)} karşılığında sattı.`);
+    ds.log.push({ k: "log.draftSold", v: {
+      club: participant.name, posSlot: slot, name: player.name, rating: player.rating, price: formatValue(player.value)
+    } });
   } else {
     ds.sellChoice[participant.clubId] = "-";
-    ds.log.push(`🏳️ <b>${participant.name}</b> bu sezon kimseyi satmadı.`);
+    ds.log.push({ k: "log.draftNoSale", v: { club: participant.name } });
   }
   ds.sellDone[participant.clubId] = true;
   ds.seq++;
@@ -2333,13 +2395,13 @@ function renderDraftScreen() {
   resultScreen.classList.add("hidden");
   draftScreen.classList.remove("hidden");
 
-  draftSeasonNum.textContent = currentSeason;
-  draftBudgetPill.textContent = "Bütçe: " + formatValue(human.budget);
+  if (draftScreenTitle) draftScreenTitle.textContent = t("draft.title", { n: currentSeason });
+  draftBudgetPill.textContent = t("common.budget", { v: formatValue(human.budget) });
   draftSlotsRow.innerHTML = draftState.slots.map((slot, i) => {
     const cls = draftState.stage !== "pick" ? " done" : i === draftState.slotIdx ? " active" : i < draftState.slotIdx ? " done" : "";
     return `<span class="draft-slot-chip${cls}">${SLOT_LABELS[slot]}</span>`;
   }).join("");
-  draftLog.innerHTML = draftState.log.slice(-14).map(m => `<div>${m}</div>`).join("");
+  draftLog.innerHTML = draftState.log.slice(-14).map(m => `<div>${renderLogEntry(m)}</div>`).join("");
 
   if (draftState.stage === "replace") renderDraftReplacePanel();
   else if (draftState.stage === "sell") renderDraftSellPanel();
@@ -2361,7 +2423,7 @@ function renderDraftPickPanel() {
   const myTurn = turnClubId === human.clubId && mpControlsClub(human.clubId);
   const locked = !!guestDraftInFlight;
 
-  draftStageTitle.textContent = `${SLOT_LABELS[slot]} · Mevki ${ds.slotIdx + 1}/${ds.slots.length} — havuzdan bedelsiz bir oyuncu seç`;
+  draftStageTitle.textContent = t("draft.stageTitle", { pos: SLOT_LABELS[slot], i: ds.slotIdx + 1, total: ds.slots.length });
 
   draftPoolGrid.innerHTML = ds.pool.map(entry => {
     const owner = draftParticipant(entry.ownerClubId);
@@ -2369,17 +2431,17 @@ function renderDraftPickPanel() {
     const gone = entry.status !== "open";
     const canPick = myTurn && !locked && !mine && !gone;
     const status = entry.status === "taken"
-      ? `<div class="draft-pool-status taken">${draftParticipant(entry.takenByClubId).name} draftladı</div>`
+      ? `<div class="draft-pool-status taken">${t("draft.poolTakenBy", { club: draftParticipant(entry.takenByClubId).name })}</div>`
       : entry.status === "withdrawn"
-        ? `<div class="draft-pool-status taken">Kadrodan ayrıldı</div>`
-        : `<div class="draft-pool-status open">Havuzda</div>`;
-    const label = mine ? "Kendi Oyuncun" : gone ? "Havuzdan Çıktı" : "🎯 Draftla";
+        ? `<div class="draft-pool-status taken">${t("draft.poolWithdrawn")}</div>`
+        : `<div class="draft-pool-status open">${t("draft.poolOpen")}</div>`;
+    const label = mine ? t("draft.btnMine") : gone ? t("draft.btnGone") : t("draft.btnPick");
     return `<div class="draft-pool-card${mine ? " mine" : ""}${gone ? " gone" : ""}">
-      <div class="draft-pool-owner">${SLOT_SHORT[entry.slot]} · ${owner.name}${mine ? " (Sen)" : ""}</div>
+      <div class="draft-pool-owner">${SLOT_SHORT[entry.slot]} · ${owner.name}${mine ? t("common.you") : ""}</div>
       <div class="rating-badge small">${entry.player.rating}</div>
       <div class="player-photo">${pixelAvatarSVG(entry.player.name)}</div>
       <div class="candidate-name">${entry.player.name}</div>
-      <div class="candidate-meta">${entry.player.age} yaş · ${entry.player.nationality}</div>
+      <div class="candidate-meta">${t("common.age", { n: entry.player.age })} · ${entry.player.nationality}</div>
       <div class="candidate-value">${formatValue(entry.player.value)}</div>
       ${status}
       <button class="keep-btn draft-pick-btn" data-owner="${entry.ownerClubId}"${canPick ? "" : " disabled"}>${label}</button>
@@ -2392,16 +2454,14 @@ function renderDraftPickPanel() {
 
   draftTurnRow.innerHTML = ds.order.map((id, i) => {
     const p = draftParticipant(id);
-    return `<span class="bidder-chip${i === ds.turnIdx ? " turn" : ""}${p === human ? " you" : ""}">${p.name}${p === human ? " (Sen)" : ""}</span>`;
+    return `<span class="bidder-chip${i === ds.turnIdx ? " turn" : ""}${p === human ? " you" : ""}">${p.name}${p === human ? t("common.you") : ""}</span>`;
   }).join("");
 
   draftPassBtn.disabled = !myTurn || locked;
   if (myTurn) {
-    draftTurnHint.textContent = locked
-      ? "Kararın gönderildi, host'un onayı bekleniyor…"
-      : "Sıra sende: havuzdaki bir rakip oyuncusunu bedelsiz seç ya da pas geç. Seçtiğin oyuncu kadrona girer, senin bu mevkideki eski oyuncun kadrodan ayrılır.";
+    draftTurnHint.textContent = locked ? t("draft.turnHintLocked") : t("draft.turnHintMine");
   } else {
-    draftTurnHint.textContent = `${draftParticipant(turnClubId).name} bekleniyor…`;
+    draftTurnHint.textContent = t("draft.turnHintOther", { club: draftParticipant(turnClubId).name });
   }
 }
 
@@ -2413,10 +2473,10 @@ function renderDraftSellPanel() {
   const sellable = draftSellableSlots(human);
   const waiting = participants.filter(p => !ds.sellDone[p.clubId] && p !== human).map(p => p.name);
 
-  draftSellTitle.textContent = "📤 Transfer — kadrondan bir oyuncuyu sat";
+  draftSellTitle.textContent = t("draft.sellTitle");
   draftSellHint.textContent = done
-    ? (waiting.length > 0 ? `Kararını verdin — bekleniyor: ${waiting.join(", ")}` : "Kararını verdin, boşalan mevki için adaylar hazırlanıyor…")
-    : "Kadrondaki 11 oyuncudan birini seçip satabilirsin: piyasa değeri kasana girer ve o mevkiye 5 adaydan birini imzalarsın. İstemezsen satmadan da geçebilirsin.";
+    ? (waiting.length > 0 ? t("draft.sellHintDoneWaiting", { names: waiting.join(", ") }) : t("draft.sellHintDone"))
+    : t("draft.sellHint");
 
   draftSellGrid.innerHTML = sellable.map(slot => {
     const player = human.squad[slot];
@@ -2425,9 +2485,9 @@ function renderDraftSellPanel() {
       <div class="rating-badge small">${player.rating}</div>
       <div class="player-photo">${pixelAvatarSVG(player.name)}</div>
       <div class="candidate-name">${player.name}</div>
-      <div class="candidate-meta">${player.age} yaş · ${player.nationality}</div>
+      <div class="candidate-meta">${t("common.age", { n: player.age })} · ${player.nationality}</div>
       <div class="candidate-value">${formatValue(player.value)}</div>
-      <button class="sell-btn draft-sell-toggle"${done ? " disabled" : ""}>💸 Sat</button>
+      <button class="sell-btn draft-sell-toggle"${done ? " disabled" : ""}>${t("draft.sellBtn")}</button>
     </div>`;
   }).join("");
 
@@ -2437,11 +2497,11 @@ function renderDraftSellPanel() {
         const already = card.classList.contains("selected");
         draftSellGrid.querySelectorAll(".draft-sell-card").forEach(c => {
           c.classList.remove("selected");
-          c.querySelector(".draft-sell-toggle").textContent = "💸 Sat";
+          c.querySelector(".draft-sell-toggle").textContent = t("draft.sellBtn");
         });
         if (!already) {
           card.classList.add("selected");
-          card.querySelector(".draft-sell-toggle").textContent = "✅ Satılacak";
+          card.querySelector(".draft-sell-toggle").textContent = t("draft.sellBtnSelected");
         }
       });
     });
@@ -2449,7 +2509,7 @@ function renderDraftSellPanel() {
 
   draftSellConfirmBtn.classList.toggle("hidden", sellable.length === 0);
   draftSellConfirmBtn.disabled = done || !!guestDraftInFlight;
-  draftSellConfirmBtn.textContent = done ? "✅ Karar Verildi" : "✅ Kararımı Onayla";
+  draftSellConfirmBtn.textContent = done ? t("draft.confirmed") : t("draft.confirm");
 }
 
 function renderDraftReplacePanel() {
@@ -2462,19 +2522,17 @@ function renderDraftReplacePanel() {
   draftReplaceGrid.innerHTML = "";
 
   if (mine.length === 0) {
-    draftReplaceTitle.textContent = "✍️ Boşalan Mevkilere İmza";
+    draftReplaceTitle.textContent = t("draft.replaceTitleNone");
     draftReplaceHint.textContent = waiting.length > 0
-      ? `Senin imzalayacak boş mevkin kalmadı — bekleniyor: ${[...new Set(waiting)].join(", ")}`
-      : "Draft tamamlanıyor…";
+      ? t("draft.replaceHintWaiting", { names: [...new Set(waiting)].join(", ") })
+      : t("draft.replaceHintFinishing");
     return;
   }
 
   const { slot, key } = mine[0];
   const cands = ds.replaceCandidates[key] || [];
-  draftReplaceTitle.textContent = `${SLOT_LABELS[slot]} · Boşalan mevkiye imza (${mine.length} mevki kaldı)`;
-  draftReplaceHint.textContent = ds.replaceRound === 1
-    ? "Bu mevki draftta boşaldı. Gelen 5 adaydan tam olarak birini imzala."
-    : "Sattığın oyuncunun yerine gelen 5 adaydan tam olarak birini imzala.";
+  draftReplaceTitle.textContent = t("draft.replaceTitle", { pos: SLOT_LABELS[slot], n: mine.length });
+  draftReplaceHint.textContent = ds.replaceRound === 1 ? t("draft.replaceHint1") : t("draft.replaceHint2");
 
   cands.forEach((cand, idx) => {
     const affordable = cand.value <= human.budget;
@@ -2483,19 +2541,19 @@ function renderDraftReplacePanel() {
     card.dataset.tier = cand.tier;
     card.innerHTML = `
       <div class="offer-left">
-        <div class="tier-tag">${cand.tierLabel}</div>
+        <div class="tier-tag">${t("tier." + cand.tier)}</div>
         <div class="rating-badge small">${cand.rating}</div>
         <div class="player-photo">${pixelAvatarSVG(cand.name)}</div>
       </div>
       <div class="offer-text">
-        <div class="offer-pos">${SLOT_LABELS[slot]} · ${cand.age} yaş · ${cand.nationality}</div>
+        <div class="offer-pos">${SLOT_LABELS[slot]} · ${t("common.age", { n: cand.age })} · ${cand.nationality}</div>
         <div class="offer-name">${cand.name}</div>
         <div class="offer-current-value">${cand.club}</div>
-        <div class="offer-buyer">${affordable ? "Bütçen yeterli" : "Bütçen yetmiyor"}</div>
+        <div class="offer-buyer">${affordable ? t("draft.affordable") : t("draft.notAffordable")}</div>
       </div>
       <div class="offer-actions">
-        <div class="offer-value">${cand.value === 0 ? "Bedava" : formatValue(cand.value)}</div>
-        <div class="offer-buttons"><button class="accept-btn draft-sign-btn">✍️ İmzala</button></div>
+        <div class="offer-value">${cand.value === 0 ? t("common.free") : formatValue(cand.value)}</div>
+        <div class="offer-buttons"><button class="accept-btn draft-sign-btn">${t("draft.sign")}</button></div>
         <div class="offer-status"></div>
       </div>
     `;
@@ -2525,7 +2583,7 @@ function renderPitch() {
     spot.className = "pitch-spot " + stateClass;
     spot.style.top = coords.top;
     spot.style.left = coords.left;
-    spot.title = `${player.name}, ${player.age} yaş (${player.rating})`;
+    spot.title = t("squad.tooltip", { name: player.name, age: t("common.age", { n: player.age }), rating: player.rating });
 
     const shortName = player.name.split(" ").pop();
     const tag = i < slotIndex ? (player.origin === "bought" ? "🆕" : "") : "";
@@ -2543,7 +2601,7 @@ function renderPitch() {
 
 // "Sen" sadece BU istemcinin kendi katılımcısı için, bot için 🤖, başka gerçek oyuncu için 👤.
 function whoLabel(p) {
-  return p === human ? " (Sen)" : p.isBot ? " 🤖" : " 👤";
+  return p === human ? t("common.you") : p.isBot ? " 🤖" : " 👤";
 }
 
 function averageRating(p) {
@@ -2553,7 +2611,7 @@ function averageRating(p) {
 
 function renderBotStatus() {
   const myAvgEl = document.getElementById("myAvgRating");
-  if (myAvgEl) myAvgEl.textContent = `Ortalama Rating: ${averageRating(human)}`;
+  if (myAvgEl) myAvgEl.textContent = t("squad.avgRating", { v: averageRating(human) });
 
   if (mobileRatingsStrip) {
     mobileRatingsStrip.innerHTML = participants.map(p => {
@@ -2572,7 +2630,8 @@ function renderBotStatus() {
       let cls = "pending";
       if (i < slotIndex) cls = player.origin === "bought" ? "bought" : "kept";
       else if (i === slotIndex) cls = "active";
-      return `<span class="bot-chip ${cls}" title="${SLOT_LABELS[slot]}: ${player.name}, ${player.age} yaş (${player.rating})">${SLOT_SHORT[slot]}</span>`;
+      const tip = t("squad.chipTooltip", { pos: SLOT_LABELS[slot], name: player.name, age: t("common.age", { n: player.age }), rating: player.rating });
+      return `<span class="bot-chip ${cls}" title="${tip}">${SLOT_SHORT[slot]}</span>`;
     }).join("");
 
     const card = document.createElement("div");
@@ -2582,7 +2641,7 @@ function renderBotStatus() {
         <span class="bot-card-name">${p.name}${p.isBot ? " 🤖" : " 👤"}</span>
         <span class="bot-card-budget">${formatValue(p.budget)}</span>
       </div>
-      <div class="bot-card-meta">Sezon ${currentSeason} · İşlenen: ${processed}/${SLOTS.length} · Ortalama Rating: <b>${avgRating}</b></div>
+      <div class="bot-card-meta">${t("squad.botMeta", { season: currentSeason, done: processed, total: SLOTS.length, avg: avgRating })}</div>
       <div class="bot-chip-row">${chips}</div>
     `;
     botStatusList.appendChild(card);
@@ -2610,29 +2669,34 @@ function renderCareerSummary() {
     <div class="career-row${idx === 0 ? " champion" : ""}">
       <span class="career-rank">${idx === 0 ? "👑" : idx + 1}</span>
       <span class="career-name">${r.p.name}${whoLabel(r.p)}</span>
-      <span class="career-points">${r.points} kariyer puanı</span>
+      <span class="career-points">${t("career.points", { n: r.points })}</span>
     </div>
   `).join("");
 
   const historyRows = seasonHistory.map(h => {
     const winner = h.table[0];
-    return `<div class="history-row">
-      <b>Sezon ${h.season}:</b> Lig şampiyonu ${winner.p.name} (Kadro Reytingi ${winner.avgRating.toFixed(1)}, +${formatValue(winner.prize)}) ·
-      Gol Kralı: ${h.topScorer.player.name} (${h.topScorer.p.name}, ${h.topScorer.goals} gol)
-    </div>`;
+    return `<div class="history-row">${t("career.historyRow", {
+      season: h.season,
+      club: winner.p.name,
+      rating: winner.avgRating.toFixed(1),
+      prize: formatValue(winner.prize),
+      scorer: h.topScorer.player.name,
+      scorerClub: h.topScorer.p.name,
+      goals: t("common.goals", { n: h.topScorer.goals })
+    })}</div>`;
   }).join("");
 
   const bonusRows = positionBonusBreakdown.length > 0 ? `
-    <h4 class="career-subtitle">⭐ Mevki Bazlı En Büyük Yükseltme Bonusları (+1 puan)</h4>
+    <h4 class="career-subtitle">${t("career.bonusTitle")}</h4>
     <div class="career-history">
-      ${positionBonusBreakdown.map(b => `<div class="history-row">
-        <b>${SLOT_LABELS[b.slot]}:</b> ${b.clubName} (başlangıca göre +${b.upgrade} rating)
-      </div>`).join("")}
+      ${positionBonusBreakdown.map(b => `<div class="history-row">${t("career.bonusRow", {
+        pos: SLOT_LABELS[b.slot], club: b.clubName, n: b.upgrade
+      })}</div>`).join("")}
     </div>
   ` : "";
 
   careerSummaryEl.innerHTML = `
-    <h3 class="career-title">🏆 ${seasonHistory.length} Sezonluk Kariyer Şampiyonu: ${champion.p.name}</h3>
+    <h3 class="career-title">${t("career.champion", { n: seasonHistory.length, name: champion.p.name })}</h3>
     <div class="career-points-table">${pointsRows}</div>
     ${bonusRows}
     <div class="career-history">${historyRows}</div>
@@ -2676,8 +2740,8 @@ function showResults() {
   resultScreen.classList.remove("hidden");
 
   resultTitle.textContent = isFullCareer
-    ? `🏆 Kariyer Bitti — ${seasonsPlayed} Sezon Tamamlandı`
-    : `Kariyer Özeti — ${seasonsPlayed} Sezon Sonunda`;
+    ? t("result.titleFull", { n: seasonsPlayed })
+    : t("result.titlePartial", { n: seasonsPlayed });
 
   renderCareerSummary();
 
@@ -2700,16 +2764,16 @@ function showResults() {
         <span class="rs-avatar">${pixelAvatarSVG(x.name)}</span>
         <span class="pos-tag">${SLOT_SHORT[slot]}</span>
         <span class="result-rating">${x.rating}</span>
-        <span>${x.name} <span class="age-tag">${x.age}y</span> <span class="origin-tag ${x.origin}">${x.origin === "bought" ? "Yeni" : x.origin === "academy" ? "🌱 Altyapı" : "Kadroda"}</span></span>
+        <span>${x.name} <span class="age-tag">${t("result.ageTag", { n: x.age })}</span> <span class="origin-tag ${x.origin}">${x.origin === "bought" ? t("result.originNew") : x.origin === "academy" ? t("result.originAcademy") : t("result.originKept")}</span></span>
         <span class="rv">${formatValue(x.value)}</span>
       </div>`;
     }).join("");
     div.innerHTML = `
       <h3><span>${p.name}${whoLabel(p)}${isWinner ? " 👑" : ""}</span></h3>
       <div class="result-totals">
-        <span>Ortalama Rating: <b>${(totalRating / SLOTS.length).toFixed(1)}</b></span>
-        <span>Kadro Değeri: <b>${formatValue(totalValue)}</b></span>
-        <span>Kalan Bütçe: <b>${formatValue(p.budget)}</b></span>
+        <span>${t("result.avgRating", { v: (totalRating / SLOTS.length).toFixed(1) })}</span>
+        <span>${t("result.squadValue", { v: formatValue(totalValue) })}</span>
+        <span>${t("result.budgetLeft", { v: formatValue(p.budget) })}</span>
       </div>
       ${rows}
     `;
@@ -2732,3 +2796,37 @@ function showResults() {
     });
   }
 }
+
+/* ---------------- I18N: dil değişince görünen ekranı yeniden çiz ---------------- */
+// data/i18n.js statik ([data-i18n]) düğümleri kendisi tazeler; burada JS ile üretilen
+// dinamik içeriği yeniden çiziyoruz. Yarım kalmış bir kullanıcı etkileşimi (aday seçim
+// ekranı, açık artırma turu) ASLA ezilmez — o durumda ilgili panel olduğu gibi bırakılır.
+function rerenderForLanguage() {
+  // Kurulum ekranı her zaman güvenle yeniden çizilebilir (henüz oyun başlamamış olabilir).
+  renderLeaguePickGrid();
+  renderTeamPickGrid();
+  renderOpponentPickGrid();
+  renderBotSetupText();
+
+  if (!human || participants.length === 0) return;
+
+  renderMatchupTitle();
+  updateBudgetPill();
+  renderPitch();
+  renderBotStatus();
+
+  if (draftState && !draftScreen.classList.contains("hidden")) {
+    renderDraftScreen();
+  } else if (!seasonTableScreen.classList.contains("hidden")) {
+    const last = seasonHistory[seasonHistory.length - 1];
+    if (last) renderSeasonTableScreen(last.table, last.scorers);
+  } else if (!transferScreen.classList.contains("hidden") && lastTransferRender) {
+    renderTransferScreen(lastTransferRender.messages, lastTransferRender.botsAccepted, lastTransferRender.botsTotal);
+  } else if (!resultScreen.classList.contains("hidden")) {
+    showResults();
+  } else if (!rebuildScreen.classList.contains("hidden")) {
+    if (auction && !auctionView.classList.contains("hidden")) renderAuctionView();
+    else if (chooseView.classList.contains("hidden") && round) renderCurrentClientView();
+  }
+}
+onLangChange(rerenderForLanguage);

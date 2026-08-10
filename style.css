@@ -1943,3 +1943,64 @@ body {
   padding: 0.35rem 0.9rem;
   font-size: 0.8rem;
 }
+
+/* ---------------- DİL SEÇİCİ (sağ üst) ---------------- */
+.lang-switcher {
+  position: fixed;
+  top: 0.9rem;
+  right: 0.9rem;
+  z-index: 900;
+}
+.lang-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(12, 20, 32, 0.72);
+  backdrop-filter: blur(6px);
+  color: #eaf2ff;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.lang-btn:hover { border-color: rgba(255, 255, 255, 0.45); transform: translateY(-1px); }
+.lang-globe { font-size: 0.95rem; opacity: 0.85; }
+.lang-menu {
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  right: 0;
+  min-width: 168px;
+  padding: 0.3rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(10, 17, 28, 0.96);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.lang-option {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  width: 100%;
+  padding: 0.5rem 0.65rem;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #dbe6f5;
+  font-size: 0.9rem;
+  text-align: left;
+  cursor: pointer;
+}
+.lang-option:hover { background: rgba(255, 255, 255, 0.08); }
+.lang-option.active { background: rgba(88, 160, 255, 0.18); color: #fff; font-weight: 600; }
+.lang-option-flag { font-size: 1.05rem; }
+
+@media (max-width: 640px) {
+  .lang-switcher { top: 0.5rem; right: 0.5rem; }
+  .lang-btn { padding: 0.32rem 0.5rem; font-size: 0.9rem; }
+}

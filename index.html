@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rebuild11 — Kadro Rebuild Süper Lig</title>
+<title>Rebuild11 — Kadro Rebuild</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -16,6 +16,14 @@
   <span class="floaty f4">⭐</span>
 </div>
 
+<!-- LANGUAGE SWITCHER (landing / setup / lobby ekranlarında sağ üstte) -->
+<div class="lang-switcher" id="langSwitcher">
+  <button id="langBtn" class="lang-btn" type="button" aria-haspopup="true" aria-expanded="false">
+    <span class="lang-globe">🌐</span><span id="langBtnFlag">🇹🇷</span>
+  </button>
+  <div class="lang-menu hidden" id="langMenu" role="menu"></div>
+</div>
+
 <!-- LANDING / MODE SELECT SCREEN -->
 <section id="landingScreen" class="screen">
   <div class="setup-card">
@@ -25,44 +33,32 @@
         <span class="brand-num">11</span>
       </div>
       <div class="brand-word">Rebuild<span class="brand-word-accent">11</span></div>
-      <div class="brand-tagline">KADRO REBUILD · SÜPER LİG</div>
+      <div class="brand-tagline" data-i18n="brand.tagline">KADRO REBUILD · 5 BÜYÜK LİG</div>
     </div>
-    <p class="subtitle">
-      Fenerbahçe, Beşiktaş ve Galatasaray'dan birini yönet; herkesin 120M€ bütçesi ve kendi
-      gerçek 11'i var. Mevki mevki oyuncunu <b>tut</b> ya da <b>sat</b>, açık artırmalarla
-      rakiplerinle yarış, 5 sezonluk bir kariyer boyunca EA FC ratingine göre en güçlü 11'i kur.
-    </p>
-    <button id="modeBotBtn" class="primary-btn">🤖 Botlara Karşı Oyna</button>
-    <button id="modeLobbyBtn" class="primary-btn secondary-btn-style">👥 Arkadaşlarla Oyna</button>
+    <p class="subtitle" data-i18n-html="landing.subtitle"></p>
+    <button id="modeBotBtn" class="primary-btn" data-i18n="landing.playBots">🤖 Botlara Karşı Oyna</button>
+    <button id="modeLobbyBtn" class="primary-btn secondary-btn-style" data-i18n="landing.playFriends">👥 Arkadaşlarla Oyna</button>
   </div>
 </section>
 
 <!-- SETUP SCREEN (bot mode) -->
 <section id="setupScreen" class="screen hidden">
   <div class="setup-card">
-    <button class="back-link" data-back-to="landingScreen">◀ Geri</button>
+    <button class="back-link" data-back-to="landingScreen" data-i18n="common.back">◀ Geri</button>
     <div class="setup-hero">
       <div class="hero-trophy">🏆</div>
     </div>
-    <h1>Kadro Rebuild <span class="accent" id="setupTeamName">Fenerbahçe</span></h1>
-    <p class="subtitle" id="setupSubtitle">
-      Sen Fenerbahçe'yi yönetiyorsun, karşında <b>Beşiktaş</b> ve <b>Galatasaray</b> botları var.
-      Herkesin 120M€ bütçesi ve kendi gerçek 11'i var. Mevki mevki oyuncunu <b>tut</b> ya da <b>sat</b>
-      (satış kesindir, vazgeçemezsin) — sana ve botlara her turda <b>aynı 3 alternatif</b> sunulur.
-      Aynı oyuncuyu birden fazla taraf isterse <b>açık artırma</b> başlar; kaybedersen kalan
-      adaylardan birini almak zorundasın. Amaç: EA FC ratingine göre en güçlü 11'i kurmak.
-      Her sezon sonunda büyük Avrupa kulüpleri her takımdan <b>3 oyuncuya</b>, yaşına ve
-      potansiyeline göre teklif gönderir. Kariyer 5 sezon sürer.
-    </p>
+    <h1><span data-i18n="setup.title">Kadro Rebuild</span> <span class="accent" id="setupTeamName">Fenerbahçe</span></h1>
+    <p class="subtitle" id="setupSubtitle"></p>
 
     <div class="setup-row">
-      <label>Ligini Seç</label>
+      <label data-i18n="setup.leagueLabel">Ligini Seç</label>
       <div class="team-pick-grid league-pick-grid" id="leaguePickGroup"></div>
       <p class="hint" id="leaguePickHint"></p>
     </div>
 
     <div class="setup-row">
-      <label>Takımını Seç <span class="hint-inline" id="teamPickLabelHint">(Süper Lig&#39;deki 18 takımdan biri)</span></label>
+      <label><span data-i18n="setup.teamLabel">Takımını Seç</span> <span class="hint-inline" id="teamPickLabelHint"></span></label>
       <div class="team-pick-grid" id="botTeamPickGroup"></div>
     </div>
 
@@ -73,42 +69,42 @@
     </div>
 
     <div class="setup-row">
-      <label>Oyun Modu</label>
+      <label data-i18n="setup.modeLabel">Oyun Modu</label>
       <div class="option-group" id="botModePickGroup">
-        <button class="option-btn active" data-mode="rebuild">🔁 Kadro Rebuild</button>
-        <button class="option-btn" data-mode="empty">🌱 Sıfırdan Kadro Kur</button>
+        <button class="option-btn active" data-mode="rebuild" data-i18n="setup.modeRebuild">🔁 Kadro Rebuild</button>
+        <button class="option-btn" data-mode="empty" data-i18n="setup.modeEmpty">🌱 Sıfırdan Kadro Kur</button>
       </div>
-      <p class="hint" id="botModeHint">Mevcut kadronla başlarsın, mevki mevki tut/sat kararı verirsin.</p>
+      <p class="hint" id="botModeHint"></p>
     </div>
 
     <div class="setup-row">
-      <label>Draft Modu</label>
+      <label data-i18n="setup.draftLabel">Draft Modu</label>
       <div class="option-group" id="botDraftModeGroup">
-        <button class="option-btn active" data-draft="off">Kapalı</button>
-        <button class="option-btn" data-draft="on">🎯 Draft Modu Açık</button>
+        <button class="option-btn active" data-draft="off" data-i18n="setup.draftOff">Kapalı</button>
+        <button class="option-btn" data-draft="on" data-i18n="setup.draftOn">🎯 Draft Modu Açık</button>
       </div>
-      <p class="hint" id="botDraftModeHint">Kapalı: klasik akış. Açık: her sezon sonunda 3 rastgele mevki draft'a çıkar. Her kulübün o mevkideki oyuncusu ortak havuza girer ve ters lig sırasıyla (sonuncu ilk seçer) herkes havuzdan bedelsiz bir rakip oyuncusu seçer. Draft bitince boşalan her mevkiye 5 adaydan birini imzalar, ardından kadrondan istediğin bir oyuncuyu satıp onun yerine de 5 adaydan birini alırsın.</p>
+      <p class="hint" id="botDraftModeHint" data-i18n="setup.draftHint"></p>
     </div>
 
     <div class="setup-row">
-      <label>Kariyer Uzunluğu</label>
+      <label data-i18n="setup.seasonsLabel">Kariyer Uzunluğu</label>
       <div class="option-group wrap-group" id="botSeasonCountGroup">
-        <button class="option-btn active" data-seasons="5">5 Sezon</button>
-        <button class="option-btn" data-seasons="10">10 Sezon</button>
-        <button class="option-btn" data-seasons="15">15 Sezon</button>
-        <button class="option-btn" data-seasons="20">20 Sezon</button>
-        <button class="option-btn" data-seasons="25">25 Sezon</button>
-        <button class="option-btn" data-seasons="30">30 Sezon</button>
+        <button class="option-btn active" data-seasons="5">5</button>
+        <button class="option-btn" data-seasons="10">10</button>
+        <button class="option-btn" data-seasons="15">15</button>
+        <button class="option-btn" data-seasons="20">20</button>
+        <button class="option-btn" data-seasons="25">25</button>
+        <button class="option-btn" data-seasons="30">30</button>
       </div>
     </div>
 
     <div class="setup-row hidden" id="teamNameRow">
-      <label>Takımının İsmi</label>
-      <input type="text" id="teamNameInput" class="lobby-input" placeholder="ör. Yıldız Spor" maxlength="24">
+      <label data-i18n="setup.teamNameLabel">Takımının İsmi</label>
+      <input type="text" id="teamNameInput" class="lobby-input" data-i18n-placeholder="setup.teamNamePlaceholder" maxlength="24">
     </div>
 
     <div class="budget-display">
-      <span class="budget-label">Herkesin Bütçesi</span>
+      <span class="budget-label" data-i18n="setup.budgetLabel">Herkesin Bütçesi</span>
       <span class="budget-amount" id="setupBudgetAmount">€120,0M</span>
     </div>
 
@@ -121,7 +117,7 @@
 <!-- LOBBY SCREEN (multiplayer) -->
 <section id="lobbyScreen" class="screen hidden">
   <div class="setup-card">
-    <button class="back-link" data-back-to="landingScreen">◀ Geri</button>
+    <button class="back-link" data-back-to="landingScreen" data-i18n="common.back">◀ Geri</button>
     <div class="setup-hero">
       <div class="hero-trophy">👥</div>
     </div>
@@ -132,8 +128,8 @@
 <!-- REBUILD SCREEN -->
 <section id="rebuildScreen" class="screen hidden">
   <header class="draft-header">
-    <div class="draft-title">Kadro Rebuild <span class="accent" id="draftTitleTeams">Fenerbahçe vs Botlar</span></div>
-    <div class="budget-pill" id="budgetPill">Bütçe: €0M</div>
+    <div class="draft-title"><span data-i18n="rebuild.title">Kadro Rebuild</span> <span class="accent" id="draftTitleTeams"></span></div>
+    <div class="budget-pill" id="budgetPill"></div>
   </header>
 
   <div id="roundLog" class="round-log hidden"></div>
@@ -143,7 +139,7 @@
   <div class="rebuild-body">
     <aside class="squad-panel" id="squadPanel">
       <div class="squad-panel-header">
-        <h3>Kadron <span class="formation-tag">4-2-3-1</span></h3>
+        <h3><span data-i18n="squad.yourSquad">Kadron</span> <span class="formation-tag">4-2-3-1</span></h3>
         <span class="my-avg-rating" id="myAvgRating"></span>
       </div>
       <div class="squad-panel-body" id="squadPanelBody">
@@ -160,8 +156,8 @@
         <p class="slot-label" id="slotLabel"></p>
         <div class="current-player-card" id="currentPlayerCard"></div>
         <div class="decision-buttons">
-          <button id="keepBtn" class="keep-btn">✅ Tut</button>
-          <button id="sellBtn" class="sell-btn">💰 Sat</button>
+          <button id="keepBtn" class="keep-btn" data-i18n="decide.keep">✅ Tut</button>
+          <button id="sellBtn" class="sell-btn" data-i18n="decide.sell">💰 Sat</button>
         </div>
       </div>
 
@@ -173,17 +169,17 @@
 
       <!-- Auction -->
       <div id="auctionView" class="auction-view hidden">
-        <p class="auction-title">🔨 Açık Artırma!</p>
+        <p class="auction-title" data-i18n="auction.heading">🔨 Açık Artırma!</p>
         <p class="auction-desc" id="auctionDesc"></p>
         <div class="auction-candidate" id="auctionCandidate"></div>
         <div class="auction-bidders" id="auctionBidders"></div>
         <div class="auction-current-bid">
-          Güncel Teklif: <span id="auctionCurrentBid"></span>
+          <span data-i18n="auction.currentBid">Güncel Teklif:</span> <span id="auctionCurrentBid"></span>
         </div>
         <p class="auction-budget-hint" id="auctionBudgetHint"></p>
         <div class="auction-buttons">
-          <button id="raiseBidBtn" class="keep-btn">💰 Teklif Ver (+€5,0M)</button>
-          <button id="concedeBidBtn" class="sell-btn">🏳️ Vazgeç</button>
+          <button id="raiseBidBtn" class="keep-btn"></button>
+          <button id="concedeBidBtn" class="sell-btn" data-i18n="auction.concede">🏳️ Vazgeç</button>
         </div>
       </div>
     </main>
@@ -193,33 +189,43 @@
 <!-- SEASON TABLE SCREEN -->
 <section id="seasonTableScreen" class="screen hidden">
   <header class="draft-header">
-    <div class="draft-title">Sezon <span class="accent" id="tableSeasonNum"></span> Sonu — Lig Tablosu</div>
+    <div class="draft-title" id="seasonTableTitle"></div>
   </header>
   <div class="table-body">
     <div class="table-scroll">
       <table class="league-table" id="leagueTable">
         <thead>
           <tr>
-            <th>#</th><th>Takım</th><th><span class="full">Kadro</span><span class="short">KR</span></th><th>O</th><th>G</th><th>B</th><th>M</th>
-            <th>AG</th><th>YG</th><th>AV</th><th><span class="full">Puan</span><span class="short">P</span></th><th><span class="full">Ödül</span><span class="short">🏆</span></th>
+            <th data-i18n="table.colRank">#</th>
+            <th data-i18n="table.colTeam">Takım</th>
+            <th><span class="full" data-i18n="table.colSquadFull">Kadro</span><span class="short" data-i18n="table.colSquadShort">KR</span></th>
+            <th data-i18n="table.colPlayed">O</th>
+            <th data-i18n="table.colWon">G</th>
+            <th data-i18n="table.colDrawn">B</th>
+            <th data-i18n="table.colLost">M</th>
+            <th data-i18n="table.colGf">AG</th>
+            <th data-i18n="table.colGa">YG</th>
+            <th data-i18n="table.colGd">AV</th>
+            <th><span class="full" data-i18n="table.colPointsFull">Puan</span><span class="short" data-i18n="table.colPointsShort">P</span></th>
+            <th><span class="full" data-i18n="table.colPrizeFull">Ödül</span><span class="short">🏆</span></th>
           </tr>
         </thead>
         <tbody id="leagueTableBody"></tbody>
       </table>
     </div>
 
-    <h3 class="scorer-title">⚽ Gol Krallığı</h3>
+    <h3 class="scorer-title" data-i18n="table.topScorers">⚽ Gol Krallığı</h3>
     <div class="scorer-list" id="scorerList"></div>
 
-    <button id="seasonTableContinueBtn" class="primary-btn">Transfer Tekliflerine Geç</button>
+    <button id="seasonTableContinueBtn" class="primary-btn"></button>
   </div>
 </section>
 
 <!-- DRAFT MODE SCREEN -->
 <section id="draftScreen" class="screen hidden">
   <header class="draft-header">
-    <div class="draft-title">Sezon <span class="accent" id="draftSeasonNum"></span> — 🎯 Draft</div>
-    <div class="budget-pill" id="draftBudgetPill">Bütçe: €0M</div>
+    <div class="draft-title" id="draftScreenTitle"></div>
+    <div class="budget-pill" id="draftBudgetPill"></div>
   </header>
   <div class="draft-mode-body">
     <div class="draft-slots-row" id="draftSlotsRow"></div>
@@ -230,7 +236,7 @@
       <div class="draft-turn-row" id="draftTurnRow"></div>
       <p class="draft-hint" id="draftTurnHint"></p>
       <div class="draft-buttons">
-        <button id="draftPassBtn" class="sell-btn">🏳️ Sıranı Pas Geç</button>
+        <button id="draftPassBtn" class="sell-btn" data-i18n="draft.pass">🏳️ Sıranı Pas Geç</button>
       </div>
     </div>
 
@@ -239,7 +245,7 @@
       <p class="draft-hint" id="draftSellHint"></p>
       <div class="draft-sell-grid" id="draftSellGrid"></div>
       <div class="draft-buttons">
-        <button id="draftSellConfirmBtn" class="primary-btn">✅ Kararımı Onayla</button>
+        <button id="draftSellConfirmBtn" class="primary-btn"></button>
       </div>
     </div>
 
@@ -256,10 +262,10 @@
 <!-- TRANSFER WINDOW SCREEN -->
 <section id="transferScreen" class="screen hidden">
   <header class="draft-header">
-    <div class="draft-title">Sezon <span class="accent" id="transferSeasonNum"></span> Sonu — Transfer Teklifleri</div>
+    <div class="draft-title" id="transferScreenTitle"></div>
   </header>
   <div class="transfer-body">
-    <p class="transfer-intro">Büyük Avrupa kulüpleri, sezon performansına ve genç yeteneğine güvenerek 3 oyuncun için teklif gönderdi. Kabul edersen para kasana girer ama mevkiyi yeni sezonda doldurman gerekir.</p>
+    <p class="transfer-intro" id="transferIntro"></p>
     <div class="transfer-offers-scroll">
       <div id="academyOfferWrap"></div>
       <div id="transferOffers" class="transfer-offers"></div>
@@ -267,8 +273,8 @@
     <div id="botTransferSummary" class="bot-transfer-summary"></div>
     <div id="botTransferLog" class="round-log"></div>
     <div id="transferContinueRow" class="transfer-continue-row hidden">
-      <button id="continueSeasonBtn" class="primary-btn">Sonraki Sezona Geç</button>
-      <button id="endCareerBtn" class="cancel-btn">Kariyeri Burada Bitir</button>
+      <button id="continueSeasonBtn" class="primary-btn" data-i18n="transfer.continue">Sonraki Sezona Geç</button>
+      <button id="endCareerBtn" class="cancel-btn"></button>
     </div>
   </div>
 </section>
@@ -276,14 +282,15 @@
 <!-- RESULT SCREEN -->
 <section id="resultScreen" class="screen hidden">
   <header class="draft-header">
-    <div class="draft-title" id="resultTitle">Rebuild Tamamlandı</div>
+    <div class="draft-title" id="resultTitle" data-i18n="result.title">Rebuild Tamamlandı</div>
   </header>
   <div class="career-summary" id="careerSummary"></div>
   <div class="result-tabs" id="resultTabs"></div>
   <div class="result-body" id="resultBody"></div>
-  <button id="restartBtn" class="primary-btn">Yeniden Başla</button>
+  <button id="restartBtn" class="primary-btn" data-i18n="result.restart">Yeniden Başla</button>
 </section>
 
+<script src="data/i18n.js"></script>
 <script src="data/players.js"></script>
 <script src="data/players_premierleague.js"></script>
 <script src="data/players_laliga.js"></script>
@@ -297,5 +304,6 @@
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
 <script src="game.js"></script>
 <script src="multiplayer.js"></script>
+<script src="langswitcher.js"></script>
 </body>
 </html>
